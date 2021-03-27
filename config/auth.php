@@ -81,7 +81,7 @@ return [
         //     'table' => 'users',
         // ],
 
-        'admins' => [
+        'cms_users' => [
             'driver' => 'eloquent',
             'model' => App\Models\Admin::class,
         ],
