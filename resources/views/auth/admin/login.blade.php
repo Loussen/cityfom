@@ -1,81 +1,67 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Laravel 8 Admin Auth - laravelcode.com</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
-    <style>
-        .login-form {
-            width: 340px;
-            margin: 50px auto;
-            font-size: 15px;
-        }
-        .login-form form {
-            margin-bottom: 15px;
-            background: #f7f7f7;
-            box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
-            padding: 30px;
-        }
-        .login-form h2 {
-            margin: 0 0 15px;
-        }
-        .form-control, .btn {
-            min-height: 38px;
-            border-radius: 2px;
-        }
-        .btn {
-            font-size: 15px;
-            font-weight: bold;
-        }
-    </style>
-</head>
-<body>
-<div class="login-form">
-    <form action="{{ route('adminLoginPost') }}" method="post">
-        {!! csrf_field() !!}
-        <h2 class="text-center">Log in</h2>
-        @if(\Session::get('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ \Session::get('success') }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-        @endif
-        {{ \Session::forget('success') }}
-        @if(\Session::get('error'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                {{ \Session::get('error') }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-        @endif
-        <div class="form-group">
-            <input type="email" class="form-control" name="email" placeholder="Email" required="required">
-            @if ($errors->has('email'))
-                <span class="help-block font-red-mint">
-                <strong>{{ $errors->first('email') }}</strong>
-            </span>
+@extends('admin.layouts.login')
+@section('content')
+    <form class="login-form" action="{{ route('adminLoginPost') }}" method="POST">
+        @csrf
+        <div class="card-body">
+            @if(session('message'))
+                <div class="alert alert-{{ session('type') }} border-0 alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert"><span>×</span></button>
+                    {{ session('message') }}
+                </div>
+
             @endif
-        </div>
-        <div class="form-group">
-            <input type="password" class="form-control" name="password" placeholder="Password" required="required">
-            @if ($errors->has('password'))
-                <span class="help-block font-red-mint">
-                <strong>{{ $errors->first('password') }}</strong>
+            <div class="form-group form-group-feedback form-group-feedback-left">
+                <input type="email" class="form-control  @error('email') is-invalid @enderror" name="email"
+                       value="{{ old('email') }}" placeholder="{{ __('admin.email') }}">
+                <div class="form-control-feedback">
+                    <i class="icon-user text-muted"></i>
+                </div>
+                @error('email')
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+                @enderror
+            </div>
+            <div class="form-group form-group-feedback form-group-feedback-left">
+                <input type="password" class="form-control @error('password') is-invalid @enderror" name="password"
+                       placeholder="{{ __('admin.password') }}">
+                <div class="form-control-feedback">
+                    <i class="icon-lock2 text-muted"></i>
+                </div>
+                @error('password')
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+                @enderror
+            </div>
+
+            <img class='img-responsive' src="{{ captcha_src('admin') }}"/>
+            <div class="form-group form-group-feedback form-group-feedback-left">
+                <input type="text" class="form-control @error('captcha') is-invalid @enderror" name="captcha"
+                       placeholder="Kodu daxil edin">
+                <div class="form-control-feedback">
+                    <i class="icon-lock2 text-muted"></i>
+                </div>
+                @error('captcha')
+                <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
             </span>
-            @endif
-        </div>
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary btn-block">Log in</button>
+                @enderror
+            </div>
+
+            <div class="form-group d-flex align-items-center">
+                <div class="form-check mb-0">
+                    <label class="form-check-label">
+                        <input type="checkbox" name="remember" name="remember" id="remember" class="form-input-styled"
+                               checked data-fouc {{ old('remember') ? 'checked' : '' }}>
+                        {{ __('admin.remember_me') }}
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-block">{{ __('admin.login') }} <i
+                        class="icon-circle-right2 ml-2"></i></button>
+            </div>
         </div>
     </form>
-</div>
-</body>
-</html>
+@endsection

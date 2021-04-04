@@ -56,8 +56,9 @@ class AdminAuthController extends Controller
     public function postLogin(Request $request)
     {
         $this->validate($request, [
-            'email' => 'required|email',
-            'password' => 'required',
+            'email' => 'required|string|email',
+            'password' => 'required|string|min:6',
+            'captcha'   => 'required|captcha',
         ]);
         if (auth()->guard('admin')->attempt(['email' => $request->input('email'), 'password' => $request->input('password')]))
         {
@@ -67,7 +68,7 @@ class AdminAuthController extends Controller
             return redirect()->route('dashboard');
 
         } else {
-            return back()->with('error','your username and password are wrong.');
+            return back()->with(['message' => __('admin.login_failed'), 'type' => 'danger']);
         }
 
     }
@@ -81,7 +82,6 @@ class AdminAuthController extends Controller
     {
         auth()->guard('admin')->logout();
         \Session::flush();
-        \Sessioin::put('success','You are logout successfully');
-        return redirect(route('adminLogin'));
+        return redirect()->route('adminLogin')->with(['message' => 'You are logout successfully', 'type' => 'success']);
     }
 }
