@@ -22,7 +22,9 @@ Route::get('admin/login','Auth\AdminAuthController@getLogin')->name('adminLogin'
 Route::post('admin/login', 'Auth\AdminAuthController@postLogin')->name('adminLoginPost');
 Route::get('admin/logout', 'Auth\AdminAuthController@logout')->name('adminLogout');
 
-Route::group(['prefix' => 'admin','middleware' => 'adminauth'], function () {
+Route::group(['as' => 'admin.', 'prefix' => 'admin', 'middleware' => 'adminauth', 'namespace' => 'Admin'], function () {
     // Admin Dashboard
-    Route::get('dashboard','AdminController@dashboard')->name('dashboard');
+    Route::get('dashboard','DashboardController@dashboard')->name('dashboard');
 });
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

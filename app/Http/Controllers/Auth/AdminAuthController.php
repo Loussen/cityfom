@@ -65,7 +65,7 @@ class AdminAuthController extends Controller
             $user = auth()->guard('admin')->user();
 
             \Session::put('success','You are Login successfully!!');
-            return redirect()->route('dashboard');
+            return redirect()->route('admin.dashboard');
 
         } else {
             return back()->with(['message' => __('admin.login_failed'), 'type' => 'danger']);

@@ -22,7 +22,7 @@
     <!-- Theme JS files -->
     <script src="{{ asset('admin/global_assets/js/plugins/forms/styling/uniform.min.js')}}"></script>
     <script src="{{ asset('admin/js/app.js')}}"></script>
-    <script src="{{ asset('admin//global_assets/js/demo_pages/login.js')}}"></script>
+    <script src="{{ asset('admin/global_assets/js/demo_pages/login.js')}}"></script>
     <!-- /theme JS files -->
 </head>
 <body>
