@@ -19,10 +19,10 @@
 
         <!-- User menu -->
         <div class="sidebar-user-material">
-            <div class="sidebar-user-material-body" style="background: url({{"global_assets/images/backgrounds/user_bg3.jpg"}}) center center no-repeat; background-size: cover;">
+            <div class="sidebar-user-material-body" style="background: url({{asset("admin/global_assets/images/backgrounds/user_bg3.jpg")}}) center center no-repeat; background-size: cover;">
                 <div class="card-body text-center">
                     <a href="#">
-                        <img src="{{"global_assets/images/placeholders/placeholder.jpg"}}" class="img-fluid rounded-circle shadow-1 mb-3" width="80" height="80" alt="">
+                        <img src="{{asset("admin/global_assets/images/placeholders/user.png")}}" class="img-fluid rounded-circle shadow-1 mb-3" width="80" height="80" alt="">
                     </a>
                     <h6 class="mb-0 text-white text-shadow-dark">Victoria Baker</h6>
                     <span class="font-size-sm text-white text-shadow-dark">Santa Ana, CA</span>
@@ -97,7 +97,7 @@
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="index.html" class="nav-link legitRipple">
+                    <a href=""{{route('admin.category.index')}}" class="nav-link legitRipple">
                         <i class="icon-list"></i>
                         <span>
 									Category

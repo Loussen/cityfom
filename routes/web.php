@@ -25,6 +25,8 @@ Route::get('admin/logout', 'Auth\AdminAuthController@logout')->name('adminLogout
 Route::group(['as' => 'admin.', 'prefix' => 'admin', 'middleware' => 'adminauth', 'namespace' => 'Admin'], function () {
     // Admin Dashboard
     Route::get('dashboard','DashboardController@dashboard')->name('dashboard');
+
+    Route::resource('category', 'CategoryController');
 });
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

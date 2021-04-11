@@ -24,7 +24,7 @@ var App = function () {
     var _transitionsDisabled = function() {
         $('body').addClass('no-transitions');
     };
-////////
+
     // Enable all transitions
     var _transitionsEnabled = function() {
         $('body').removeClass('no-transitions');
@@ -123,7 +123,7 @@ var App = function () {
 
             // Opposite sidebar visibility
             $('body').toggleClass('sidebar-right-visible');
-
+            
             // If visible
             if ($('body').hasClass('sidebar-right-visible')) {
                 $('body').addClass('sidebar-main-hidden');
@@ -330,24 +330,6 @@ var App = function () {
         $('[data-popup="popover"]').popover();
     };
 
-    // Slinky
-    var _componentSlinky = function() {
-        if (!$().slinky) {
-            console.warn('Warning - slinky.min.js is not loaded.');
-            return;
-        };
-
-        // Attach drill down menu to menu list with child levels
-        $('.nav-item-levels').one('shown.bs.dropdown', function () {
-            $('.dropdown-item-group').each(function() {
-                $(this).slinky({
-                    title: true,
-                    speed: 200
-                });
-            });
-        });
-    };
-
 
     // Card actions
     // -------------------------
@@ -358,9 +340,9 @@ var App = function () {
             e.preventDefault();
             var $target = $(this),
                 block = $target.closest('.card');
-
+            
             // Block card
-            $(block).block({
+            $(block).block({ 
                 message: '<i class="icon-spinner2 spinner"></i>',
                 overlayCSS: {
                     backgroundColor: '#fff',
@@ -378,7 +360,7 @@ var App = function () {
             // For demo purposes
             window.setTimeout(function () {
                $(block).unblock();
-            }, 2000);
+            }, 2000); 
         });
     };
 
@@ -546,7 +528,6 @@ var App = function () {
         initComponents: function() {
             _componentTooltip();
             _componentPopover();
-            _componentSlinky();
         },
 
         // Initialize all card actions

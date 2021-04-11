@@ -1,0 +1,1 @@
+<button type="button" onclick="_getConfirm('{{ route($route, [$vacancyId, $userId]) }}', '{{ csrf_token() }}')" class="btn btn-sm btn-light" data-popup="tooltip" data-placement="right" data-original-title="{{ __('admin.delete') }}"><i class="icon-cross3 "></i></button>

@@ -28,7 +28,7 @@
     <script src="{{asset('admin/global_assets/js/demo_pages/editor_ckeditor_default.js')}}"></script>
 
     <script src="{{asset('admin/js/app.js')}}"></script>
-    <script src="{{asset('admin/global_assets/js/demo_pages/dashboard.js')}}"></script>
+{{--    <script src="{{asset('admin/global_assets/js/demo_pages/dashboard.js')}}"></script>--}}
     <script src="{{asset('admin/js/custom.js')}}"></script>
     <script src="{{asset('admin/global_assets/js/demo_pages/form_checkboxes_radios.js')}}"></script>
 
@@ -46,8 +46,11 @@
 <!-- Page content -->
 <div class="page-content">
 @include('admin.particles._navbar')
-@yield('content')
+    <div class="content-wrapper">
+        @yield('content')
 
+        @include('admin.particles._footer')
+    </div>
 </div>
 
 @yield('script')
