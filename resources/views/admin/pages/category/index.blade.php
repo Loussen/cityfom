@@ -12,7 +12,7 @@
 
                 <div class="header-elements d-none">
                     <div class="d-flex justify-content-center">
-                        <a href="http://localhost/miq/miq_dislocation_new/public/admin/school/create" class="btn btn-outline-success float-right"><i class="icon-plus2"></i> Add New</a>
+                        <a href="{{route('admin.category.create')}}" class="btn btn-outline-success float-right"><i class="icon-plus2"></i> Add New</a>
                     </div>
                 </div>
             </div>
@@ -48,7 +48,7 @@
                         <div class="form-row">
                             <div class="form-group col-sm-3">
                                 <label for="name">{{__('admin.name')}}</label>
-                                <input type="text" class="form-control" name="name" id="{{ __('admin.name') }}" placeholder="{{ __('admin.name') }}" value="{{request('name')}}">
+                                <input type="text" class="form-control" name="name" id="name" placeholder="{{ __('admin.name') }}" value="{{request('name')}}">
                             </div>
                             <div class="form-group col-sm-3">
                                 <label for="status">{{__('admin.status')}}</label>
@@ -68,6 +68,7 @@
                 </div>
             </div>
 
+            @include('admin.particles._sessionmessage')
             <!-- Basic table -->
             <div class="card" style="zoom: 1;">
                 <div class="card-header header-elements-inline">

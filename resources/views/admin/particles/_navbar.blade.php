@@ -97,7 +97,7 @@
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a href=""{{route('admin.category.index')}}" class="nav-link legitRipple">
+                    <a href="{{route('admin.category.index')}}" class="nav-link legitRipple">
                         <i class="icon-list"></i>
                         <span>
 									Category

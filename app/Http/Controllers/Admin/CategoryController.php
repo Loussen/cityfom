@@ -2,17 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Exports\SchoolExportMapping;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\SchoolRequest;
-use App\Models\MKadrKendler as Village;
-use App\Models\MKadrMektebler as School;
-use App\Models\MKadrPochtlar as Post;
-use App\Models\MKadrRayonlar as Region;
+use App\Http\Requests\CategoryRequest;
+use App\Models\Categories;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
@@ -59,44 +56,39 @@ class CategoryController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(SchoolRequest $request)
+    public function store(CategoryRequest $request)
     {
-        $input = $request->all();
+        $category = new Categories();
 
-        $school_data = [
-            'adi' => $input['name'],
-            'rayon_id' => $input['region_id'],
-            'unvan' => $input['address'],
-            'n_phone' => $input['phone'],
-            'yerleshdiyi_rayon' => $input['located_region_id'],
-            'pocth_id' => $input['post_id'],
-            'kend_id' => $input['village_id'],
-//            'lat'                       => $input['latitude'],
-//            'lng'                       => $input['longitude'],
-            'mesafe' => $input['distance'],
-//            'dislokasiya'               => $input['dislocation'],
-            'n_motivation' => $input['motivation'],
-            'status' => $input['status']
+        $iconName = null;
+        if($request->hasFile('icon') && $request->icon != '') {
+            $icon = $request->file('icon');
+            $iconName = time()."_".$icon->getClientOriginalName();
+
+            $iconType = explode(".",$iconName);
+            $iconType = end($iconType);
+
+            if(in_array(strtolower($iconType),['jpg','jpeg','png', 'ico']))
+            {
+                $icon->move(public_path().'/uploads/categories/',$iconName);
+            }
+            else
+            {
+                return redirect()->route('admin.category.create')->with(_sessionmessage(null, "Yalnız şəkil formatı (jpg,jpeg,png)", 'warning', true));
+            }
+        }
+
+        $categoryData = [
+            'name_en' => $request->name_en,
+            'name_az' => $request->name_az,
+            'name_ru' => $request->name_ru,
+            'name_es' => $request->name_es,
+            'icon' => $iconName,
         ];
 
-        $school = School::create($school_data);
+        Categories::create($categoryData);
 
-//        if($school)
-//        {
-//            $schoolClass = new School();
-//            $log_data = [
-//                'log_name'              => 'create',
-//                'description'           => 'Yeni məktəb yaradıldı',
-//                'subject_id'            => $school->id,
-//                'subject_type'          => $schoolClass->tablePath,
-//                'user_id'               => Auth::user()->id,
-//                'attributes'            => ''
-//            ];
-//
-//            ActivityLog::create($log_data);
-//        }
-
-        return redirect()->route('admin.school.index')->with(_sessionmessage());
+        return redirect()->route('admin.category.index')->with(_sessionmessage());
     }
 
     /**
@@ -113,47 +105,12 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param School $school
+     * @param Categories $category
      * @return \Illuminate\Http\Response
      */
-    public function edit(School $school)
+    public function edit(Categories $category)
     {
-        if (Auth::user()->hasRole('Rayonlar') || Auth::user()->hasRole('Rayonlar_direktor')) {
-            if (Auth::user()->region_id != $school->rayon_id) {
-                abort(403, 'Access forbidden.');
-            }
-        }
-
-        $queryRegions = Region::query();
-        $queryPosts = Post::query();
-        $queryVillages = Village::query();
-
-        if (Auth::user()->hasRole('Rayon mərkəzləri')) {
-            $region_data = Region::where('id', Auth::user()->region_center_id)->get();
-            $regions_array = [];
-            foreach ($region_data as $region) {
-                $regions_array[] = $region->id;
-            }
-            if (!in_array($school->rayon_id, $regions_array)) {
-                abort(403, 'Access forbidden.');
-            }
-        }
-
-        if (Auth::user()->hasRole('Admin Peşə')) {
-            $queryRegions->where('id', 67);
-            $queryPosts->where('rayon_id', 67);
-            $queryVillages->where('rayon_id', 67);
-        }
-
-//        $posts = Post::all();
-//        $villages = Village::all();
-//        $regions = Region::all();
-
-        $regions = $queryRegions->orderBy('adi', 'ASC')->get();
-        $posts = $queryPosts->get();
-        $villages = $queryVillages->get();
-
-        return view('admin.pages.school.edit', compact('school', 'posts', 'villages', 'regions'));
+        return view('admin.pages.category.edit', compact('category'));
     }
 
     /**
@@ -163,61 +120,41 @@ class CategoryController extends Controller
      * @param int $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(SchoolRequest $request, $id)
+    public function update(CategoryRequest $request, $id)
     {
-        $input = $request->all();
-        $school = School::find($id);
+        $category = Categories::find($id);
 
-//        $oldData = $school;
+        $iconName = $category->icon;
+        if($request->hasFile('icon') && $request->icon != '') {
+            $icon = $request->file('icon');
+            $iconName = time()."_".$icon->getClientOriginalName();
 
-        $school_data = [
-            'adi' => $input['name'],
-            'rayon_id' => $input['region_id'],
-            'unvan' => $input['address'],
-            'n_phone' => $input['phone'],
-            'yerleshdiyi_rayon' => $input['located_region_id'],
-            'pocht_id' => $input['post_id'],
-            'kend_id' => $input['village_id'],
-//            'lat'                       => $input['latitude'],
-//            'lng'                       => $input['longitude'],
-            'mesafe' => $input['distance'],
-//            'dislokasiya'               => $input['dislocation'],
-            'n_motivation' => $input['motivation'],
-            'status' => $input['status']
+            $iconType = explode(".",$iconName);
+            $iconType = end($iconType);
+
+            if(in_array(strtolower($iconType),['jpg','jpeg','png', 'ico']))
+            {
+                $icon->move(public_path().'/uploads/categories/',$iconName);
+
+                delete_old_files(public_path().'/uploads/categories/'.$category->icon);
+            }
+            else
+            {
+                return redirect()->route('admin.category.edit', [$id])->with(_sessionmessage(null, "Yalnız şəkil formatı (jpg,jpeg,png)", 'warning', true));
+            }
+        }
+
+        $categoryData = [
+            'name_en' => $request->name_en,
+            'name_az' => $request->name_az,
+            'name_ru' => $request->name_ru,
+            'name_es' => $request->name_es,
+            'icon'    => $iconName
         ];
-        $school->update($school_data);
 
-//        if($school)
-//        {
-//            $attributes = [];
-//
-//            foreach ($school_data as $dataKey => $dataVal)
-//            {
-//                echo $oldData[$dataKey]." - ".$dataVal."<br />";
-//                if($oldData[$dataKey] != $dataVal)
-//                {
-//                    $attributes[$dataKey]['old'] = $oldData[$dataKey];
-//                    $attributes[$dataKey]['new'] = $dataVal;
-//                }
-//            }
-//
-//            echo $attributesJson = json_encode($attributes); exit;
-//
-//            $schoolClass = new School();
-//            $log_data = [
-//                'log_name'              => 'update',
-//                'description'           => 'Məktəb dəyişildi',
-//                'subject_id'            => $school->id,
-//                'subject_type'          => $schoolClass->tablePath,
-//                'user_id'               => Auth::user()->id,
-//                'attributes'            => ''
-//            ];
-//
-//            ActivityLog::create($log_data);
-//        }
+        $category->update($categoryData);
 
-        return redirect()->route('admin.school.index')->with(_sessionmessage());
-//        return redirect($input['redirect_page'])->with(_sessionmessage());
+        return redirect()->route('admin.category.index')->with(_sessionmessage());
     }
 
     /**
