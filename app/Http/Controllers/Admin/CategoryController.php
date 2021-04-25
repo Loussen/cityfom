@@ -30,14 +30,51 @@ class CategoryController extends Controller
     public function index()
     {
         $query = DB::table('categories AS c')
-            ->selectRaw('c.*');
+            ->selectRaw('c.*, sum((case when sc.category_id is not null then 1 else 0 end)) AS store_count')
+            ->leftJoin('store_category as sc', 'sc.category_id','=','c.id')
+            ->groupByRaw('c.id');
 
         $pageCount = config('global.pagination_count');
+
+        if(request('id')) {
+            $filterId = intval(request('id'));
+
+            if($filterId > 0)
+                $query->whereRaw('id = '.request('id'));
+        }
+
+        if(request('name')) {
+            $query->whereRaw('name_en LIKE "%'.request('name').'%" or name_az LIKE "%'.request('name').'%" or name_ru LIKE "%'.request('name').'%" or name_es LIKE "%'.request('name').'%"');
+        }
+
+        if(request('status') && in_array(request('status'),[1,2])) {
+            $filterStatus = intval(request('status'));
+
+            if($filterStatus > 0)
+                $query->whereRaw('status = '.request('status'));
+        }
+
+        if(request('filter_type') && in_array(request('filter_type'),[1,2])) {
+            $filterType = intval(request('filter_type'));
+
+            if($filterType > 0)
+                $query->whereRaw('filter = '.request('filter_type'));
+        }
+
+        $storeCount = 'ASC';
+        if(request('store_count') && in_array(request('store_count'),['ASC','DESC'])) {
+            $query->orderBy('store_count',request('store_count'));
+
+            $storeCount = request('store_count');
+        }
 
         $query = $query->paginate($pageCount);
         $categories = $query->appends(request()->query());
 
-        return view('admin.pages.category.index', compact('categories'));
+        $status = config('global.status');
+        $filterType = config('global.filter_type');
+
+        return view('admin.pages.category.index', compact('categories','storeCount','status','filterType'));
     }
 
     /**
@@ -160,30 +197,119 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param School $school
+     * @param Categories $category
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(School $school)
+    public function destroy(Categories $category)
     {
-        $school->delete();
+        delete_old_files(public_path().'/uploads/categories/'.$category->icon);
+        $category->delete();
         $arr = _sessionmessage(null, null, null, true);
         return response($arr);
     }
 
-    protected function getWhereArray()
+    public function destroyMultipleCategory(Request $request)
     {
+        $ids = $request->ids;
+        $explodeIds = explode(",",$ids);
 
-        $filter = [];
-        if (request('region_id')) $filter[] = ['rayon_id', request('region_id')];
-        if (request('located_region_id')) $filter[] = ['yerleshdiyi_rayon', request('located_region_id')];
-        if (request('name')) $filter[] = ['adi', 'like', '%' . request('name') . '%'];
-        if (!is_null(request('status'))) $filter[] = ['status', '=', request('status')];
-
-        if (Auth::user()->hasRole('Rayonlar') || Auth::user()->hasRole('Rayonlar_direktor')) {
-            $filter[] = ['rayon_id', Auth::user()->region_id];
+        foreach ($explodeIds as $id)
+        {
+            $category = Categories::find($id);
+            delete_old_files(public_path().'/uploads/categories/'.$category->icon);
         }
 
-        return array_filter($filter);
+        DB::table("categories")->whereIn('id',$explodeIds)->delete();
+        $response = ['status' => 'OK'];
+        return response()->json(['response' => $response]);
+    }
+
+    public function filterMultipleCategory(Request $request)
+    {
+        $response = ['status' => 'Fail'];
+
+        if ($request->has('ids') && $request->has('filter_type')) {
+            $filterType = intval($request->filter_type);
+            $ids = $request->ids;
+            $explodeIds = explode(",",$ids);
+
+            if ($filterType > 0 && count($explodeIds) > 0) {
+                DB::table("categories")->whereIn('id',$explodeIds)
+                    ->update(['filter' => $filterType]);
+
+                $response = ['status' => 'OK', 'filter_type' => $filterType];
+            }
+        }
+
+        return response()->json(['response' => $response]);
+    }
+
+    public function statusMultipleCategory(Request $request)
+    {
+        $response = ['status' => 'Fail'];
+
+        if ($request->has('ids') && $request->has('status')) {
+            $status = intval($request->status);
+            $ids = $request->ids;
+            $explodeIds = explode(",",$ids);
+
+            if ($status > 0 && count($explodeIds) > 0) {
+                DB::table("categories")->whereIn('id',$explodeIds)
+                    ->update(['status' => $status]);
+
+                $response = ['status' => 'OK', 'status_type' => $status];
+            }
+        }
+
+        return response()->json(['response' => $response]);
+    }
+
+    public function changeCategoryStatus(Request $request)
+    {
+        $response = ['status' => 'Fail'];
+
+        if ($request->has('status') && $request->has('category_id')) {
+            $status = intval($request->status);
+            $categoryId = intval($request->category_id);
+
+            if ($status > 0 && $categoryId > 0) {
+                $category = Categories::find($categoryId);
+
+                $categoryData = [
+                    'status' => $status,
+                ];
+
+                $category->update($categoryData);
+
+                $response = ['status' => 'OK', 'status_type' => $status];
+            }
+        }
+
+        return response()->json(['response' => $response]);
+    }
+
+    public function changeCategoryFilterType(Request $request)
+    {
+        $response = ['status' => 'Fail'];
+
+        if ($request->has('filter_type') && $request->has('category_id')) {
+            $filterType = intval($request->filter_type);
+            $categoryId = intval($request->category_id);
+
+            if ($filterType > 0 && $categoryId > 0) {
+                $category = Categories::find($categoryId);
+
+                $categoryData = [
+                    'filter' => $filterType,
+                ];
+
+                $category->update($categoryData);
+
+                $response = ['status' => 'OK', 'filter_type' => $filterType];
+            }
+        }
+
+        return response()->json(['response' => $response]);
     }
 
     /**

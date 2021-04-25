@@ -9,12 +9,12 @@
 function _getConfirm(url,token = null,method = 'DELETE',type='warning') {
 
     swal.fire({
-        title: 'Silmək istədiyinizə əminsiniz?',
-        text: "Məlumatı silərkən ehtiyatlı olun!",
+        title: 'Dou you want delete?',
+        text: "While this information be carefull!",
         type: type,
         showCancelButton: true,
-        confirmButtonText: 'Bəli!',
-        cancelButtonText: 'Xeyr, İmtina!',
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No',
         confirmButtonClass: 'btn btn-success',
         cancelButtonClass: 'btn btn-danger',
         buttonsStyling: false
