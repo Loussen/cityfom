@@ -27,10 +27,23 @@
     <script src="{{asset('admin/global_assets/js/plugins/editors/ckeditor/ckeditor.js')}}"></script>
     <script src="{{asset('admin/global_assets/js/demo_pages/editor_ckeditor_default.js')}}"></script>
 
+    <script src="{{asset('admin/global_assets/js/plugins/forms/styling/uniform.min.js')}}"></script>
+
+    <script src="{{asset('admin/global_assets/js/plugins/ui/moment/moment.min.js')}}"></script>
+    <script src="{{asset('admin/global_assets/js/plugins/pickers/daterangepicker.js')}}"></script>
+    <script src="{{asset('admin/global_assets/js/plugins/pickers/anytime.min.js')}}"></script>
+    <script src="{{asset('admin/global_assets/js/plugins/pickers/pickadate/picker.js')}}"></script>
+    <script src="{{asset('admin/global_assets/js/plugins/pickers/pickadate/picker.date.js')}}"></script>
+    <script src="{{asset('admin/global_assets/js/plugins/pickers/pickadate/picker.time.js')}}"></script>
+    <script src="{{asset('admin/global_assets/js/plugins/pickers/pickadate/legacy.js')}}"></script>
+    <script src="{{asset('admin/global_assets/js/plugins/notifications/jgrowl.min.js')}}"></script>
+
     <script src="{{asset('admin/js/app.js')}}"></script>
 {{--    <script src="{{asset('admin/global_assets/js/demo_pages/dashboard.js')}}"></script>--}}
-    <script src="{{asset('admin/js/custom.js')}}"></script>
     <script src="{{asset('admin/global_assets/js/demo_pages/form_checkboxes_radios.js')}}"></script>
+    <script src="{{asset('admin/js/custom.js')}}"></script>
+    <script src="{{asset('admin/global_assets/js/demo_pages/form_wizard.js')}}"></script>
+    <script src="{{asset('admin/global_assets/js/demo_pages/picker_date.js')}}"></script>
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 

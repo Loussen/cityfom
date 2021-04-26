@@ -7,13 +7,13 @@
         <div class="page-header-content header-elements-md-inline">
             <div class="page-title d-flex">
                 <h4><i class="icon-arrow-left52 mr-2"></i> <span class="font-weight-semibold">Cityfom</span> -
-                    Categories</h4>
+                    Coupons</h4>
                 <a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
             </div>
 
             <div class="header-elements d-none">
                 <div class="d-flex justify-content-center">
-                    <a href="{{route('admin.category.create')}}" class="btn btn-outline-success float-right"><i
+                    <a href="{{route('admin.coupon.create')}}" class="btn btn-outline-success float-right"><i
                             class="icon-plus2"></i> Add New</a>
                 </div>
             </div>
@@ -23,7 +23,7 @@
             <div class="d-flex">
                 <div class="breadcrumb">
                     <a href="{{ route('admin.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
-                    <span class="breadcrumb-item active">Categories</span>
+                    <span class="breadcrumb-item active">Coupons</span>
                 </div>
 
                 <a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
@@ -37,7 +37,7 @@
     <div class="content">
         <div class="card">
             <div class="card-header header-elements-inline">
-                <h5 class="card-title">Search category</h5>
+                <h5 class="card-title">Search coupon</h5>
                 <div class="header-elements">
                     <div class="list-icons">
                         <a class="list-icons-item" data-action="collapse"></a>
@@ -54,9 +54,19 @@
                                    value="{{request('id')}}">
                         </div>
                         <div class="form-group col-sm-3">
-                            <label for="name">{{__('admin.name')}}</label>
-                            <input type="text" class="form-control" name="name" id="name"
-                                   placeholder="{{ __('admin.name') }}" value="{{request('name')}}">
+                            <label for="title">{{__('admin.title')}}</label>
+                            <input type="text" class="form-control" name="title" id="title"
+                                   placeholder="{{ __('admin.title') }}" value="{{request('title')}}">
+                        </div>
+                        <div class="form-group col-sm-3">
+                            <label for="store_id">{{__('admin.store')}}</label>
+                            <select name="store_id" class="select-search" id="store_id">
+                                <option value="">{{ __('admin.all') }}</option>
+                                @foreach($stores as $store)
+                                    <option
+                                        {{ request('store_id') == $store->id ? 'selected' : '' }}  value="{{ $store->id }}">{{ $store->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="form-group col-sm-3">
                             <label for="status">{{__('admin.status')}}</label>
@@ -68,19 +78,9 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="form-group col-sm-3">
-                            <label for="filter_type">{{__('admin.filter_type')}}</label>
-                            <select name="filter_type" class="select" id="filter_type">
-                                <option value="">{{ __('admin.all') }}</option>
-                                @foreach($filterType as $filterTypeKey => $filterTypeVal)
-                                    <option
-                                        {{ request('filter_type') == $filterTypeKey ? 'selected' : '' }}  value="{{ $filterTypeKey }}">{{ $filterTypeVal }}</option>
-                                @endforeach
-                            </select>
-                        </div>
                         <div class="col-sm-12">
                             <x-search/>
-                            <x-showall route="admin.category.index"/>
+                            <x-showall route="admin.coupon.index"/>
                             <x-clear/>
                         </div>
                     </div>
@@ -91,41 +91,28 @@
     @include('admin.particles._sessionmessage')
     <!-- Basic table -->
         <a class="btn btn-info legitRipple col-md-2 mr-2 mb-2"
-           href="{{ route('admin.category.index',['store_count' => $storeCount == 'ASC' ? 'DESC' : 'ASC']) }}">
-            {!! $storeCount == 'ASC' ? "<i class='icon-arrow-up-left2'></i>" : "<i class='icon-arrow-down-left2'></i>" !!}
-            Sorting by store count
+           href="{{ route('admin.coupon.index',['redeem_count' => $redeemCount == 'ASC' ? 'DESC' : 'ASC']) }}">
+            {!! $redeemCount == 'ASC' ? "<i class='icon-arrow-up-left2'></i>" : "<i class='icon-arrow-down-left2'></i>" !!}
+            Sorting by redeem count
         </a>
         <div class="card" style="zoom: 1;">
             <div class="card-header row">
-                <div class="col-md-3 mr-1 mb-2 border p-1 rounded">
-                    Filter type: <br />
-                    <button class="btn btn-success filter_all col-md-5" data-type="1"
-                            data-url="{{ url('filterMultipleCategory') }}">
-                        Yes Selected
-                    </button>
-
-                    <button class="btn btn-warning filter_all col-md-5" data-type="2"
-                            data-url="{{ url('filterMultipleCategory') }}">
-                        No Selected
-                    </button>
-                </div>
-
                 <div class="col-md-4 mr-1 mb-2 border p-1 rounded">
                     Status: <br />
                     <button class="btn btn-success status_all col-md-5" data-type="1"
-                            data-url="{{ url('statusMultipleCategory') }}">
+                            data-url="{{ url('statusMultipleCoupon') }}">
                         Enable Selected
                     </button>
 
                     <button class="btn btn-warning status_all col-md-5" data-type="2"
-                            data-url="{{ url('statusMultipleCategory') }}">
+                            data-url="{{ url('statusMultipleCoupon') }}">
                         Disable Selected
                     </button>
                 </div>
 
                 <div class="col-md-3 mb-2 float-right text-right">
                     <button class="btn btn-danger delete_all"
-                            data-url="{{ url('destroyMultipleCategory') }}
+                            data-url="{{ url('destroyMultipleCoupon') }}
                                 ">Delete Selected
                     </button>
                 </div>
@@ -138,35 +125,36 @@
                     <tr>
                         <th><input type="checkbox" id="master"></th>
                         <th>#</th>
-                        <th>Name (EN)</th>
-                        <th>Name (AZ)</th>
-                        <th>Name (ES)</th>
-                        <th>Name (RU)</th>
-                        <th>Icon</th>
-                        <th>Store Count</th>
+                        <th>Title</th>
+                        <th>Store</th>
+                        <th>Discount</th>
+                        <th>Valid from</th>
+                        <th>Valid to</th>
+                        <th>Image</th>
+                        <th>Redeem Count</th>
                         <th>Status</th>
-                        <th>Filter</th>
                         <th class="text-center"><i class="icon-menu7"></i></th>
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($categories as $category)
-                        <tr id="tr_{{$category->id}}">
-                            <td><input type="checkbox" class="sub_chk" data-id="{{$category->id}}"></td>
-                            <td>{{ $category->id }}</td>
-                            <td>{{ $category->name_en }}</td>
-                            <td>{{ $category->name_az }}</td>
-                            <td>{{ $category->name_es }}</td>
-                            <td>{{ $category->name_ru }}</td>
+                    @foreach($coupons as $coupon)
+                        <tr id="tr_{{$coupon->id}}">
+                            <td><input type="checkbox" class="sub_chk" data-id="{{$coupon->id}}"></td>
+                            <td>{{ $coupon->id }}</td>
+                            <td>{{ $coupon->title }}</td>
+                            <td>{{ $coupon->s_name }}</td>
+                            <td>{{ $coupon->discount }} %</td>
+                            <td>{{ $coupon->valid_from }}</td>
+                            <td>{{ $coupon->valid_to }}</td>
                             <td>
                                 @php
-                                    if($category->icon !== null)
+                                    if($coupon->image !== null)
                                     {
-                                        $explodeIcon = explode(".", $category->icon);
-                                        $iconType = end($explodeIcon);
-                                        if(in_array(strtolower($iconType), ['jpg', 'jpeg', 'png', 'ico']));
+                                        $explodeImage = explode(".", $coupon->image);
+                                        $imageType = end($explodeImage);
+                                        if(in_array(strtolower($imageType), ['jpg', 'jpeg', 'png']));
 
-                                        echo '<a href="javascript:void(0);" class="pop"><img src="'.asset("/uploads/categories/".$category->icon).'" style="max-width: 100px; max-height: 100px;"/></a>';
+                                        echo '<a href="javascript:void(0);" class="pop"><img src="'.asset("/uploads/coupons/".$coupon->image).'" style="max-width: 100px; max-height: 100px;"/></a>';
                                     }
                                 @endphp
                                 <div class="modal fade" id="imagemodal" tabindex="-1" role="dialog"
@@ -184,27 +172,19 @@
                                     </div>
                                 </div>
                             </td>
-                            <td>{{ $category->store_count }}</td>
+                            <td>{{ $coupon->redeem_count }}</td>
                             <td>
-                                <select name="status" id="status" data-category-id="{{ $category->id }}">
+                                <select name="status" id="status" data-coupon-id="{{ $coupon->id }}">
                                     @foreach($status as $statusKey => $statusVal)
                                         <option
-                                            {{ $statusKey == $category->status ? 'selected': '' }} value="{{ $statusKey }}">{{ $statusVal }}</option>
-                                    @endforeach
-                                </select>
-                            </td>
-                            <td>
-                                <select name="filter_type" id="filter_type" data-category-id="{{ $category->id }}">
-                                    @foreach($filterType as $filterTypeKey => $filterTypeVal)
-                                        <option
-                                            {{ $filterTypeKey == $category->filter ? 'selected': '' }} value="{{ $filterTypeKey }}">{{ $filterTypeVal }}</option>
+                                            {{ $statusKey == $coupon->status ? 'selected': '' }} value="{{ $statusKey }}">{{ $statusVal }}</option>
                                     @endforeach
                                 </select>
                             </td>
                             <td class="text-center">
                                 <div class="btn-group">
-                                    <x-edit route="admin.category.edit" :id="$category->id"/>
-                                    <x-delete route="admin.category.destroy" :id="$category->id"/>
+                                    <x-edit route="admin.coupon.edit" :id="$coupon->id"/>
+                                    <x-delete route="admin.coupon.destroy" :id="$coupon->id"/>
                                 </div>
                             </td>
                         </tr>
@@ -214,10 +194,10 @@
             </div>
 
             <div class="card-footer bg-white d-flex justify-content-between align-items-center">
-                {{ $categories->links('pagination::bootstrap-4') }}
-                <span class="text-muted">{{ ($categories->currentPage() * config('global.pagination_count') >= $categories->total()) ? ($categories->currentPage() * config('global.pagination_count') - config('global.pagination_count')) ." - ". $categories->total() : ($categories->currentPage() * config('global.pagination_count') - config('global.pagination_count')) ." - ". $categories->currentPage() * config('global.pagination_count') }}
+                {{ $coupons->links('pagination::bootstrap-4') }}
+                <span class="text-muted">{{ ($coupons->currentPage() * config('global.pagination_count') >= $coupons->total()) ? ($coupons->currentPage() * config('global.pagination_count') - config('global.pagination_count')) ." - ". $coupons->total() : ($coupon->currentPage() * config('global.pagination_count') - config('global.pagination_count')) ." - ". $coupons->currentPage() * config('global.pagination_count') }}
                         /
-                        {{ $categories->total() }}
+                        {{ $coupons->total() }}
                         </span>
             </div>
         </div>
@@ -238,12 +218,12 @@
         }).on('change', function () {
             let $this = $(this);
             let status = $this.val();
-            let category_id = $this.data('category-id');
+            let coupon_id = $this.data('coupon-id');
 
-            if (status > 0 && category_id > 0) {
+            if (status > 0 && coupon_id > 0) {
                 swal.fire({
                     title: 'Alert',
-                    text: "Do you want change status this category!",
+                    text: "Do you want change status this coupon!",
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Yes',
@@ -254,8 +234,8 @@
                 }).then(function (result) {
                     if (result.value) {
                         $.ajax({
-                            url: "{{ route('admin.category.changeCategoryStatus') }}",
-                            data: {status: status, category_id: category_id},
+                            url: "{{ route('admin.coupon.changeCouponStatus') }}",
+                            data: {status: status, coupon_id: coupon_id},
                             method: 'PUT',
                             dataType: 'json',
                             headers: {
@@ -266,72 +246,13 @@
                                 if (data.response.status == 'OK') {
                                     swal.fire({
                                         title: 'Success',
-                                        text: "This category's status was changed successfully!",
+                                        text: "This coupon's status was changed successfully!",
                                         type: 'success',
                                         confirmButtonText: 'OK',
                                         confirmButtonClass: 'btn btn-success',
                                         buttonsStyling: false
                                     });
                                     $($this).val(data.response.status_type);
-                                } else {
-                                    swal.fire({
-                                        title: 'Error',
-                                        text: "System Error",
-                                        type: 'warning',
-                                        confirmButtonText: 'OK',
-                                        confirmButtonClass: 'btn btn-danger',
-                                        buttonsStyling: false
-                                    });
-                                }
-                            }
-                        });
-                    } else {
-                        $($this).val(previous);
-                    }
-                });
-            }
-        });
-
-        $('select#filter_type').focus(function () {
-            previous = $(this).val();
-        }).on('change', function () {
-            let $this = $(this);
-            let filter_type = $this.val();
-            let category_id = $this.data('category-id');
-
-            if (filter_type > 0 && category_id > 0) {
-                swal.fire({
-                    title: 'Alert',
-                    text: "Do you want change filter type this category!",
-                    type: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes',
-                    cancelButtonText: 'No!',
-                    confirmButtonClass: 'btn btn-success',
-                    cancelButtonClass: 'btn btn-danger',
-                    buttonsStyling: false
-                }).then(function (result) {
-                    if (result.value) {
-                        $.ajax({
-                            url: "{{ route('admin.category.changeCategoryFilterType') }}",
-                            data: {filter_type: filter_type, category_id: category_id},
-                            method: 'PUT',
-                            dataType: 'json',
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
-                            async: false,
-                            success: function (data) {
-                                if (data.response.status == 'OK') {
-                                    swal.fire({
-                                        title: 'Success',
-                                        text: "This category's filter type was changed successfully!",
-                                        type: 'success',
-                                        confirmButtonText: 'OK',
-                                        confirmButtonClass: 'btn btn-success',
-                                        buttonsStyling: false
-                                    });
-                                    $($this).val(data.response.filter_type);
                                 } else {
                                     swal.fire({
                                         title: 'Error',
@@ -391,7 +312,7 @@
                         let join_selected_values = allVals.join(",");
 
                         $.ajax({
-                            url: "{{ route('admin.category.destroyMultipleCategory') }}",
+                            url: "{{ route('admin.coupon.destroyMultipleCoupon') }}",
                             data: {ids: join_selected_values},
                             method: 'DELETE',
                             dataType: 'json',
@@ -434,78 +355,6 @@
             }
         });
 
-        $('.filter_all').on('click', function (e) {
-
-            let allVals = [];
-            let filter_type = $(this).attr('data-type');
-            $(".sub_chk:checked").each(function () {
-                allVals.push($(this).attr('data-id'));
-            });
-
-            if (allVals.length <= 0) {
-                swal.fire({
-                    title: 'Error',
-                    text: "Please select row.",
-                    type: 'warning',
-                    confirmButtonText: 'OK',
-                    confirmButtonClass: 'btn btn-danger',
-                    buttonsStyling: false
-                });
-            } else {
-                swal.fire({
-                    title: 'Alert',
-                    text: "Are you sure you want change filter type these rows?",
-                    type: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes',
-                    cancelButtonText: 'No!',
-                    confirmButtonClass: 'btn btn-success',
-                    cancelButtonClass: 'btn btn-danger',
-                    buttonsStyling: false
-                }).then(function (result) {
-                    if (result.value) {
-                        let join_selected_values = allVals.join(",");
-
-                        $.ajax({
-                            url: "{{ route('admin.category.filterMultipleCategory') }}",
-                            data: {ids: join_selected_values, filter_type: filter_type},
-                            method: 'PUT',
-                            dataType: 'json',
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
-                            async: false,
-                            success: function (data) {
-                                if (data.response.status == 'OK') {
-                                    $(".sub_chk:checked").each(function () {
-                                        $(this).parents("tr").find('select#filter_type').val(data.response.filter_type);
-                                    });
-                                    swal.fire({
-                                        title: 'Success',
-                                        text: "These rows was changed filter type successfully!",
-                                        type: 'success',
-                                        confirmButtonText: 'OK',
-                                        confirmButtonClass: 'btn btn-success',
-                                        buttonsStyling: false
-                                    });
-
-                                } else {
-                                    swal.fire({
-                                        title: 'Error',
-                                        text: "System Error",
-                                        type: 'warning',
-                                        confirmButtonText: 'OK',
-                                        confirmButtonClass: 'btn btn-danger',
-                                        buttonsStyling: false
-                                    });
-                                }
-                            }
-                        });
-                    }
-                });
-            }
-        });
-
         $('.status_all').on('click', function (e) {
 
             let allVals = [];
@@ -539,7 +388,7 @@
                         let join_selected_values = allVals.join(",");
 
                         $.ajax({
-                            url: "{{ route('admin.category.statusMultipleCategory') }}",
+                            url: "{{ route('admin.coupon.statusMultipleCoupon') }}",
                             data: {ids: join_selected_values, status: status},
                             method: 'PUT',
                             dataType: 'json',

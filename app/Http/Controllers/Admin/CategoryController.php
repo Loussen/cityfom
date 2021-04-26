@@ -6,10 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Categories;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
@@ -40,7 +37,7 @@ class CategoryController extends Controller
             $filterId = intval(request('id'));
 
             if($filterId > 0)
-                $query->whereRaw('id = '.request('id'));
+                $query->whereRaw('c.id = '.request('id'));
         }
 
         if(request('name')) {
@@ -95,8 +92,6 @@ class CategoryController extends Controller
      */
     public function store(CategoryRequest $request)
     {
-        $category = new Categories();
-
         $iconName = null;
         if($request->hasFile('icon') && $request->icon != '') {
             $icon = $request->file('icon');
@@ -111,7 +106,7 @@ class CategoryController extends Controller
             }
             else
             {
-                return redirect()->route('admin.category.create')->with(_sessionmessage(null, "Yalnız şəkil formatı (jpg,jpeg,png)", 'warning', true));
+                return redirect()->route('admin.category.create')->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png,ico)", 'warning', true));
             }
         }
 
@@ -177,7 +172,7 @@ class CategoryController extends Controller
             }
             else
             {
-                return redirect()->route('admin.category.edit', [$id])->with(_sessionmessage(null, "Yalnız şəkil formatı (jpg,jpeg,png)", 'warning', true));
+                return redirect()->route('admin.category.edit', [$id])->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png,ico)", 'warning', true));
             }
         }
 

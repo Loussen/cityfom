@@ -90,7 +90,8 @@
                         <div class="form-group col-sm-6">
                             <label class="font-weight-semibold @error('icon') text-danger @enderror"
                                    for="document">{{__('admin.icon')}}</label>
-                            <input type="file" name="icon" class="form-control"/>
+                            <input type="file" name="icon" class="form-input-styled" data-fouc />
+                            <span class="form-text text-muted">Accepted formats: jpg, jpeg, png, ico. Max file size 2Mb</span>
                             <?php
                             if($category->icon !== null)
                             {
