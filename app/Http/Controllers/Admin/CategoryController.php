@@ -48,14 +48,14 @@ class CategoryController extends Controller
             $filterStatus = intval(request('status'));
 
             if($filterStatus > 0)
-                $query->whereRaw('status = '.request('status'));
+                $query->whereRaw('status = '.$filterStatus);
         }
 
         if(request('filter_type') && in_array(request('filter_type'),[1,2])) {
             $filterType = intval(request('filter_type'));
 
             if($filterType > 0)
-                $query->whereRaw('filter = '.request('filter_type'));
+                $query->whereRaw('filter = '.$filterType);
         }
 
         $storeCount = 'ASC';

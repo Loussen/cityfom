@@ -3,13 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CouponRequest;
-use App\Models\Coupons;
 use App\Models\Stores;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class CouponController extends Controller
+class RatingReviewController extends Controller
 {
     public function __construct()
     {
@@ -27,23 +25,17 @@ class CouponController extends Controller
      */
     public function index()
     {
-        $query = DB::table('coupons AS c')
-            ->selectRaw('c.*, sum((case when cr.coupon_id is not null then 1 else 0 end)) AS redeem_count, s.name AS s_name')
-            ->leftJoin('coupon_redeem as cr', 'cr.coupon_id','=','c.id')
-            ->join('stores AS s','s.id','=','c.store_id')
-            ->groupByRaw('c.id');
+        $query = DB::table('rate_reviews AS rr')
+            ->selectRaw('rr.*, rr.id AS rate_review_id, sum((case when rl.review_id is not null then 1 else 0 end)) AS like_count, s.name AS store_name, au.firstname AS firstname, au.lastname AS lastname')
+            ->leftJoin('review_likes as rl', 'rl.review_id','=','rr.id')
+            ->leftJoin('app_users as au', 'au.id','=','rr.user_id')
+            ->join('stores AS s','s.id','=','rr.store_id')
+            ->groupByRaw('rr.id');
 
         $pageCount = config('global.pagination_count');
 
-        if(request('id')) {
-            $filterId = intval(request('id'));
-
-            if($filterId > 0)
-                $query->whereRaw('c.id = '.request('id'));
-        }
-
-        if(request('title')) {
-            $query->whereRaw('c.title LIKE "%'.request('title').'%"');
+        if(request('review')) {
+            $query->whereRaw('rr.review LIKE "%'.request('review').'%"');
         }
 
         if(request('store_id')) {
@@ -54,31 +46,31 @@ class CouponController extends Controller
                 $storeExists = Stores::find($storeId);
 
                 if($storeExists)
-                    $query->whereRaw('c.store_id = '.$storeId);
+                    $query->whereRaw('rr.store_id = '.$storeId);
             }
         }
 
-        if(request('status') && in_array(request('status'),[1,2])) {
-            $filterStatus = intval(request('status'));
+        if(request('status') && in_array(request('status'),[1,2,3])) {
+            $status = intval(request('status'));
 
-            if($filterStatus > 0)
-                $query->whereRaw('c.status = '.$filterStatus);
+            if($status > 0)
+                $query->whereRaw('rr.status = '.request('status'));
         }
 
-        $redeemCount = 'ASC';
-        if(request('redeem_count') && in_array(request('redeem_count'),['ASC','DESC'])) {
-            $query->orderBy('redeem_count',request('redeem_count'));
+        $likeCount = 'ASC';
+        if(request('like_count') && in_array(request('like_count'),['ASC','DESC'])) {
+            $query->orderBy('like_count',request('like_count'));
 
-            $redeemCount = request('redeem_count');
+            $likeCount = request('like_count');
         }
 
         $query = $query->paginate($pageCount);
-        $coupons = $query->appends(request()->query());
+        $ratingReviews = $query->appends(request()->query());
 
         $stores = Stores::all();
-        $status = config('global.status');
+        $ratingReviewstatus = config('global.rating_review_status');
 
-        return view('admin.pages.coupon.index', compact('coupons','stores','redeemCount','status'));
+        return view('admin.pages.rating_review.index', compact('ratingReviews','stores','ratingReviewstatus','likeCount'));
     }
 
     /**

@@ -26,10 +26,8 @@ Route::group(['as' => 'admin.', 'prefix' => 'admin', 'middleware' => 'adminauth'
     // Admin Dashboard
     Route::get('dashboard','DashboardController@dashboard')->name('dashboard');
 
-    Route::resource('category', 'CategoryController');
-    Route::resource('coupon', 'CouponController');
-
     // Categories
+    Route::resource('category', 'CategoryController');
     Route::put('changeCategoryStatus', 'CategoryController@changeCategoryStatus')->name('category.changeCategoryStatus');
     Route::put('changeCategoryFilterType', 'CategoryController@changeCategoryFilterType')->name('category.changeCategoryFilterType');
     Route::delete('destroyMultipleCategory', 'CategoryController@destroyMultipleCategory')->name('category.destroyMultipleCategory');
@@ -37,9 +35,16 @@ Route::group(['as' => 'admin.', 'prefix' => 'admin', 'middleware' => 'adminauth'
     Route::put('statusMultipleCategory', 'CategoryController@statusMultipleCategory')->name('category.statusMultipleCategory');
 
     // Coupons
+    Route::resource('coupon', 'CouponController');
     Route::put('changeCouponStatus', 'CouponController@changeCouponStatus')->name('coupon.changeCouponStatus');
     Route::delete('destroyMultipleCoupon', 'CouponController@destroyMultipleCoupon')->name('coupon.destroyMultipleCoupon');
     Route::put('statusMultipleCoupon', 'CouponController@statusMultipleCoupon')->name('coupon.statusMultipleCoupon');
+
+    // Rating&Reviews
+    Route::resource('rating_review', 'RatingReviewController');
+    Route::put('changeRatingReviewStatus', 'RatingReviewController@changeRatingReviewStatus')->name('rating_review.changeRatingReviewStatus');
+    Route::delete('destroyMultipleRatingReview', 'RatingReviewController@destroyMultipleRatingReview')->name('rating_review.destroyMultipleRatingReview');
+    Route::put('statusMultipleRatingReview', 'CouponController@statusMultipleRatingReview')->name('rating_review.statusMultipleRatingReview');
 
 });
 
