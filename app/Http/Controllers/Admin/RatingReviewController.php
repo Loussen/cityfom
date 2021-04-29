@@ -105,7 +105,16 @@ class RatingReviewController extends Controller
      */
     public function show($id)
     {
+        $rateReview = DB::table('rate_reviews AS rr')
+            ->selectRaw('rr.*, rr.id AS rate_review_id, rr.comment, sum((case when rl.review_id is not null then 1 else 0 end)) AS like_count, s.name AS store_name, au.firstname AS firstname, au.lastname AS lastname, GROUP_CONCAT(rri.image SEPARATOR ",") AS rate_review_images, GROUP_CONCAT(rri.id SEPARATOR ",") AS rate_review_image_id')
+            ->leftJoin('review_likes as rl', 'rl.review_id','=','rr.id')
+            ->leftJoin('app_users as au', 'au.id','=','rr.user_id')
+            ->leftJoin('rate_review_images as rri', 'rri.rate_review_id','=','rr.id')
+            ->join('stores AS s','s.id','=','rr.store_id')
+            ->where('rr.id','=',$id)
+            ->groupByRaw('rr.id')->first();
 
+        return view('admin.pages.rating_review.show', compact('rateReview'));
     }
 
     /**
@@ -169,6 +178,19 @@ class RatingReviewController extends Controller
 
         DB::table("rate_review_images")->whereIn('rate_review_id',$explodeIds)->delete();
         DB::table("rate_reviews")->whereIn('id',$explodeIds)->delete();
+        $response = ['status' => 'OK'];
+        return response()->json(['response' => $response]);
+    }
+
+    public function destroyImage(Request $request)
+    {
+        $imageId = $request->image_id;
+
+        $image = RateReviewImages::where('id',$imageId)->first();
+
+        delete_old_files(public_path().'/uploads/rating_reviews/'.$image->image);
+
+        $image->delete();
         $response = ['status' => 'OK'];
         return response()->json(['response' => $response]);
     }

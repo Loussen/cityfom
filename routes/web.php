@@ -45,6 +45,7 @@ Route::group(['as' => 'admin.', 'prefix' => 'admin', 'middleware' => 'adminauth'
     Route::put('changeRatingReviewStatus', 'RatingReviewController@changeRatingReviewStatus')->name('rating_review.changeRatingReviewStatus');
     Route::delete('destroyMultipleRatingReview', 'RatingReviewController@destroyMultipleRatingReview')->name('rating_review.destroyMultipleRatingReview');
     Route::put('statusMultipleRatingReview', 'RatingReviewController@statusMultipleRatingReview')->name('rating_review.statusMultipleRatingReview');
+    Route::delete('destroyImage', 'RatingReviewController@destroyImage')->name('rating_review.destroyImage');
 
 });
 
