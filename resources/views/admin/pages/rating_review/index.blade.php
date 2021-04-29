@@ -11,12 +11,12 @@
                 <a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
             </div>
 
-            <div class="header-elements d-none">
-                <div class="d-flex justify-content-center">
-                    <a href="{{route('admin.rating_review.create')}}" class="btn btn-outline-success float-right"><i
-                            class="icon-plus2"></i> Add New</a>
-                </div>
-            </div>
+{{--            <div class="header-elements d-none">--}}
+{{--                <div class="d-flex justify-content-center">--}}
+{{--                    <a href="{{route('admin.rating_review.create')}}" class="btn btn-outline-success float-right"><i--}}
+{{--                            class="icon-plus2"></i> Add New</a>--}}
+{{--                </div>--}}
+{{--            </div>--}}
         </div>
 
         <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
@@ -125,11 +125,11 @@
                     <tr>
                         <th><input type="checkbox" id="master"></th>
                         <th>#</th>
-                        <th>Username</th>
+                        <th style="width: 10%;">Username</th>
                         <th>Store</th>
-                        <th>Rating</th>
-                        <th>Review</th>
-                        <th>User added images</th>
+                        <th style="width: 10%;">Rating</th>
+                        <th style="width: 15%;">Review</th>
+                        <th style="width: 15%;">User added images</th>
                         <th>Like count</th>
                         <th>Owner comment</th>
                         <th>Date</th>
@@ -141,6 +141,7 @@
                     @foreach($ratingReviews as $ratingReview)
                         <tr id="tr_{{$ratingReview->rate_review_id}}">
                             <td><input type="checkbox" class="sub_chk" data-id="{{$ratingReview->rate_review_id}}"></td>
+                            <td>{{ $ratingReview->id }}</td>
                             <td>{{ $ratingReview->firstname." ".$ratingReview->lastname }}</td>
                             <td>{{ $ratingReview->store_name }}</td>
                             <td>
@@ -153,38 +154,45 @@
                                     @endfor
                                 @endif
                             </td>
-                            <td>{{ $ratingReview->store_name }} %</td>
-                            <td>{{ $ratingReview->store_name }}</td>
-                            <td>{{ $ratingReview->store_name }}</td>
-{{--                            <td>--}}
-{{--                                @php--}}
-{{--                                    if($coupon->image !== null)--}}
-{{--                                    {--}}
-{{--                                        $explodeImage = explode(".", $coupon->image);--}}
-{{--                                        $imageType = end($explodeImage);--}}
-{{--                                        if(in_array(strtolower($imageType), ['jpg', 'jpeg', 'png']));--}}
-
-{{--                                        echo '<a href="javascript:void(0);" class="pop"><img src="'.asset("/uploads/coupons/".$coupon->image).'" style="max-width: 100px; max-height: 100px;"/></a>';--}}
-{{--                                    }--}}
-{{--                                @endphp--}}
-{{--                                <div class="modal fade" id="imagemodal" tabindex="-1" role="dialog"--}}
-{{--                                     aria-labelledby="myModalLabel" aria-hidden="true">--}}
-{{--                                    <div class="modal-dialog" data-dismiss="modal">--}}
-{{--                                        <div class="modal-content">--}}
-{{--                                            <div class="modal-body">--}}
-{{--                                                <button type="button" class="close" data-dismiss="modal"><span--}}
-{{--                                                        aria-hidden="true">&times;</span><span--}}
-{{--                                                        class="sr-only">Close</span>--}}
-{{--                                                </button>--}}
-{{--                                                <img src="" class="imagepreview" style="width: 100%;">--}}
-{{--                                            </div>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
-{{--                            </td>--}}
-                            <td>{{ $ratingReview->store_name }}</td>
+                            <td>{{ $ratingReview->review ? mb_substr($ratingReview->review,0,100,'UTF-8')." ..." : " - " }}</td>
                             <td>
-                                <select name="status" id="status" data-coupon-id="{{ $ratingReview->rate_review_id }}">
+                                @php
+                                    if($ratingReview->rate_review_images !== null)
+                                    {
+                                        $explodeImages = explode(",", $ratingReview->rate_review_images);
+
+                                        foreach ($explodeImages as $images)
+                                        {
+                                            $explodeImage = explode(".", $images);
+                                            $imageType = end($explodeImage);
+                                            if(in_array(strtolower($imageType), ['jpg', 'jpeg', 'png']))
+                                            {
+                                                echo '<a href="javascript:void(0);" class="pop" style="margin: 5px 5px; display: inline-block;"><img src="'.asset("/uploads/rating_reviews/".$images).'" style="width: 70px; height: 70px;" class="rounded"/></a> ';
+                                            }
+                                        }
+                                    }
+                                @endphp
+                                <div class="modal fade" id="imagemodal" tabindex="-1" role="dialog"
+                                     aria-labelledby="myModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" data-dismiss="modal">
+                                        <div class="modal-content">
+                                            <div class="modal-body">
+                                                <button type="button" class="close" data-dismiss="modal"><span
+                                                        aria-hidden="true">&times;</span><span
+                                                        class="sr-only">Close</span>
+                                                </button>
+                                                <img src="" class="imagepreview" style="width: 100%;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ $ratingReview->like_count }}</td>
+                            <td>{{ $ratingReview->comment !== null ? 'Yes' : 'No' }}</td>
+
+                            <td>{{ $ratingReview->created_at }}</td>
+                            <td>
+                                <select name="status" id="status" data-rate-review-id="{{ $ratingReview->rate_review_id }}">
                                     @foreach($ratingReviewstatus as $statusKey => $statusVal)
                                         <option
                                             {{ $statusKey == $ratingReview->status ? 'selected': '' }} value="{{ $statusKey }}">{{ $statusVal }}</option>
@@ -228,12 +236,12 @@
         }).on('change', function () {
             let $this = $(this);
             let status = $this.val();
-            let coupon_id = $this.data('coupon-id');
+            let rate_review_id = $this.data('rate-review-id');
 
-            if (status > 0 && coupon_id > 0) {
+            if (status > 0 && rate_review_id > 0) {
                 swal.fire({
                     title: 'Alert',
-                    text: "Do you want change status this coupon!",
+                    text: "Do you want change status this rate review!",
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Yes',
@@ -244,8 +252,8 @@
                 }).then(function (result) {
                     if (result.value) {
                         $.ajax({
-                            url: "{{ route('admin.coupon.changeCouponStatus') }}",
-                            data: {status: status, coupon_id: coupon_id},
+                            url: "{{ route('admin.rating_review.changeRatingReviewStatus') }}",
+                            data: {status: status, rate_review_id: rate_review_id},
                             method: 'PUT',
                             dataType: 'json',
                             headers: {
@@ -256,7 +264,7 @@
                                 if (data.response.status == 'OK') {
                                     swal.fire({
                                         title: 'Success',
-                                        text: "This coupon's status was changed successfully!",
+                                        text: "This rate review's status was changed successfully!",
                                         type: 'success',
                                         confirmButtonText: 'OK',
                                         confirmButtonClass: 'btn btn-success',
@@ -322,7 +330,7 @@
                         let join_selected_values = allVals.join(",");
 
                         $.ajax({
-                            url: "{{ route('admin.coupon.destroyMultipleCoupon') }}",
+                            url: "{{ route('admin.rating_review.destroyMultipleRatingReview') }}",
                             data: {ids: join_selected_values},
                             method: 'DELETE',
                             dataType: 'json',
@@ -398,7 +406,7 @@
                         let join_selected_values = allVals.join(",");
 
                         $.ajax({
-                            url: "{{ route('admin.coupon.statusMultipleCoupon') }}",
+                            url: "{{ route('admin.rating_review.statusMultipleRatingReview') }}",
                             data: {ids: join_selected_values, status: status},
                             method: 'PUT',
                             dataType: 'json',

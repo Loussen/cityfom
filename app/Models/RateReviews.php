@@ -17,6 +17,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class RateReviews extends Model
 {
+    protected $table = 'rate_reviews';
+    public $timestamps = true;
     /**
      * @var array
      */

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\RateReviewImages;
+use App\Models\RateReviews;
 use App\Models\Stores;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -26,9 +28,10 @@ class RatingReviewController extends Controller
     public function index()
     {
         $query = DB::table('rate_reviews AS rr')
-            ->selectRaw('rr.*, rr.id AS rate_review_id, sum((case when rl.review_id is not null then 1 else 0 end)) AS like_count, s.name AS store_name, au.firstname AS firstname, au.lastname AS lastname')
+            ->selectRaw('rr.*, rr.id AS rate_review_id, sum((case when rl.review_id is not null then 1 else 0 end)) AS like_count, s.name AS store_name, au.firstname AS firstname, au.lastname AS lastname, GROUP_CONCAT(rri.image SEPARATOR ",") AS rate_review_images')
             ->leftJoin('review_likes as rl', 'rl.review_id','=','rr.id')
             ->leftJoin('app_users as au', 'au.id','=','rr.user_id')
+            ->leftJoin('rate_review_images as rri', 'rri.rate_review_id','=','rr.id')
             ->join('stores AS s','s.id','=','rr.store_id')
             ->groupByRaw('rr.id');
 
@@ -80,9 +83,7 @@ class RatingReviewController extends Controller
      */
     public function create()
     {
-        $stores = Stores::all();
-
-        return view('admin.pages.coupon.create',compact('stores'));
+        return redirect()->route('admin.rating_review.index');
     }
 
     /**
@@ -91,52 +92,9 @@ class RatingReviewController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(CouponRequest $request)
+    public function store()
     {
-        $imageName = null;
-        if($request->hasFile('image') && $request->image != '') {
-            $image = $request->file('image');
-            $imageName = time()."_".$image->getClientOriginalName();
-
-            $imageType = explode(".",$imageName);
-            $imageType = end($imageType);
-
-            if(in_array(strtolower($imageType),['jpg','jpeg','png']))
-            {
-                $image->move(public_path().'/uploads/coupons/',$imageName);
-            }
-            else
-            {
-                return redirect()->route('admin.coupon.create')->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png)", 'warning', true));
-            }
-        }
-
-        $validFromTo = $request->valid_from_to;
-        $validExplode = explode("-",$validFromTo);
-        $validFrom = date("Y-m-d", strtotime($validExplode[0]));
-        $validTo = date("Y-m-d", strtotime($validExplode[1]));
-
-        $couponData = [
-            'title' => $request->title,
-            'store_id' => $request->store_id,
-            'description' => $request->description,
-            'discount' => $request->discount,
-            'image' => $imageName,
-            'valid_from' => $validFrom,
-            'valid_to' => $validTo,
-        ];
-
-        $couponId = Coupons::insertGetId($couponData);
-
-        if ($couponId > 0) {
-            $generateCouponCode = $this->generatecouponcode();
-            DB::table("coupons")->where('id','=',$couponId)
-                ->update(['code' => $generateCouponCode.$couponId]);
-
-            return redirect()->route('admin.coupon.index')->with(_sessionmessage());
-        } else {
-            return redirect()->route('admin.coupon.create')->with(_sessionmessage(null, "Coupon code cannot create", 'warning', true));
-        }
+        return redirect()->route('admin.rating_review.index');
     }
 
     /**
@@ -153,14 +111,12 @@ class RatingReviewController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param Coupons $coupon
+     * @param RateReviews $rateReview
      * @return \Illuminate\Http\Response
      */
-    public function edit(Coupons $coupon)
+    public function edit()
     {
-        $stores = Stores::all();
-
-        return view('admin.pages.coupon.edit', compact('coupon','stores'));
+        return redirect()->route('admin.rating_review.index');
     }
 
     /**
@@ -170,81 +126,54 @@ class RatingReviewController extends Controller
      * @param int $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(CouponRequest $request, $id)
+    public function update()
     {
-        $coupon = Coupons::find($id);
-
-        $imageName = $coupon->image;
-        if($request->hasFile('image') && $request->image != '') {
-            $image = $request->file('image');
-            $imageName = time()."_".$image->getClientOriginalName();
-
-            $imageType = explode(".",$imageName);
-            $imageType = end($imageType);
-
-            if(in_array(strtolower($imageType),['jpg','jpeg','png']))
-            {
-                $image->move(public_path().'/uploads/coupons/',$imageName);
-
-                delete_old_files(public_path().'/uploads/coupons/'.$coupon->image);
-            }
-            else
-            {
-                return redirect()->route('admin.coupon.edit', [$id])->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png)", 'warning', true));
-            }
-        }
-
-        $validFromTo = $request->valid_from_to;
-        $validExplode = explode("-",$validFromTo);
-        $validFrom = date("Y-m-d", strtotime($validExplode[0]));
-        $validTo = date("Y-m-d", strtotime($validExplode[1]));
-
-        $couponData = [
-            'title' => $request->title,
-            'store_id' => $request->store_id,
-            'description' => $request->description,
-            'discount' => $request->discount,
-            'image' => $imageName,
-            'valid_from' => $validFrom,
-            'valid_to' => $validTo,
-        ];
-
-        $coupon->update($couponData);
-
-        return redirect()->route('admin.coupon.index')->with(_sessionmessage());
+        return redirect()->route('admin.rating_review.index');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param Coupons $coupon
+     * @param RateReviews $ratingReview
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Coupons $coupon)
+    public function destroy(RateReviews $ratingReview)
     {
-        delete_old_files(public_path().'/uploads/coupons/'.$coupon->image);
-        $coupon->delete();
+        $images = RateReviewImages::where('rate_review_id',$ratingReview->id)->get();
+
+        foreach ($images as $image)
+        {
+            delete_old_files(public_path().'/uploads/rating_reviews/'.$image['image']);
+        }
+
+        DB::table("rate_reviews")->where('id',$ratingReview->id)->delete();
+        DB::table("rate_review_images")->where('rate_review_id',$ratingReview->id)->delete();
         $arr = _sessionmessage(null, null, null, true);
         return response($arr);
     }
 
-    public function destroyMultipleCoupon(Request $request)
+    public function destroyMultipleRatingReview(Request $request)
     {
         $ids = $request->ids;
         $explodeIds = explode(",",$ids);
 
         foreach ($explodeIds as $id)
         {
-            $coupon = Coupons::find($id);
-            delete_old_files(public_path().'/uploads/coupons/'.$coupon->image);
+            $images = RateReviewImages::where('rate_review_id',$id)->get();
+
+            foreach ($images as $image)
+            {
+                delete_old_files(public_path().'/uploads/rating_reviews/'.$image['image']);
+            }
         }
 
-        DB::table("coupons")->whereIn('id',$explodeIds)->delete();
+        DB::table("rate_review_images")->whereIn('rate_review_id',$explodeIds)->delete();
+        DB::table("rate_reviews")->whereIn('id',$explodeIds)->delete();
         $response = ['status' => 'OK'];
         return response()->json(['response' => $response]);
     }
 
-    public function statusMultipleCoupon(Request $request)
+    public function statusMultipleRatingReview(Request $request)
     {
         $response = ['status' => 'Fail'];
 
@@ -254,7 +183,7 @@ class RatingReviewController extends Controller
             $explodeIds = explode(",",$ids);
 
             if ($status > 0 && count($explodeIds) > 0) {
-                DB::table("coupons")->whereIn('id',$explodeIds)
+                DB::table("rate_reviews")->whereIn('id',$explodeIds)
                     ->update(['status' => $status]);
 
                 $response = ['status' => 'OK', 'status_type' => $status];
@@ -264,22 +193,22 @@ class RatingReviewController extends Controller
         return response()->json(['response' => $response]);
     }
 
-    public function changeCouponStatus(Request $request)
+    public function changeRatingReviewStatus(Request $request)
     {
         $response = ['status' => 'Fail'];
 
-        if ($request->has('status') && $request->has('coupon_id')) {
+        if ($request->has('status') && $request->has('rate_review_id')) {
             $status = intval($request->status);
-            $couponId = intval($request->coupon_id);
+            $rateReviewId = intval($request->rate_review_id);
 
-            if ($status > 0 && $couponId > 0) {
-                $coupon = Coupons::find($couponId);
+            if ($status > 0 && $rateReviewId > 0) {
+                $rateReview = RateReviews::find($rateReviewId);
 
-                $couponData = [
+                $rateReviewData = [
                     'status' => $status,
                 ];
 
-                $coupon->update($couponData);
+                $rateReview->update($rateReviewData);
 
                 $response = ['status' => 'OK', 'status_type' => $status];
             }

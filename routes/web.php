@@ -44,7 +44,7 @@ Route::group(['as' => 'admin.', 'prefix' => 'admin', 'middleware' => 'adminauth'
     Route::resource('rating_review', 'RatingReviewController');
     Route::put('changeRatingReviewStatus', 'RatingReviewController@changeRatingReviewStatus')->name('rating_review.changeRatingReviewStatus');
     Route::delete('destroyMultipleRatingReview', 'RatingReviewController@destroyMultipleRatingReview')->name('rating_review.destroyMultipleRatingReview');
-    Route::put('statusMultipleRatingReview', 'CouponController@statusMultipleRatingReview')->name('rating_review.statusMultipleRatingReview');
+    Route::put('statusMultipleRatingReview', 'RatingReviewController@statusMultipleRatingReview')->name('rating_review.statusMultipleRatingReview');
 
 });
 
