@@ -38,7 +38,7 @@
                     <div class="form-row">
                         <div class="form-group col-sm-6">
                             <label class="font-weight-semibold @error('title') text-danger @enderror"
-                                   for="name_en">{{__('admin.title')}}</label>
+                                   for="title">{{__('admin.title')}}</label>
                             <div class="form-group-feedback form-group-feedback-right">
                                 <input type="text" name="title" id="title"
                                        class="form-control @error('title') border-danger @enderror"

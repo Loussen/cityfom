@@ -24,8 +24,8 @@
     <!-- /core JS files -->
     <script src="{{asset('admin/global_assets/js/plugins/notifications/sweet_alert.min.js')}}"></script>
     <script src="{{asset('admin/global_assets/js/plugins/forms/selects/select2.min.js')}}"></script>
-    <script src="{{asset('admin/global_assets/js/plugins/editors/ckeditor/ckeditor.js')}}"></script>
-    <script src="{{asset('admin/global_assets/js/demo_pages/editor_ckeditor_default.js')}}"></script>
+{{--    <script src="{{asset('admin/global_assets/js/plugins/editors/ckeditor/ckeditor.js')}}"></script>--}}
+{{--    <script src="{{asset('admin/global_assets/js/demo_pages/editor_ckeditor_default.js')}}"></script>--}}
 
     <script src="{{asset('admin/global_assets/js/plugins/forms/styling/uniform.min.js')}}"></script>
 
@@ -44,6 +44,7 @@
     <script src="{{asset('admin/js/custom.js')}}"></script>
     <script src="{{asset('admin/global_assets/js/demo_pages/form_wizard.js')}}"></script>
     <script src="{{asset('admin/global_assets/js/demo_pages/picker_date.js')}}"></script>
+    <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 

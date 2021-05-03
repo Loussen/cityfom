@@ -85,7 +85,7 @@
 
                                 </div>
                             </div>
-                            @error('name_ru')
+                            @error('valid_from_to')
                             <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
                             @enderror
                         </div>

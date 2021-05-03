@@ -47,6 +47,13 @@ Route::group(['as' => 'admin.', 'prefix' => 'admin', 'middleware' => 'adminauth'
     Route::put('statusMultipleRatingReview', 'RatingReviewController@statusMultipleRatingReview')->name('rating_review.statusMultipleRatingReview');
     Route::delete('destroyImage', 'RatingReviewController@destroyImage')->name('rating_review.destroyImage');
 
+    //Content
+    Route::resource('cms_pages', 'CmsPagesController');
+    Route::put('changeCmsPageStatus', 'CmsPagesController@changeCmsPageStatus')->name('cms_pages.changeCmsPageStatus');
+    Route::put('statusMultipleCmsPage', 'CmsPagesController@statusMultipleCmsPage')->name('cms_pages.statusMultipleCmsPage');
+
+    Route::post('ckeditor_upload', 'CkeditorController@upload')->name('ckeditor.upload');
+
 });
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

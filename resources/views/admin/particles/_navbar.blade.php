@@ -129,6 +129,14 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="{{route('admin.cms_pages.index')}}" class="nav-link legitRipple">
+                        <i class="icon-list"></i>
+                        <span>
+									CMS pages
+								</span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="index.html" class="nav-link legitRipple">
                         <i class="icon-cart"></i>
                         <span>
