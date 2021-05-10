@@ -28,7 +28,7 @@ class RatingReviewController extends Controller
     public function index()
     {
         $query = DB::table('rate_reviews AS rr')
-            ->selectRaw('rr.*, rr.id AS rate_review_id, sum((case when rl.review_id is not null then 1 else 0 end)) AS like_count, s.name AS store_name, au.firstname AS firstname, au.lastname AS lastname, GROUP_CONCAT(rri.image SEPARATOR ",") AS rate_review_images')
+            ->selectRaw('rr.*, rr.id AS rate_review_id, sum((case when rl.review_id is not null then 1 else 0 end)) AS like_count, s.name AS store_name, au.firstname AS firstname, au.lastname AS lastname, au.email, GROUP_CONCAT(rri.image SEPARATOR ",") AS rate_review_images')
             ->leftJoin('review_likes as rl', 'rl.review_id','=','rr.id')
             ->leftJoin('app_users as au', 'au.id','=','rr.user_id')
             ->leftJoin('rate_review_images as rri', 'rri.rate_review_id','=','rr.id')

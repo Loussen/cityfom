@@ -136,6 +136,17 @@
 								</span>
                     </a>
                 </li>
+                <li class="nav-item nav-item-submenu">
+                    <a href="#" class="nav-link legitRipple"><i class="icon-blocked"></i> <span>Reports</span></a>
+
+                    <ul class="nav nav-group-sub" data-submenu-title="Users">
+                        <li class="nav-item"><a href="{{route('admin.report_notification.index')}}"
+                                                class="nav-link legitRipple">Notification</a></li>
+                        <li class="nav-item"><a href="{{route('admin.report_store.index')}}" class="nav-link legitRipple">Store</a></li>
+                        <li class="nav-item"><a href="{{route('admin.report_type.index')}}"
+                                                class="nav-link legitRipple">Report types</a></li>
+                    </ul>
+                </li>
                 <li class="nav-item">
                     <a href="index.html" class="nav-link legitRipple">
                         <i class="icon-cart"></i>

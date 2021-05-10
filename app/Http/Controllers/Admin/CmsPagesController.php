@@ -4,10 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CmsPagesRequest;
-use App\Http\Requests\CouponRequest;
 use App\Models\CmsPages;
-use App\Models\Coupons;
-use App\Models\Stores;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 

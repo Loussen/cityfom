@@ -52,6 +52,21 @@ Route::group(['as' => 'admin.', 'prefix' => 'admin', 'middleware' => 'adminauth'
     Route::put('changeCmsPageStatus', 'CmsPagesController@changeCmsPageStatus')->name('cms_pages.changeCmsPageStatus');
     Route::put('statusMultipleCmsPage', 'CmsPagesController@statusMultipleCmsPage')->name('cms_pages.statusMultipleCmsPage');
 
+    //Report for notification
+    Route::resource('report_notification', 'ReportNotificationController');
+
+    //Report for store
+    Route::resource('report_store', 'ReportStoreController');
+    Route::put('changeReportStoreStatus', 'ReportStoreController@changeReportStoreStatus')->name('report_store.changeReportStoreStatus');
+    Route::delete('destroyMultipleReportStore', 'ReportStoreController@destroyMultipleReportStore')->name('report_store.destroyMultipleReportStore');
+    Route::put('statusMultipleReportStore', 'ReportStoreController@statusMultipleReportStore')->name('report_store.statusMultipleReportStore');
+
+    //Report type for store
+    Route::resource('report_type', 'ReportTypeController');
+    Route::put('changeReportTypeStatus', 'ReportTypeController@changeReportTypeStatus')->name('report_type.changeReportTypeStatus');
+    Route::delete('destroyMultipleReportType', 'ReportTypeController@destroyMultipleReportType')->name('report_type.destroyMultipleReportType');
+    Route::put('statusMultipleReportType', 'ReportTypeController@statusMultipleReportType')->name('report_type.statusMultipleReportType');
+
     Route::post('ckeditor_upload', 'CkeditorController@upload')->name('ckeditor.upload');
 
 });
