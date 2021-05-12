@@ -7,7 +7,7 @@
         <div class="page-header-content header-elements-md-inline">
             <div class="page-title d-flex">
                 <h4><i class="icon-arrow-left52 mr-2"></i> <span class="font-weight-semibold">Cityfom</span> -
-                    Add Coupon</h4>
+                    Add Channel</h4>
                 <a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
             </div>
         </div>
@@ -17,8 +17,8 @@
                 <div class="breadcrumb">
                     <a href="{{ route('admin.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i>
                         Home</a>
-                    <a href="{{ route('admin.coupon.index') }}" class="breadcrumb-item">Coupons</a>
-                    <span class="breadcrumb-item active">Add Coupon</span>
+                    <a href="{{ route('admin.channel.index') }}" class="breadcrumb-item">Channels</a>
+                    <span class="breadcrumb-item active">Add Channel</span>
                 </div>
 
                 <a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
@@ -31,7 +31,7 @@
         <div class="card">
             <div class="card-body">
                 @include('admin.particles._sessionmessage',['error_type' => 'warning'])
-                <form action="{{route('admin.coupon.store')}}" method="POST" enctype="multipart/form-data">
+                <form action="{{route('admin.channel.store')}}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="form-row">
                         <div class="form-group col-sm-6">
@@ -63,50 +63,24 @@
                             @enderror
                         </div>
                         <div class="form-group col-sm-6">
-                            <label class="font-weight-semibold @error('valid_from_to') text-danger @enderror"
-                                   for="valid_from_to">{{__('admin.valid_from_to')}}</label>
+                            <label class="font-weight-semibold @error('category_id') text-danger @enderror"
+                                   for="category_id">{{__('admin.categories')}}</label>
                             <div class="form-group-feedback form-group-feedback-right">
-                                <div class="input-group">
-                                <span class="input-group-prepend">
-											<span class="input-group-text"><i class="icon-calendar22"></i></span>
-										</span>
-                                    @php
-                                        if(old('valid_from_to'))
-                                        {
-                                            echo '<input type="text" name="valid_from_to" id="valid_from_to" class="form-control daterange-basic"
-                                           value="'.old('valid_from_to').'">';
-                                        }
-                                        else
-                                        {
-                                            echo '<input type="text" name="valid_from_to" id="valid_from_to" class="form-control daterange-basic"
-                                           value="">';
-                                        }
-                                    @endphp
-
-                                </div>
+                                <select name="category_id" class="select-search" id="category_id">
+                                    <option value="0">{{__('admin.please_select')}} ...</option>
+                                    @foreach($categories as $category)
+                                        <option
+                                            {{ old('category_id') == $category->id ? 'selected': '' }} value="{{$category->id}}">{{$category->name}}</option>
+                                    @endforeach
+                                </select>
                             </div>
-                            @error('valid_from_to')
-                            <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="form-group col-sm-6">
-                            <label class="font-weight-semibold @error('discount') text-danger @enderror"
-                                   for="discount">{{__('admin.discount')}}</label>
-                            <div class="form-group-feedback form-group-feedback-right">
-                                <input type="number" min="1" name="discount" id="discount"
-                                       class="form-control @error('discount') border-danger @enderror"
-                                       placeholder="{{__('admin.discount')}}" value="{{ old('discount') }}">
-                                <div class="form-control-feedback form-control-feedback-lg">
-                                    <i class="icon-percent"></i>
-                                </div>
-                            </div>
-                            @error('discount')
+                            @error('store_id')
                             <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
                             @enderror
                         </div>
                         <div class="form-group col-sm-6">
                             <label class="font-weight-semibold @error('description') text-danger @enderror"
-                                   for="description">{{__('admin.description')}}</label>
+                                   for="discount">{{__('admin.description')}}</label>
                             <div class="form-group-feedback form-group-feedback-right">
                                 <textarea rows="3" cols="3" class="form-control @error('description') border-danger @enderror" name="description" placeholder="{{__('admin.description')}}">{{ old('description') }}</textarea>
                             </div>
@@ -121,6 +95,18 @@
                             <span
                                 class="form-text text-muted">Accepted formats: jpg, jpeg, png. Max file size 2Mb</span>
                             @error('image')
+                            <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label class="font-weight-semibold @error('reorder') text-danger @enderror"
+                                   for="reorder">{{__('admin.reorder')}}</label>
+                            <div class="form-group-feedback form-group-feedback-right">
+                                <input type="text" name="reorder" id="reorder"
+                                       class="form-control @error('reorder') border-danger @enderror"
+                                       placeholder="{{__('admin.reorder')}}" value="{{ old('reorder') }}">
+                            </div>
+                            @error('reorder')
                             <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
                             @enderror
                         </div>

@@ -75,7 +75,7 @@ class ReportTypeController extends Controller
             'name_az' => $request->name_az,
             'name_ru' => $request->name_ru,
             'name_es' => $request->name_es,
-            'reorder' => $request->reorder,
+            'reorder' => $request->reorder ?? 0,
         ];
 
         ReportType::create($reportTypeData);
@@ -121,7 +121,7 @@ class ReportTypeController extends Controller
             'name_az' => $request->name_az,
             'name_ru' => $request->name_ru,
             'name_es' => $request->name_es,
-            'reorder'    => $request->reorder
+            'reorder'    => $request->reorder ?? 0
         ];
 
         $reportType->update($reportTypeData);

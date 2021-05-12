@@ -67,6 +67,19 @@ Route::group(['as' => 'admin.', 'prefix' => 'admin', 'middleware' => 'adminauth'
     Route::delete('destroyMultipleReportType', 'ReportTypeController@destroyMultipleReportType')->name('report_type.destroyMultipleReportType');
     Route::put('statusMultipleReportType', 'ReportTypeController@statusMultipleReportType')->name('report_type.statusMultipleReportType');
 
+    // Channels
+    Route::resource('channel', 'ChannelController');
+    Route::put('changeChannelStatus', 'ChannelController@changeChannelStatus')->name('channel.changeChannelStatus');
+    Route::delete('destroyMultipleChannel', 'ChannelController@destroyMultipleChannel')->name('channel.destroyMultipleChannel');
+    Route::put('statusMultipleChannel', 'ChannelController@statusMultipleChannel')->name('channel.statusMultipleChannel');
+
+    // Channel's posts
+    Route::resource('channel_post', 'ChannelPostController');
+    Route::put('changeChannelPostStatus', 'ChannelPostController@changeChannelPostStatus')->name('channel_post.changeChannelPostStatus');
+    Route::delete('destroyMultipleChannelPost', 'ChannelPostController@destroyMultipleChannelPost')->name('channel_post.destroyMultipleChannelPost');
+    Route::put('statusMultipleChannelPost', 'ChannelPostController@statusMultipleChannelPost')->name('channel_post.statusMultipleChannelPost');
+    Route::get('channelCategoryFilter', 'ChannelPostController@channelCategoryFilter')->name('channel_post.channelCategoryFilter');
+
     Route::post('ckeditor_upload', 'CkeditorController@upload')->name('ckeditor.upload');
 
 });

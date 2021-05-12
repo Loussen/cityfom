@@ -152,9 +152,10 @@
                                     {
                                         $explodeImage = explode(".", $coupon->image);
                                         $imageType = end($explodeImage);
-                                        if(in_array(strtolower($imageType), ['jpg', 'jpeg', 'png']));
-
-                                        echo '<a href="javascript:void(0);" class="pop"><img src="'.asset("/uploads/coupons/".$coupon->image).'" style="max-width: 100px; max-height: 100px;"/></a>';
+                                        if(in_array(strtolower($imageType), ['jpg', 'jpeg', 'png']))
+                                        {
+                                            echo '<a href="javascript:void(0);" class="pop"><img src="'.asset("/uploads/coupons/".$coupon->image).'" style="max-width: 100px; max-height: 100px;"/></a>';
+                                        }
                                     }
                                 @endphp
                                 <div class="modal fade" id="imagemodal" tabindex="-1" role="dialog"

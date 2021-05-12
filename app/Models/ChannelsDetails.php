@@ -28,6 +28,6 @@ class ChannelsDetails extends Model
     /**
      * @var array
      */
-    protected $fillable = ['cms_channel_detail_id', 'channel_id', 'title', 'description', 'additional', 'image', 'format', 'cms_image_url', 'price', 'old_price', 'publication_date', 'expiration_date', 'reorder', 'status', 'created_at', 'updated_at'];
+    protected $fillable = ['cms_channel_detail_id', 'channel_id', 'title', 'description', 'additional', 'media', 'format', 'cms_image_url', 'price', 'old_price', 'publication_date', 'expiration_date', 'reorder', 'status', 'created_at', 'updated_at'];
 
 }

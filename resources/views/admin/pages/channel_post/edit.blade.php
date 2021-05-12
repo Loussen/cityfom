@@ -7,7 +7,7 @@
         <div class="page-header-content header-elements-md-inline">
             <div class="page-title d-flex">
                 <h4><i class="icon-arrow-left52 mr-2"></i> <span class="font-weight-semibold">Cityfom</span> -
-                    Edit Coupon</h4>
+                    Edit Channel</h4>
                 <a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
             </div>
         </div>
@@ -17,8 +17,8 @@
                 <div class="breadcrumb">
                     <a href="{{ route('admin.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i>
                         Home</a>
-                    <a href="{{ route('admin.coupon.index') }}" class="breadcrumb-item">Coupons</a>
-                    <span class="breadcrumb-item active">Edit Coupon</span>
+                    <a href="{{ route('admin.channel.index') }}" class="breadcrumb-item">Channels</a>
+                    <span class="breadcrumb-item active">Edit Channel</span>
                 </div>
 
                 <a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
@@ -31,7 +31,7 @@
         <div class="card">
             <div class="card-body">
                 @include('admin.particles._sessionmessage',['error_type' => 'warning'])
-                <form action="{{route('admin.coupon.update', $coupon->id)}}" method="POST"
+                <form action="{{route('admin.channel.update', $channel->id)}}" method="POST"
                       enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
@@ -43,7 +43,7 @@
                                 <input type="text" name="title" id="title"
                                        class="form-control @error('title') border-danger @enderror"
                                        placeholder="{{__('admin.title')}}"
-                                       value="{{ old('title', $coupon->title) }}">
+                                       value="{{ old('title', $channel->title) }}">
                             </div>
                             @error('title')
                             <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
@@ -56,7 +56,7 @@
                                 <option value="0">{{__('admin.please_select')}} ...</option>
                                 @foreach($stores as $store)
                                     <option
-                                        {{ old('store_id',$coupon->store_id) == $store->id ? 'selected': '' }} value="{{$store->id}}">{{$store->name}}</option>
+                                        {{ old('store_id',$channel->store_id) == $store->id ? 'selected': '' }} value="{{$store->id}}">{{$store->name}}</option>
                                 @endforeach
                             </select>
                             @error('store_id')
@@ -64,31 +64,16 @@
                             @enderror
                         </div>
                         <div class="form-group col-sm-6">
-                            <label class="font-weight-semibold @error('valid_from_to') text-danger @enderror"
-                                   for="valid_from_to">{{__('admin.valid_from_to')}}</label>
-                            <div class="form-group-feedback form-group-feedback-right">
-                                <div class="input-group">
-                                <span class="input-group-prepend">
-											<span class="input-group-text"><i class="icon-calendar22"></i></span>
-										</span>
-                                    <input type="text" name="valid_from_to" id="valid_from_to" class="form-control daterange-basic"
-                                           value="{{ old('valid_from_to',date("m/d/Y",strtotime($coupon->valid_from))." - ".date("m/d/Y",strtotime($coupon->valid_to))) }}">
-                                </div>
-                            </div>
-                            @error('valid_from_to')
-                            <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="form-group col-sm-6">
-                            <label class="font-weight-semibold @error('discount') text-danger @enderror"
-                                   for="discount">{{__('admin.discount')}}</label>
-                            <div class="form-group-feedback form-group-feedback-right">
-                                <input type="text" name="discount" id="discount"
-                                       class="form-control @error('discount') border-danger @enderror"
-                                       placeholder="{{__('admin.discount')}}"
-                                       value="{{ old('discount', $coupon->discount) }}">
-                            </div>
-                            @error('discount')
+                            <label class="font-weight-semibold @error('category_id') text-danger @enderror"
+                                   for="category_id">{{__('admin.categories')}}</label>
+                            <select name="category_id" class="select-search" id="category_id">
+                                <option value="0">{{__('admin.please_select')}} ...</option>
+                                @foreach($categories as $category)
+                                    <option
+                                        {{ old('category_id',$channel->channel_category_id) == $category->id ? 'selected': '' }} value="{{$category->id}}">{{$category->name}}</option>
+                                @endforeach
+                            </select>
+                            @error('category_id')
                             <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
                             @enderror
                         </div>
@@ -96,7 +81,7 @@
                             <label class="font-weight-semibold @error('description') text-danger @enderror"
                                    for="description">{{__('admin.description')}}</label>
                             <div class="form-group-feedback form-group-feedback-right">
-                                <textarea rows="3" cols="3" class="form-control @error('description') border-danger @enderror" name="description" placeholder="{{__('admin.description')}}">{{ old('description', $coupon->description) }}</textarea>
+                                <textarea rows="3" cols="3" class="form-control @error('description') border-danger @enderror" name="description" placeholder="{{__('admin.description')}}">{{ old('description', $channel->description) }}</textarea>
                             </div>
                             @error('description')
                             <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
@@ -109,16 +94,16 @@
                             <span
                                 class="form-text text-muted">Accepted formats: jpg, jpeg, png. Max file size 2Mb</span>
                             <?php
-                            if($coupon->image !== null)
+                            if($channel->image !== null)
                             {
                             echo "<br />";
-                            $explodeImage = explode(".", $coupon->image);
+                            $explodeImage = explode(".", $channel->image);
                             $imageType = end($explodeImage);
                             if(in_array(strtolower($imageType), ['jpg', 'jpeg', 'png']))
                             {
                             ?>
                             <a href="javascript:void(0);" class="pop"><img
-                                    src="{{ asset('/uploads/coupons/'.$coupon->image) }}"
+                                    src="{{ asset('/uploads/channels/'.$channel->image) }}"
                                     style="max-width: 300px; max-height: 300px;"/></a>
                             <?php
                             }
@@ -143,9 +128,22 @@
                             <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
                             @enderror
                         </div>
+                        <div class="form-group col-sm-6">
+                            <label class="font-weight-semibold @error('reorder') text-danger @enderror"
+                                   for="reorder">{{__('admin.reorder')}}</label>
+                            <div class="form-group-feedback form-group-feedback-right">
+                                <input type="text" name="reorder" id="reorder"
+                                       class="form-control @error('reorder') border-danger @enderror"
+                                       placeholder="{{__('admin.reorder')}}"
+                                       value="{{ old('reorder', $channel->reorder) }}">
+                            </div>
+                            @error('reorder')
+                            <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
                         <div class="col-sm-12">
                             <x-save/>
-                            <x-back route="admin.coupon.index"></x-back>
+                            <x-back route="admin.channel.index"></x-back>
                         </div>
                     </div>
                 </form>

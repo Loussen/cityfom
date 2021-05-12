@@ -139,12 +139,21 @@
                 <li class="nav-item nav-item-submenu">
                     <a href="#" class="nav-link legitRipple"><i class="icon-blocked"></i> <span>Reports</span></a>
 
-                    <ul class="nav nav-group-sub" data-submenu-title="Users">
+                    <ul class="nav nav-group-sub" data-submenu-title="Reports">
                         <li class="nav-item"><a href="{{route('admin.report_notification.index')}}"
                                                 class="nav-link legitRipple">Notification</a></li>
                         <li class="nav-item"><a href="{{route('admin.report_store.index')}}" class="nav-link legitRipple">Store</a></li>
                         <li class="nav-item"><a href="{{route('admin.report_type.index')}}"
                                                 class="nav-link legitRipple">Report types</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item nav-item-submenu">
+                    <a href="#" class="nav-link legitRipple"><i class="icon-megaphone"></i> <span>Channels & Posts</span></a>
+
+                    <ul class="nav nav-group-sub" data-submenu-title="Channels & Posts">
+                        <li class="nav-item"><a href="{{route('admin.channel.index')}}"
+                                                class="nav-link legitRipple">Channel</a></li>
+                        <li class="nav-item"><a href="{{route('admin.channel_post.index')}}" class="nav-link legitRipple">Posts</a></li>
                     </ul>
                 </li>
                 <li class="nav-item">
@@ -154,17 +163,6 @@
 									Stores
 								</span>
                     </a>
-                </li>
-                <li class="nav-item nav-item-submenu">
-                    <a href="#" class="nav-link legitRipple"><i class="icon-megaphone"></i>
-                        <span>Channels & Posts</span></a>
-
-                    <ul class="nav nav-group-sub" data-submenu-title="Channels & Posts">
-                        <li class="nav-item"><a href="../../../../layout_1/LTR/default/full/index.html"
-                                                class="nav-link legitRipple">Channels</a></li>
-                        <li class="nav-item"><a href="../../../../layout_3/LTR/default/full/index.html"
-                                                class="nav-link legitRipple">Posts</a></li>
-                    </ul>
                 </li>
                 <li class="nav-item nav-item-submenu">
                     <a href="#" class="nav-link legitRipple"><i class="icon-copy"></i> <span>Layouts</span></a>
