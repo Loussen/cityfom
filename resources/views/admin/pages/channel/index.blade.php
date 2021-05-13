@@ -136,8 +136,13 @@
                     </thead>
                     <tbody>
                     @foreach($channels as $channel)
+                        @php
+                            $channelPost = \Illuminate\Support\Facades\DB::table("channels_details")->where('channel_id',$channel->id)->first();
+
+                            if($channelPost === null) $existsPost = 'no'; else $existsPost = 'yes';
+                        @endphp
                         <tr id="tr_{{$channel->id}}">
-                            <td><input type="checkbox" class="sub_chk" data-id="{{$channel->id}}"></td>
+                            <td><input {{ $existsPost == 'yes' ? 'disabled' : '' }} type="checkbox" class="sub_chk" data-id="{{$channel->id}}"></td>
                             <td>{{ $channel->id }}</td>
                             <td>{{ $channel->title }}</td>
                             <td>{{ $channel->c_name }}</td>
@@ -181,7 +186,14 @@
                             <td class="text-center">
                                 <div class="btn-group">
                                     <x-edit route="admin.channel.edit" :id="$channel->id"/>
-                                    <x-delete route="admin.channel.destroy" :id="$channel->id"/>
+                                    <?php
+                                        if($existsPost == 'no')
+                                        {
+                                            ?>
+                                            <x-delete route="admin.channel.destroy" :id="$channel->id"/>
+                                            <?php
+                                        }
+                                    ?>
                                 </div>
                             </td>
                         </tr>

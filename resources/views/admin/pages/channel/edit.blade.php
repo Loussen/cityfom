@@ -66,13 +66,16 @@
                         <div class="form-group col-sm-6">
                             <label class="font-weight-semibold @error('category_id') text-danger @enderror"
                                    for="category_id">{{__('admin.categories')}}</label>
-                            <select name="category_id" class="select-search" id="category_id">
+                            <select name="category_id" class="select-search" id="category_id" {{ $existsPost == 'yes' ? 'disabled' : '' }}>
                                 <option value="0">{{__('admin.please_select')}} ...</option>
                                 @foreach($categories as $category)
                                     <option
                                         {{ old('category_id',$channel->channel_category_id) == $category->id ? 'selected': '' }} value="{{$category->id}}">{{$category->name}}</option>
                                 @endforeach
                             </select>
+                            @php
+                            if($existsPost == 'yes') echo '<input type="hidden" name="category_id" value="'.$channel->channel_category_id.'" />';
+                            @endphp
                             @error('category_id')
                             <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
                             @enderror

@@ -26,10 +26,13 @@ class ChannelPostRequest extends FormRequest
         $rules = [
             'title'                 => 'required|min:3',
             'store_id'              => 'required|numeric|min:1',
-            'channel_id'            => 'required|numeric|min:1',
-            'image'                 => 'required|mimes:png,jpg,jpeg,ico|max:2048',
+            'channel_id'            => 'required',
             'public_expire_date'    => 'required',
         ];
+
+//        if(!request('id') > 0) {
+//            $rules['media'] = 'required|mimes:png,jpg,jpeg,mpeg,mov,wav,avi,dat,flv,3gp,m4v,mp4|max:11000';
+//        }
 
         if(request('channel_id'))
         {

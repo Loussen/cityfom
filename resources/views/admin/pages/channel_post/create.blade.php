@@ -51,19 +51,20 @@
                             @enderror
                         </div>
                         <div class="form-group col-sm-6">
-                            <label class="font-weight-semibold @error('channel_id') text-danger @enderror" for="channel_id">{{__('admin.channel')}}</label>
+                            <label class="font-weight-semibold @error('channel_id') text-danger @enderror"
+                                   for="channel_id">{{__('admin.channel')}}</label>
                             <select name="channel_id" class="channel_id" id="channel_id">
                                 <?php
                                 if(old('channel_id')) {
-                                    $explodeChannelId = explode("-",old('channel_id'));
-//                                $selectedChannel = \App\Models\Channels::where('id', old('channel_id'))->first();
+                                $explodeChannelId = explode("-", old('channel_id'));
                                 $selectedChannel = \Illuminate\Support\Facades\DB::table('channels AS c')
-                                    ->join('channel_category AS cc', 'cc.id', '=','c.channel_category_id')
-                                    ->whereRaw('c.id = '.$explodeChannelId[0])
+                                    ->join('channel_category AS cc', 'cc.id', '=', 'c.channel_category_id')
+                                    ->whereRaw('c.id = ' . $explodeChannelId[0])
                                     ->select('c.title AS channel_title', 'cc.name AS category_name')
                                     ->first();
                                 ?>
-                                <option value={{ old('channel_id') }}>{{ $selectedChannel->category_name." - ".$selectedChannel->channel_title }}</option>
+                                <option
+                                    value={{ old('channel_id') }}>{{ $selectedChannel->category_name." - ".$selectedChannel->channel_title }}</option>
                                 <?php
                                 }
                                 ?>
@@ -88,7 +89,10 @@
                             <label class="font-weight-semibold @error('description') text-danger @enderror"
                                    for="description">{{__('admin.description')}}</label>
                             <div class="form-group-feedback form-group-feedback-right">
-                                <textarea rows="3" cols="3" class="form-control @error('description') border-danger @enderror" name="description" placeholder="{{__('admin.description')}}">{{ old('description') }}</textarea>
+                                <textarea rows="3" cols="3"
+                                          class="form-control @error('description') border-danger @enderror"
+                                          name="description"
+                                          placeholder="{{__('admin.description')}}">{{ old('description') }}</textarea>
                             </div>
                             @error('description')
                             <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
@@ -107,7 +111,8 @@
                             @enderror
                         </div>
 
-                        <div class="border border-success row col-sm-12 p-2 additional" style="margin: 0 auto 10px auto; display: none;">
+                        <div class="border border-success row col-sm-12 p-2 additional"
+                             style="margin: 0 auto 10px auto; display: none;">
                             <h2 class="text-center col-sm-12">Details</h2>
                             <div class="form-group col-sm-6 price">
                                 <label class="font-weight-semibold @error('price') text-danger @enderror"
@@ -146,12 +151,12 @@
                                 @enderror
                             </div>
                             <div class="form-group col-sm-6 image">
-                                <label class="font-weight-semibold @error('image') text-danger @enderror"
-                                       for="document">{{__('admin.image')}}</label>
-                                <input type="file" name="image" class="form-input-styled" data-fouc/>
+                                <label class="font-weight-semibold @error('media') text-danger @enderror"
+                                       for="media">{{__('admin.media')}}</label>
+                                <input type="file" name="media" class="form-input-styled" data-fouc/>
                                 <span
-                                    class="form-text text-muted">Accepted formats: jpg, jpeg, png. Max file size 2Mb</span>
-                                @error('image')
+                                    class="form-text text-muted">Accepted formats: jpg, jpeg, png, mpeg, mov, wav, avi, dat, flv, 3gp, m4v, mp4. Max file size 10Mb</span>
+                                @error('media')
                                 <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
@@ -186,7 +191,10 @@
                                 <label class="font-weight-semibold @error('additional_text') text-danger @enderror"
                                        for="additional_text">{{__('admin.additional_text')}}</label>
                                 <div class="form-group-feedback form-group-feedback-right">
-                                    <textarea rows="3" cols="3" class="form-control @error('additional_text') border-danger @enderror" name="additional_text" placeholder="{{__('admin.additional_text')}}">{{ old('additional_text') }}</textarea>
+                                    <textarea rows="3" cols="3"
+                                              class="form-control @error('additional_text') border-danger @enderror"
+                                              name="additional_text"
+                                              placeholder="{{__('admin.additional_text')}}">{{ old('additional_text') }}</textarea>
                                 </div>
                                 @error('additional_text')
                                 <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
@@ -207,8 +215,7 @@
 @stop
 @section('script')
     <script>
-        function get_channel_categories(store_id)
-        {
+        function get_channel_categories(store_id) {
             $('select#channel_id').select2({
                 placeholder: 'Select category',
                 allowClear: true,
@@ -217,7 +224,7 @@
                     dataType: 'json',
                     delay: 250,
                     data: function (params) {
-                        let query = { store_id : store_id, q : params.term }
+                        let query = {store_id: store_id, q: params.term}
 
                         return query;
                     },
@@ -225,8 +232,8 @@
                         return {
                             results: $.map(data.response, function (item) {
                                 return {
-                                    text: item.category_name+" - "+item.channel_title,
-                                    id: item.channel_id+"-"+item.category_id,
+                                    text: item.category_name + " - " + item.channel_title,
+                                    id: item.channel_id + "-" + item.category_id,
                                 }
                             })
                         };
@@ -237,14 +244,14 @@
         }
 
         let selected_store = $('select#store_id').find('option:selected').val();
-        if(!selected_store > 0) selected_store = 0;
+        if (!selected_store > 0) selected_store = 0;
 
         get_channel_categories(selected_store);
 
         $('select[name="store_id"]').on('change', function () {
 
             let selected_store = $(this).find('option:selected').val();
-            if(!selected_store > 0) selected_store = 0;
+            if (!selected_store > 0) selected_store = 0;
 
             $("select#channel_id").val('').trigger('change');
 
@@ -255,24 +262,20 @@
         setTimeout(function () {
             let data_type = $("select#channel_id").find(':selected');
 
-            if(data_type.length > 0) {
+            if (data_type.length > 0) {
                 data_type = data_type.val().split("-");
             }
 
-            console.log(data_type);
-
             changeCategory(data_type);
-        },1000);
+        }, 1000);
 
-        function changeCategory($this)
-        {
+        function changeCategory($this) {
             $("div.additional div.form-group").hide();
             // $("div.additional_offer").hide();
 
             let data_type = $this;
 
-            if(data_type.length > 0)
-            {
+            if (data_type.length > 0) {
                 if (data_type[1] == 1 || data_type[1] == 2) {
                     $("div.additional").show();
 
@@ -300,7 +303,7 @@
         $("select#channel_id").on("change", function () {
             let data_type = $(this).find(':selected');
 
-            if(data_type.length > 0) {
+            if (data_type.length > 0) {
                 data_type = data_type.val().split("-");
                 changeCategory(data_type);
             }

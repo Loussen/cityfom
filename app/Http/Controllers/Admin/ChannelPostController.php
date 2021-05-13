@@ -107,36 +107,74 @@ class ChannelPostController extends Controller
      */
     public function store(ChannelPostRequest $request)
     {
-        $imageName = null;
-        if($request->hasFile('image') && $request->image != '') {
-            $image = $request->file('image');
-            $imageName = time()."_".$image->getClientOriginalName();
+        $mediaName = $mediaMimeType = null;
+        if($request->hasFile('media') && $request->media != '') {
+            $media = $request->file('media');
+            $mediaName = time()."_".$media->getClientOriginalName();
 
-            $imageType = explode(".",$imageName);
-            $imageType = end($imageType);
+            $mediaMimeType = $media->getMimeType();
 
-            if(in_array(strtolower($imageType),['jpg','jpeg','png']))
+            $mediaType = explode(".",$mediaName);
+            $mediaType = end($mediaType);
+
+            if(in_array(strtolower($mediaType),['jpg','jpeg','png']))
             {
-                $image->move(public_path().'/uploads/channels/',$imageName);
+                $media->move(public_path().'/uploads/channel_posts/',$mediaName);
+            }
+            elseif(in_array(strtolower($mediaType),["mpeg", "mov", "wav", "avi", "dat", "flv", "3gp", "m4v", "mp4"]))
+            {
+                $mediaName = time().".mp4";
+
+                exec("ffmpeg -i " . $media->getPathname() . " -vcodec copy -acodec copy " . public_path() . "uploads/channel_posts/" . $mediaName, $out);
             }
             else
             {
-                return redirect()->route('admin.channel.create')->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png)", 'warning', true));
+                return redirect()->route('admin.channel_post.create')->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png,mpeg,mov,wav,avi,dat,flv,3gp,m4v,mp4)", 'warning', true));
             }
         }
 
-        $channelData = [
+        $channelAndCategoryId = $request->channel_id;
+        $channelAndCategoryIdExplode = explode("-",$channelAndCategoryId);
+        $channelId = $channelAndCategoryIdExplode[0];
+        $categoryId = $channelAndCategoryIdExplode[1];
+
+        $additionalText = $price = $oldPrice = '';
+        if(in_array($categoryId,[4,5,6]))
+        {
+            $additionalText = $request->additional_text;
+        }
+        elseif($categoryId == 3)
+        {
+            $price = $request->new_price;
+            $oldPrice = $request->old_price;
+        }
+        elseif(in_array($categoryId,[1,2]))
+        {
+            $price = $request->price;
+        }
+
+        $publicExpireDate = $request->public_expire_date;
+        $publicExpireExplode = explode("-",$publicExpireDate);
+        $publicDate = strtotime($publicExpireExplode[0]) * 1000;
+        $expireDate = strtotime($publicExpireExplode[1]) * 1000;
+
+        $channelPostData = [
+            'channel_id' => $channelId,
             'title' => $request->title,
-            'store_id' => $request->store_id,
-            'channel_category_id' => $request->category_id,
             'description' => $request->description,
-            'image' => $imageName,
+            'additional' => $additionalText,
+            'media' => $mediaName,
+            'format' => $mediaMimeType,
+            'price' => $price,
+            'old_price' => $oldPrice,
+            'publication_date' => $publicDate,
+            'expiration_date' => $expireDate,
             'reorder' => $request->reorder ?? 0,
         ];
 
-        Channels::create($channelData);
+        ChannelsDetails::create($channelPostData);
 
-        return redirect()->route('admin.channel.index')->with(_sessionmessage());
+        return redirect()->route('admin.channel_post.index')->with(_sessionmessage());
     }
 
     /**
@@ -153,15 +191,21 @@ class ChannelPostController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param Channels $channel
+     * @param ChannelsDetails $channelPost
      * @return \Illuminate\Http\Response
      */
-    public function edit(Channels $channel)
+    public function edit(ChannelsDetails $channelPost)
     {
         $stores = Stores::all();
-        $categories = ChannelCategory::all();
 
-        return view('admin.pages.channel.edit', compact('channel','stores','categories'));
+        $selectedStore = \Illuminate\Support\Facades\DB::table('channels_details AS cd')
+            ->join('channels AS c', 'c.id', '=', 'cd.channel_id')
+            ->join('stores AS s', 's.id', '=', 'c.store_id')
+            ->whereRaw('cd.id = ' . $channelPost->id)
+            ->select('s.id AS store_id')
+            ->first();
+
+        return view('admin.pages.channel_post.edit', compact('stores','channelPost','selectedStore'));
     }
 
     /**
@@ -171,42 +215,82 @@ class ChannelPostController extends Controller
      * @param int $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(ChannelRequest $request, $id)
+    public function update(ChannelPostRequest $request, $id)
     {
-        $channel = Channels::find($id);
+        $channelPost = ChannelsDetails::find($id);
 
-        $imageName = $channel->image;
-        if($request->hasFile('image') && $request->image != '') {
-            $image = $request->file('image');
-            $imageName = time()."_".$image->getClientOriginalName();
+        $mediaName = $mediaMimeType = null;
+        if($request->hasFile('media') && $request->media != '') {
+            $media = $request->file('media');
+            $mediaName = time()."_".$media->getClientOriginalName();
 
-            $imageType = explode(".",$imageName);
-            $imageType = end($imageType);
+            $mediaMimeType = $media->getMimeType();
 
-            if(in_array(strtolower($imageType),['jpg','jpeg','png']))
+            $mediaType = explode(".",$mediaName);
+            $mediaType = end($mediaType);
+
+            if(in_array(strtolower($mediaType),['jpg','jpeg','png']))
             {
-                $image->move(public_path().'/uploads/channels/',$imageName);
+                $media->move(public_path().'/uploads/channel_posts/',$mediaName);
 
-                delete_old_files(public_path().'/uploads/channels/'.$channel->image);
+                delete_old_files(public_path().'/uploads/channel_posts/'.$channelPost->media);
+            }
+            elseif(in_array(strtolower($mediaType),["mpeg", "mov", "wav", "avi", "dat", "flv", "3gp", "m4v", "mp4"]))
+            {
+                $mediaName = time().".mp4";
+
+                exec("ffmpeg -i " . $media->getPathname() . " -vcodec copy -acodec copy " . public_path() . "uploads/channel_posts/" . $mediaName, $out);
+
+                delete_old_files(public_path().'/uploads/channel_posts/'.$channelPost->media);
             }
             else
             {
-                return redirect()->route('admin.channel.edit', [$id])->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png)", 'warning', true));
+                return redirect()->route('admin.channel_post.edit', [$id])->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png,mpeg,mov,wav,avi,dat,flv,3gp,m4v,mp4)", 'warning', true));
             }
         }
 
-        $channelData = [
+        $channelAndCategoryId = $request->channel_id;
+        $channelAndCategoryIdExplode = explode("-",$channelAndCategoryId);
+        $channelId = $channelAndCategoryIdExplode[0];
+        $categoryId = $channelAndCategoryIdExplode[1];
+
+        $additionalText = $price = $oldPrice = '';
+        if(in_array($categoryId,[4,5,6]))
+        {
+            $additionalText = $request->additional_text;
+        }
+        elseif($categoryId == 3)
+        {
+            $price = $request->new_price;
+            $oldPrice = $request->old_price;
+        }
+        elseif(in_array($categoryId,[1,2]))
+        {
+            $price = $request->price;
+        }
+
+        $publicExpireDate = $request->public_expire_date;
+        $publicExpireExplode = explode("-",$publicExpireDate);
+        $publicDate = strtotime($publicExpireExplode[0]) * 1000;
+        $expireDate = strtotime($publicExpireExplode[1]) * 1000;
+
+        $channelPostData = [
+            'channel_id' => $channelId,
             'title' => $request->title,
-            'store_id' => $request->store_id,
-            'channel_category_id' => $request->category_id,
             'description' => $request->description,
-            'image' => $imageName,
+            'additional' => $additionalText,
+            'media' => $mediaName,
+            'format' => $mediaMimeType,
+            'price' => $price,
+            'old_price' => $oldPrice,
+            'publication_date' => $publicDate,
+            'expiration_date' => $expireDate,
             'reorder' => $request->reorder ?? 0,
         ];
 
-        $channel->update($channelData);
+        $channelPost->update($channelPostData);
 
-        return redirect()->route('admin.channel.index')->with(_sessionmessage());
+        return redirect()->route('admin.channel_post.index')->with(_sessionmessage());
     }
 
     /**

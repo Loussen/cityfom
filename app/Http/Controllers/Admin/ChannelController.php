@@ -159,7 +159,11 @@ class ChannelController extends Controller
         $stores = Stores::all();
         $categories = ChannelCategory::all();
 
-        return view('admin.pages.channel.edit', compact('channel','stores','categories'));
+        $channelPost = DB::table("channels_details")->where('channel_id',$channel->id)->first();
+
+        if($channelPost === null) $existsPost = 'no'; else $existsPost = 'yes';
+
+        return view('admin.pages.channel.edit', compact('channel','stores','categories','existsPost'));
     }
 
     /**
@@ -216,6 +220,7 @@ class ChannelController extends Controller
     public function destroy(Channels $channel)
     {
         delete_old_files(public_path().'/uploads/channels/'.$channel->image);
+        DB::table("channels_details")->where('channel_id',$channel->id)->delete();
         $channel->delete();
         $arr = _sessionmessage(null, null, null, true);
         return response($arr);
@@ -232,6 +237,7 @@ class ChannelController extends Controller
             delete_old_files(public_path().'/uploads/channels/'.$channel->image);
         }
 
+        DB::table("channels_details")->where('channel_id',$explodeIds)->delete();
         DB::table("channels")->whereIn('id',$explodeIds)->delete();
         $response = ['status' => 'OK'];
         return response()->json(['response' => $response]);
