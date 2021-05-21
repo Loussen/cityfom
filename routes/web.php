@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('admin/login','Auth\AdminAuthController@getLogin')->name('adminLogin');
 Route::post('admin/login', 'Auth\AdminAuthController@postLogin')->name('adminLoginPost');
-Route::get('admin/logout', 'Auth\AdminAuthController@logout')->name('adminLogout');
+Route::post('admin/logout', 'Auth\AdminAuthController@logout')->name('adminLogout');
 
 Route::group(['as' => 'admin.', 'prefix' => 'admin', 'middleware' => 'adminauth', 'namespace' => 'Admin'], function () {
     // Admin Dashboard
@@ -79,6 +79,11 @@ Route::group(['as' => 'admin.', 'prefix' => 'admin', 'middleware' => 'adminauth'
     Route::delete('destroyMultipleChannelPost', 'ChannelPostController@destroyMultipleChannelPost')->name('channel_post.destroyMultipleChannelPost');
     Route::put('statusMultipleChannelPost', 'ChannelPostController@statusMultipleChannelPost')->name('channel_post.statusMultipleChannelPost');
     Route::get('channelCategoryFilter', 'ChannelPostController@channelCategoryFilter')->name('channel_post.channelCategoryFilter');
+
+    //Email templates
+    Route::resource('email_templates', 'EmailTemplatesController');
+    Route::put('changeEmailTemplateStatus', 'EmailTemplatesController@changeEmailTemplateStatus')->name('email_templates.changeEmailTemplateStatus');
+    Route::put('statusMultipleEmailTemplate', 'EmailTemplatesController@statusMultipleEmailTemplate')->name('email_templates.statusMultipleEmailTemplate');
 
     Route::post('ckeditor_upload', 'CkeditorController@upload')->name('ckeditor.upload');
 

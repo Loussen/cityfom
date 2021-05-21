@@ -4,13 +4,13 @@
     <div class="navbar-header navbar-dark d-none d-md-flex align-items-md-center text-center">
         <div class="navbar-brand navbar-brand-md">
             <a href="index.html" class="d-inline-block">
-                <img src="{{asset("admin/img/city-logo.png")}}" alt="" style="height: 3rem;">
+                <img src="{{asset("admin/img/logotype_white.png")}}" alt="" style="height: 3rem;">
             </a>
         </div>
 
         <div class="navbar-brand navbar-brand-xs">
             <a href="index.html" class="d-inline-block">
-                <img src="{{asset("admin/img/city-logo.png")}}" alt="">
+                <img src="{{asset("admin/img/logotype_white.png")}}" alt="">
             </a>
         </div>
     </div>
@@ -21,7 +21,7 @@
     <div class="d-flex flex-1 d-md-none">
         <div class="navbar-brand mr-auto">
             <a href="index.html" class="d-inline-block">
-                <img src="{{asset("admin/img/city-logo.png")}}" alt="">
+                <img src="{{asset("admin/img/logotype_white.png")}}" alt="">
             </a>
         </div>
 

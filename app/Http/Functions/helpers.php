@@ -190,4 +190,71 @@ if (! function_exists('delete_old_files')){
     }
 }
 
+if (! function_exists('slugGenerator')){
+
+    /**
+     * @param null $message
+     * @return array
+     */
+    function slugGenerator($slug,$space='-',$onlyEnglish=true,$lang_name='az'){
+        if($onlyEnglish==true){
+            $from=array('ü','ö','ğ','ı','ə','ç','ş'); $to=array('u','o','g','i','e','c','s');
+            $slug=str_replace($from,$to,$slug);
+        }
+        $slug=strtolower_($slug,false,$lang_name);
+
+        $slug=str_replace('&amp;','-',$slug); $slug=str_replace('&','-',$slug); $slug=str_replace('quot','',$slug);
+        $slug=decode_text($slug,true);
+        $slug=strip_tags($slug);
+        $lettersNumbersSpacesHyphens = '/[^\-\s\pN\pL]+/u';
+        $spacesDuplicateHypens = '/[\-\s]+/';
+        $slug = preg_replace($lettersNumbersSpacesHyphens, '', $slug);
+        $slug = preg_replace($spacesDuplicateHypens, $space, $slug);
+        $slug = trim($slug, '-');
+        if(strlen($slug)>190) $slug=mb_substr($slug,0,190,"UTF-8");
+        $slug=str_replace(' ','',$slug);
+        return $slug;
+    }
+}
+
+if (! function_exists('strtolower_')) {
+
+    /**
+     * @param null $message
+     * @return array
+     */
+    function strtolower_($str,$ucfirst=false,$lang='az'){
+        $from=array('Q','Ü','E','R','T','Y','U','İ','O','P','Ö','Ğ','A','S','D','F','G','H','J','K','L','I','Ə','Z','X','C','V','B','N','M','Ç','Ş','W');
+        $to=array('q','ü','e','r','t','y','u','i','o','p','ö','ğ','a','s','d','f','g','h','j','k','l','ı','ə','z','x','c','v','b','n','m','ç','ş','w');
+        if($lang=='az' || $lang=='tr') $str=str_replace($from,$to,$str);
+
+        $from=array("Й","Ц","У","К","Е","Н","Г","Ш","Щ","З","Х","Ъ","Ф","Ы","В","А","П","Р","О","Л","Д","Ж","Э","Я","Ч","С","М","И","Т","Ь","Б","Ю","Ё");
+        $to=array("й","ц","у","к","е","н","г","ш","щ","з","х","ъ","ф","ы","в","а","п","р","о","л","д","ж","э","я","ч","с","м","и","т","ь","б","ю","ё");
+        $str=str_replace($from,$to,$str);
+
+        if($lang=='en') $str=strtolower($str);
+
+        if($ucfirst==true) $str=ucfirst_($str,"strtolower_");
+        return $str;
+    }
+}
+
+if (! function_exists('decode_text')) {
+
+    /**
+     * @param null $message
+     * @return array
+     */
+    function decode_text($value,$runHtml=false,$strip=false,$trim=true){
+        if($trim){
+            $value=str_replace("&nbsp;", " ", $value);
+            $value=trim($value);
+        }
+        $from=array('&single_quot;','\\\\'," ","  "); $to=array("'",'\\'," "," "); $value=str_replace($from, $to, $value);
+        if($runHtml) $value=html_entity_decode($value); else $value=htmlentities($value);
+        if($strip) $value=strip_tags($value);
+        return $value;
+    }
+}
+
 

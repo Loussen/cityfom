@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Cviebrock\EloquentSluggable\Sluggable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -22,9 +24,19 @@ use Illuminate\Database\Eloquent\Model;
  */
 class EmailTemplates extends Model
 {
+    use Sluggable;
     /**
      * @var array
      */
     protected $fillable = ['title', 'slug', 'subject_en', 'subject_az', 'subject_es', 'subject_ru', 'content_en', 'content_az', 'content_es', 'content_ru', 'status', 'created_at', 'updated_at'];
+
+    public function sluggable()
+    {
+        return [
+            'slug' => [
+                'source' => 'title'
+            ]
+        ];
+    }
 
 }

@@ -3,12 +3,14 @@
     <form class="login-form" action="{{ route('adminLoginPost') }}" method="POST">
         @csrf
         <div class="card-body">
+            <div class="text-center mb-3">
+                <img src="{{asset("admin/img/logo_blue.png")}}" alt="" style="height: 7rem;">
+            </div>
             @if(session('message'))
                 <div class="alert alert-{{ session('type') }} border-0 alert-dismissible">
                     <button type="button" class="close" data-dismiss="alert"><span>×</span></button>
                     {{ session('message') }}
                 </div>
-
             @endif
             <div class="form-group form-group-feedback form-group-feedback-left">
                 <input type="email" class="form-control  @error('email') is-invalid @enderror" name="email"

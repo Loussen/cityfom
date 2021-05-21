@@ -7,7 +7,7 @@
         <div class="page-header-content header-elements-md-inline">
             <div class="page-title d-flex">
                 <h4><i class="icon-arrow-left52 mr-2"></i> <span class="font-weight-semibold">Cityfom</span> -
-                    Edit CMS page</h4>
+                    Edit Email template</h4>
                 <a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
             </div>
         </div>
@@ -17,8 +17,8 @@
                 <div class="breadcrumb">
                     <a href="{{ route('admin.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i>
                         Home</a>
-                    <a href="{{ route('admin.cms_pages.index') }}" class="breadcrumb-item">CMS pages</a>
-                    <span class="breadcrumb-item active">Edit CMS page</span>
+                    <a href="{{ route('admin.cms_pages.index') }}" class="breadcrumb-item">Email templates</a>
+                    <span class="breadcrumb-item active">Edit Email template</span>
                 </div>
 
                 <a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
@@ -31,33 +31,72 @@
         <div class="card">
             <div class="card-body">
                 @include('admin.particles._sessionmessage',['error_type' => 'warning'])
-                <form action="{{route('admin.cms_pages.update', $cmsPage->id)}}" method="POST">
+                <form action="{{route('admin.email_templates.update', $emailTemplate->id)}}" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="form-row">
-                        <div class="form-group col-sm-6">
+                        <div class="form-group col-sm-12">
                             <label class="font-weight-semibold @error('title') text-danger @enderror"
                                    for="title">{{__('admin.title')}}</label>
                             <div class="form-group-feedback form-group-feedback-right">
                                 <input type="text" name="title" id="title"
                                        class="form-control @error('title') border-danger @enderror"
                                        placeholder="{{__('admin.title')}}"
-                                       value="{{ old('title', $cmsPage->title) }}">
+                                       value="{{ old('title', $emailTemplate->title) }}">
                             </div>
                             @error('title')
                             <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
                             @enderror
                         </div>
                         <div class="form-group col-sm-6">
-                            <label class="font-weight-semibold @error('slug') text-danger @enderror"
-                                   for="slug">{{__('admin.slug')}}</label>
+                            <label class="font-weight-semibold @error('subject_en') text-danger @enderror"
+                                   for="subject_en">{{__('admin.subject_en')}}</label>
                             <div class="form-group-feedback form-group-feedback-right">
-                                <input type="text" name="slug" id="slug"
-                                       class="form-control @error('slug') border-danger @enderror"
-                                       placeholder="{{__('admin.slug')}}"
-                                       value="{{ old('slug', $cmsPage->slug) }}">
+                                <input type="text" name="subject_en" id="subject_en"
+                                       class="form-control @error('subject_en') border-danger @enderror"
+                                       placeholder="{{__('admin.subject_en')}}"
+                                       value="{{ old('subject_en', $emailTemplate->subject_en) }}">
                             </div>
-                            @error('slug')
+                            @error('subject_en')
+                            <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label class="font-weight-semibold @error('subject_az') text-danger @enderror"
+                                   for="subject_az">{{__('admin.subject_az')}}</label>
+                            <div class="form-group-feedback form-group-feedback-right">
+                                <input type="text" name="subject_az" id="subject_az"
+                                       class="form-control @error('subject_az') border-danger @enderror"
+                                       placeholder="{{__('admin.subject_az')}}"
+                                       value="{{ old('subject_az', $emailTemplate->subject_az) }}">
+                            </div>
+                            @error('subject_az')
+                            <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label class="font-weight-semibold @error('subject_es') text-danger @enderror"
+                                   for="subject_es">{{__('admin.subject_es')}}</label>
+                            <div class="form-group-feedback form-group-feedback-right">
+                                <input type="text" name="subject_es" id="subject_es"
+                                       class="form-control @error('subject_es') border-danger @enderror"
+                                       placeholder="{{__('admin.subject_es')}}"
+                                       value="{{ old('subject_es', $emailTemplate->subject_es) }}">
+                            </div>
+                            @error('subject_es')
+                            <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label class="font-weight-semibold @error('subject_ru') text-danger @enderror"
+                                   for="subject_ru">{{__('admin.subject_ru')}}</label>
+                            <div class="form-group-feedback form-group-feedback-right">
+                                <input type="text" name="subject_ru" id="subject_ru"
+                                       class="form-control @error('subject_ru') border-danger @enderror"
+                                       placeholder="{{__('admin.subject_ru')}}"
+                                       value="{{ old('subject_ru', $emailTemplate->subject_ru) }}">
+                            </div>
+                            @error('subject_ru')
                             <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
                             @enderror
                         </div>
@@ -67,7 +106,7 @@
                             <textarea id="editor_en" rows="3" cols="3"
                                       class="form-control summernote-height @error('content_es') border-danger @enderror editor"
                                       name="content_en"
-                                      placeholder="{{__('admin.content_es')}}">{!! old('content_en', $cmsPage->content_en) !!}</textarea>
+                                      placeholder="{{__('admin.content_es')}}">{!! old('content_en', $emailTemplate->content_en) !!}</textarea>
                             @error('content_en')
                             <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
                             @enderror
@@ -78,7 +117,7 @@
                             <textarea id="editor_az" rows="3" cols="3"
                                       class="form-control summernote-height @error('content_az') border-danger @enderror editor"
                                       name="content_az"
-                                      placeholder="{{__('admin.content_az')}}">{{ old('content_az', $cmsPage->content_az) }}</textarea>
+                                      placeholder="{{__('admin.content_az')}}">{{ old('content_az', $emailTemplate->content_az) }}</textarea>
                             @error('content_az')
                             <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
                             @enderror
@@ -89,7 +128,7 @@
                             <textarea id="editor_ru" rows="3" cols="3"
                                       class="form-control summernote-height @error('content_ru') border-danger @enderror editor"
                                       name="content_ru"
-                                      placeholder="{{__('admin.content_ru')}}">{{ old('content_ru', $cmsPage->content_ru) }}</textarea>
+                                      placeholder="{{__('admin.content_ru')}}">{{ old('content_ru', $emailTemplate->content_ru) }}</textarea>
                             @error('content_ru')
                             <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
                             @enderror
@@ -100,14 +139,14 @@
                             <textarea id="editor_es" rows="3" cols="3"
                                       class="form-control summernote-height @error('content_es') border-danger @enderror editor"
                                       name="content_es"
-                                      placeholder="{{__('admin.content_es')}}">{{ old('content_es', $cmsPage->content_es) }}</textarea>
+                                      placeholder="{{__('admin.content_es')}}">{{ old('content_es', $emailTemplate->content_es) }}</textarea>
                             @error('content_es')
                             <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
                             @enderror
                         </div>
                         <div class="col-sm-12">
                             <x-save/>
-                            <x-back route="admin.cms_pages.index"></x-back>
+                            <x-back route="admin.email_templates.index"></x-back>
                         </div>
                     </div>
                 </form>
