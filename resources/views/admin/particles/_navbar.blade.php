@@ -164,6 +164,17 @@
 								</span>
                     </a>
                 </li>
+                <li class="nav-item nav-item-submenu">
+                    <a href="#" class="nav-link legitRipple"><i class="icon-mailbox"></i> <span>Loyalty messages</span></a>
+
+                    <ul class="nav nav-group-sub" data-submenu-title="General message">
+                        <li class="nav-item"><a href="{{route('admin.general_message.index')}}"
+                                                class="nav-link legitRipple">General message</a></li>
+                        <li class="nav-item"><a href="{{route('admin.loyalty_message.index')}}" class="nav-link legitRipple">Conditions</a></li>
+                        <li class="nav-item"><a href="{{route('admin.report_type.index')}}"
+                                                class="nav-link legitRipple">Report types</a></li>
+                    </ul>
+                </li>
                 <li class="nav-item">
                     <a href="index.html" class="nav-link legitRipple">
                         <i class="icon-cart"></i>

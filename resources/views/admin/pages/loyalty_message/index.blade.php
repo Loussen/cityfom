@@ -7,13 +7,13 @@
         <div class="page-header-content header-elements-md-inline">
             <div class="page-title d-flex">
                 <h4><i class="icon-arrow-left52 mr-2"></i> <span class="font-weight-semibold">Cityfom</span> -
-                    Coupons</h4>
+                    Loyalty messages</h4>
                 <a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
             </div>
 
             <div class="header-elements d-none">
                 <div class="d-flex justify-content-center">
-                    <a href="{{route('admin.coupon.create')}}" class="btn btn-outline-success float-right"><i
+                    <a href="{{route('admin.loyalty_message.create')}}" class="btn btn-outline-success float-right"><i
                             class="icon-plus2"></i> Add New</a>
                 </div>
             </div>
@@ -23,7 +23,7 @@
             <div class="d-flex">
                 <div class="breadcrumb">
                     <a href="{{ route('admin.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
-                    <span class="breadcrumb-item active">Coupons</span>
+                    <span class="breadcrumb-item active">Loyalty messages</span>
                 </div>
 
                 <a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
@@ -37,7 +37,7 @@
     <div class="content">
         <div class="card">
             <div class="card-header header-elements-inline">
-                <h5 class="card-title">Search coupon</h5>
+                <h5 class="card-title">Search loyalty message</h5>
                 <div class="header-elements">
                     <div class="list-icons">
                         <a class="list-icons-item" data-action="collapse"></a>
@@ -48,15 +48,10 @@
             <div class="card-body search-item">
                 <form action="" method="get">
                     <div class="form-row">
-                        <div class="form-group col-sm-2">
-                            <label for="id">{{__('admin.id')}}</label>
-                            <input type="text" class="form-control" name="id" id="id" placeholder="{{ __('admin.id') }}"
-                                   value="{{request('id')}}">
-                        </div>
                         <div class="form-group col-sm-3">
-                            <label for="title">{{__('admin.title')}}</label>
-                            <input type="text" class="form-control" name="title" id="title"
-                                   placeholder="{{ __('admin.title') }}" value="{{request('title')}}">
+                            <label for="description">{{__('admin.description')}}</label>
+                            <input type="text" class="form-control" name="description" id="description"
+                                   placeholder="{{ __('admin.description') }}" value="{{request('description')}}">
                         </div>
                         <div class="form-group col-sm-3">
                             <label for="store_id">{{__('admin.store')}}</label>
@@ -65,6 +60,16 @@
                                 @foreach($stores as $store)
                                     <option
                                         {{ request('store_id') == $store->id ? 'selected' : '' }}  value="{{ $store->id }}">{{ $store->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-3">
+                            <label for="type">{{__('admin.type')}}</label>
+                            <select name="type" class="select" id="type">
+                                <option value="">{{ __('admin.all') }}</option>
+                                @foreach($loyaltyMessageType as $typeKey => $typeVal)
+                                    <option
+                                        {{ request('type') == $typeKey ? 'selected' : '' }}  value="{{ $typeKey }}">{{ $typeVal }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -80,7 +85,7 @@
                         </div>
                         <div class="col-sm-12">
                             <x-search/>
-                            <x-showall route="admin.coupon.index"/>
+                            <x-showall route="admin.loyalty_message.index"/>
                             <x-clear/>
                         </div>
                     </div>
@@ -90,29 +95,24 @@
 
     @include('admin.particles._sessionmessage')
     <!-- Basic table -->
-        <a class="btn btn-info legitRipple col-md-2 mr-2 mb-2"
-           href="{{ route('admin.coupon.index',['redeem_count' => $redeemCount == 'ASC' ? 'DESC' : 'ASC']) }}">
-            {!! $redeemCount == 'ASC' ? "<i class='icon-arrow-up-left2'></i>" : "<i class='icon-arrow-down-left2'></i>" !!}
-            Sorting by redeem count
-        </a>
         <div class="card" style="zoom: 1;">
             <div class="card-header row">
                 <div class="col-md-4 mr-1 mb-2 border p-1 rounded">
                     Status: <br />
                     <button class="btn btn-success status_all col-md-5" data-type="1"
-                            data-url="{{ url('statusMultipleCoupon') }}">
+                            data-url="{{ url('statusMultipleLoyaltyMessage') }}">
                         Enable Selected
                     </button>
 
                     <button class="btn btn-warning status_all col-md-5" data-type="2"
-                            data-url="{{ url('statusMultipleCoupon') }}">
+                            data-url="{{ url('statusMultipleLoyaltyMessage') }}">
                         Disable Selected
                     </button>
                 </div>
 
                 <div class="col-md-3 mb-2 float-right text-right">
                     <button class="btn btn-danger delete_all"
-                            data-url="{{ url('destroyMultipleCoupon') }}
+                            data-url="{{ url('destroyMultipleLoyaltyMessage') }}
                                 ">Delete Selected
                     </button>
                 </div>
@@ -125,36 +125,32 @@
                     <tr>
                         <th><input type="checkbox" id="master"></th>
                         <th>#</th>
-                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Image</th>
                         <th>Store</th>
-                        <th>Discount</th>
+                        <th>Points</th>
+                        <th>Type</th>
                         <th>Valid from</th>
                         <th>Valid to</th>
-                        <th>Image</th>
-                        <th>Redeem Count</th>
                         <th>Status</th>
                         <th class="text-center"><i class="icon-menu7"></i></th>
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($coupons as $coupon)
-                        <tr id="tr_{{$coupon->id}}">
-                            <td><input type="checkbox" class="sub_chk" data-id="{{$coupon->id}}"></td>
-                            <td>{{ $coupon->id }}</td>
-                            <td>{{ $coupon->title }}</td>
-                            <td>{{ $coupon->s_name }}</td>
-                            <td>{{ $coupon->discount }} %</td>
-                            <td>{{ $coupon->valid_from }}</td>
-                            <td>{{ $coupon->valid_to }}</td>
+                    @foreach($loyaltyMessages as $loyaltyMessage)
+                        <tr id="tr_{{$loyaltyMessage->id}}">
+                            <td><input type="checkbox" class="sub_chk" data-id="{{$loyaltyMessage->id}}"></td>
+                            <td>{{ $loyaltyMessage->id }}</td>
+                            <td>{{ $loyaltyMessage->description }}</td>
                             <td>
                                 @php
-                                    if($coupon->image !== null)
+                                    if($loyaltyMessage->image !== null)
                                     {
-                                        $explodeImage = explode(".", $coupon->image);
+                                        $explodeImage = explode(".", $loyaltyMessage->image);
                                         $imageType = end($explodeImage);
                                         if(in_array(strtolower($imageType), ['jpg', 'jpeg', 'png']))
                                         {
-                                            echo '<a href="javascript:void(0);" class="pop"><img src="'.asset("/uploads/coupons/".$coupon->image).'" style="max-width: 100px; max-height: 100px;"/></a>';
+                                            echo '<a href="javascript:void(0);" class="pop"><img src="'.asset("/uploads/loyalty_messages/".$loyaltyMessage->image).'" style="max-width: 100px; max-height: 100px;"/></a>';
                                         }
                                     }
                                 @endphp
@@ -173,19 +169,23 @@
                                     </div>
                                 </div>
                             </td>
-                            <td>{{ $coupon->redeem_count }}</td>
+                            <td>{{ $loyaltyMessage->s_name }}</td>
+                            <td>{{ $loyaltyMessage->points }}</td>
+                            <td>{{ $loyaltyMessageType[$loyaltyMessage->type] }}</td>
+                            <td>{{ $loyaltyMessage->valid_from }}</td>
+                            <td>{{ $loyaltyMessage->valid_to }}</td>
                             <td>
-                                <select name="status" id="status" data-coupon-id="{{ $coupon->id }}">
+                                <select name="status" id="status" data-loyalty-message-id="{{ $loyaltyMessage->id }}">
                                     @foreach($status as $statusKey => $statusVal)
                                         <option
-                                            {{ $statusKey == $coupon->status ? 'selected': '' }} value="{{ $statusKey }}">{{ $statusVal }}</option>
+                                            {{ $statusKey == $loyaltyMessage->status ? 'selected': '' }} value="{{ $statusKey }}">{{ $statusVal }}</option>
                                     @endforeach
                                 </select>
                             </td>
                             <td class="text-center">
                                 <div class="btn-group">
-                                    <x-edit route="admin.coupon.edit" :id="$coupon->id"/>
-                                    <x-delete route="admin.coupon.destroy" :id="$coupon->id"/>
+                                    <x-edit route="admin.loyalty_message.edit" :id="$loyaltyMessage->id"/>
+                                    <x-delete route="admin.loyalty_message.destroy" :id="$loyaltyMessage->id"/>
                                 </div>
                             </td>
                         </tr>
@@ -195,10 +195,10 @@
             </div>
 
             <div class="card-footer bg-white d-flex justify-content-between align-items-center">
-                {{ $coupons->links('pagination::bootstrap-4') }}
-                <span class="text-muted">{{ ($coupons->currentPage() * config('global.pagination_count') >= $coupons->total()) ? ($coupons->currentPage() * config('global.pagination_count') - config('global.pagination_count')) ." - ". $coupons->total() : ($coupons->currentPage() * config('global.pagination_count') - config('global.pagination_count')) ." - ". $coupons->currentPage() * config('global.pagination_count') }}
+                {{ $loyaltyMessages->links('pagination::bootstrap-4') }}
+                <span class="text-muted">{{ ($loyaltyMessages->currentPage() * config('global.pagination_count') >= $loyaltyMessages->total()) ? ($loyaltyMessages->currentPage() * config('global.pagination_count') - config('global.pagination_count')) ." - ". $loyaltyMessages->total() : ($loyaltyMessages->currentPage() * config('global.pagination_count') - config('global.pagination_count')) ." - ". $loyaltyMessages->currentPage() * config('global.pagination_count') }}
                         /
-                        {{ $coupons->total() }}
+                        {{ $loyaltyMessages->total() }}
                         </span>
             </div>
         </div>
@@ -219,12 +219,12 @@
         }).on('change', function () {
             let $this = $(this);
             let status = $this.val();
-            let coupon_id = $this.data('coupon-id');
+            let loyalty_message_id = $this.data('loyalty-message-id');
 
-            if (status > 0 && coupon_id > 0) {
+            if (status > 0 && loyalty_message_id > 0) {
                 swal.fire({
                     title: 'Alert',
-                    text: "Do you want change status this coupon!",
+                    text: "Do you want change status this message!",
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Yes',
@@ -235,8 +235,8 @@
                 }).then(function (result) {
                     if (result.value) {
                         $.ajax({
-                            url: "{{ route('admin.coupon.changeCouponStatus') }}",
-                            data: {status: status, coupon_id: coupon_id},
+                            url: "{{ route('admin.loyalty_message.changeLoyaltyMessageStatus') }}",
+                            data: {status: status, loyalty_message_id: loyalty_message_id},
                             method: 'PUT',
                             dataType: 'json',
                             headers: {
@@ -247,7 +247,7 @@
                                 if (data.response.status == 'OK') {
                                     swal.fire({
                                         title: 'Success',
-                                        text: "This coupon's status was changed successfully!",
+                                        text: "This message's status was changed successfully!",
                                         type: 'success',
                                         confirmButtonText: 'OK',
                                         confirmButtonClass: 'btn btn-success',
@@ -313,7 +313,7 @@
                         let join_selected_values = allVals.join(",");
 
                         $.ajax({
-                            url: "{{ route('admin.coupon.destroyMultipleCoupon') }}",
+                            url: "{{ route('admin.loyalty_message.destroyMultipleLoyaltyMessage') }}",
                             data: {ids: join_selected_values},
                             method: 'DELETE',
                             dataType: 'json',
@@ -389,7 +389,7 @@
                         let join_selected_values = allVals.join(",");
 
                         $.ajax({
-                            url: "{{ route('admin.coupon.statusMultipleCoupon') }}",
+                            url: "{{ route('admin.loyalty_message.statusMultipleLoyaltyMessage') }}",
                             data: {ids: join_selected_values, status: status},
                             method: 'PUT',
                             dataType: 'json',

@@ -7,7 +7,7 @@
         <div class="page-header-content header-elements-md-inline">
             <div class="page-title d-flex">
                 <h4><i class="icon-arrow-left52 mr-2"></i> <span class="font-weight-semibold">Cityfom</span> -
-                    Add Coupon</h4>
+                    Add Loyalty Message</h4>
                 <a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
             </div>
         </div>
@@ -17,8 +17,8 @@
                 <div class="breadcrumb">
                     <a href="{{ route('admin.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i>
                         Home</a>
-                    <a href="{{ route('admin.coupon.index') }}" class="breadcrumb-item">Coupons</a>
-                    <span class="breadcrumb-item active">Add Coupon</span>
+                    <a href="{{ route('admin.loyalty_message.index') }}" class="breadcrumb-item">Loyalty messages</a>
+                    <span class="breadcrumb-item active">Add Loyalty message</span>
                 </div>
 
                 <a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
@@ -31,21 +31,9 @@
         <div class="card">
             <div class="card-body">
                 @include('admin.particles._sessionmessage',['error_type' => 'warning'])
-                <form action="{{route('admin.coupon.store')}}" method="POST" enctype="multipart/form-data">
+                <form action="{{route('admin.loyalty_message.store')}}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="form-row">
-                        <div class="form-group col-sm-6">
-                            <label class="font-weight-semibold @error('title') text-danger @enderror"
-                                   for="title">{{__('admin.title')}}</label>
-                            <div class="form-group-feedback form-group-feedback-right">
-                                <input type="text" name="title" id="title"
-                                       class="form-control @error('title') border-danger @enderror"
-                                       placeholder="{{__('admin.title')}}" value="{{ old('title') }}">
-                            </div>
-                            @error('title')
-                            <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
                         <div class="form-group col-sm-6">
                             <label class="font-weight-semibold @error('store_id') text-danger @enderror"
                                    for="store_id">{{__('admin.stores')}}</label>
@@ -59,6 +47,22 @@
                                 </select>
                             </div>
                             @error('store_id')
+                            <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label class="font-weight-semibold @error('type') text-danger @enderror"
+                                   for="type">{{__('admin.type')}}</label>
+                            <div class="form-group-feedback form-group-feedback-right">
+                                <select name="type" class="select-search" id="type">
+                                    <option value="0">{{__('admin.please_select')}} ...</option>
+                                    @foreach($loyaltyMessageType as $typeKey => $typeVal)
+                                        <option
+                                            {{ old('type') == $typeKey ? 'selected': '' }} value="{{$typeKey}}">{{$typeVal}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            @error('type')
                             <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
                             @enderror
                         </div>
@@ -90,17 +94,14 @@
                             @enderror
                         </div>
                         <div class="form-group col-sm-6">
-                            <label class="font-weight-semibold @error('discount') text-danger @enderror"
-                                   for="discount">{{__('admin.discount')}}</label>
+                            <label class="font-weight-semibold @error('points') text-danger @enderror"
+                                   for="points">{{__('admin.points')}}</label>
                             <div class="form-group-feedback form-group-feedback-right">
-                                <input type="number" min="1" name="discount" id="discount"
-                                       class="form-control @error('discount') border-danger @enderror"
-                                       placeholder="{{__('admin.discount')}}" value="{{ old('discount') }}">
-                                <div class="form-control-feedback form-control-feedback-lg">
-                                    <i class="icon-percent"></i>
-                                </div>
+                                <input type="number" min="1" name="points" id="points"
+                                       class="form-control @error('points') border-danger @enderror"
+                                       placeholder="{{__('admin.points')}}" value="{{ old('points') }}">
                             </div>
-                            @error('discount')
+                            @error('points')
                             <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
                             @enderror
                         </div>
@@ -124,9 +125,21 @@
                             <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
                             @enderror
                         </div>
+                        <div class="form-group col-sm-6">
+                            <label class="font-weight-semibold @error('reorder') text-danger @enderror"
+                                   for="reorder">{{__('admin.reorder')}}</label>
+                            <div class="form-group-feedback form-group-feedback-right">
+                                <input type="text" name="reorder" id="reorder"
+                                       class="form-control @error('reorder') border-danger @enderror"
+                                       placeholder="{{__('admin.reorder')}}" value="{{ old('reorder') }}">
+                            </div>
+                            @error('reorder')
+                            <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
                         <div class="col-sm-12">
                             <x-save/>
-                            <x-back route="admin.coupon.index"></x-back>
+                            <x-back route="admin.loyalty_message.index"></x-back>
                         </div>
                     </div>
                 </form>

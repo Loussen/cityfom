@@ -85,6 +85,18 @@ Route::group(['as' => 'admin.', 'prefix' => 'admin', 'middleware' => 'adminauth'
     Route::put('changeEmailTemplateStatus', 'EmailTemplatesController@changeEmailTemplateStatus')->name('email_templates.changeEmailTemplateStatus');
     Route::put('statusMultipleEmailTemplate', 'EmailTemplatesController@statusMultipleEmailTemplate')->name('email_templates.statusMultipleEmailTemplate');
 
+    //General messages
+    Route::resource('general_message', 'GeneralMessageController');
+    Route::put('changeGeneralMessageStatus', 'GeneralMessageController@changeGeneralMessageStatus')->name('general_message.changeGeneralMessageStatus');
+    Route::delete('destroyMultipleGeneralMessage', 'GeneralMessageController@destroyMultipleGeneralMessage')->name('general_message.destroyMultipleGeneralMessage');
+    Route::put('statusMultipleGeneralMessage', 'GeneralMessageController@statusMultipleGeneralMessage')->name('general_message.statusMultipleGeneralMessage');
+
+    // Loyalty messages
+    Route::resource('loyalty_message', 'LoyaltyMessageController');
+    Route::put('changeLoyaltyMessageStatus', 'LoyaltyMessageController@changeLoyaltyMessageStatus')->name('loyalty_message.changeLoyaltyMessageStatus');
+    Route::delete('destroyMultipleLoyaltyMessage', 'LoyaltyMessageController@destroyMultipleLoyaltyMessage')->name('loyalty_message.destroyMultipleLoyaltyMessage');
+    Route::put('statusMultipleLoyaltyMessage', 'LoyaltyMessageController@statusMultipleLoyaltyMessage')->name('loyalty_message.statusMultipleLoyaltyMessage');
+
     Route::post('ckeditor_upload', 'CkeditorController@upload')->name('ckeditor.upload');
 
 });

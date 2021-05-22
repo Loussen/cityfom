@@ -9,7 +9,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $store_id
  * @property string $description
  * @property int $points
- * @property string $expiration
+ * @property string $valid_from
+ * @property string $valid_to
  * @property string $type
  * @property string $image
  * @property int $reorder
@@ -22,6 +23,6 @@ class LoyaltyMessages extends Model
     /**
      * @var array
      */
-    protected $fillable = ['store_id', 'description', 'points', 'expiration', 'type', 'image', 'reorder', 'status', 'created_at', 'updated_at'];
+    protected $fillable = ['store_id', 'description', 'points', 'valid_from', 'valid_to', 'type', 'image', 'reorder', 'status', 'created_at', 'updated_at'];
 
 }
