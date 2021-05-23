@@ -91,11 +91,16 @@ Route::group(['as' => 'admin.', 'prefix' => 'admin', 'middleware' => 'adminauth'
     Route::delete('destroyMultipleGeneralMessage', 'GeneralMessageController@destroyMultipleGeneralMessage')->name('general_message.destroyMultipleGeneralMessage');
     Route::put('statusMultipleGeneralMessage', 'GeneralMessageController@statusMultipleGeneralMessage')->name('general_message.statusMultipleGeneralMessage');
 
-    // Loyalty messages
+    // Loyalty messages (Conditions)
     Route::resource('loyalty_message', 'LoyaltyMessageController');
     Route::put('changeLoyaltyMessageStatus', 'LoyaltyMessageController@changeLoyaltyMessageStatus')->name('loyalty_message.changeLoyaltyMessageStatus');
     Route::delete('destroyMultipleLoyaltyMessage', 'LoyaltyMessageController@destroyMultipleLoyaltyMessage')->name('loyalty_message.destroyMultipleLoyaltyMessage');
     Route::put('statusMultipleLoyaltyMessage', 'LoyaltyMessageController@statusMultipleLoyaltyMessage')->name('loyalty_message.statusMultipleLoyaltyMessage');
+
+    // Loyalty points
+    Route::resource('loyalty_point', 'LoyaltyPointController');
+    Route::delete('destroyMultipleLoyaltyPoint', 'LoyaltyPointController@destroyMultipleLoyaltyPoint')->name('loyalty_point.destroyMultipleLoyaltyPoint');
+    Route::post('pointHistory', 'LoyaltyPointController@pointHistory')->name('loyalty_point.pointHistory');
 
     Route::post('ckeditor_upload', 'CkeditorController@upload')->name('ckeditor.upload');
 

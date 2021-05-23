@@ -171,8 +171,8 @@
                         <li class="nav-item"><a href="{{route('admin.general_message.index')}}"
                                                 class="nav-link legitRipple">General message</a></li>
                         <li class="nav-item"><a href="{{route('admin.loyalty_message.index')}}" class="nav-link legitRipple">Conditions</a></li>
-                        <li class="nav-item"><a href="{{route('admin.report_type.index')}}"
-                                                class="nav-link legitRipple">Report types</a></li>
+                        <li class="nav-item"><a href="{{route('admin.loyalty_point.index')}}"
+                                                class="nav-link legitRipple">Points</a></li>
                     </ul>
                 </li>
                 <li class="nav-item">
