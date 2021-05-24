@@ -175,6 +175,17 @@
                                                 class="nav-link legitRipple">Points</a></li>
                     </ul>
                 </li>
+                <li class="nav-item nav-item-submenu">
+                    <a href="#" class="nav-link legitRipple"><i class="icon-mailbox"></i> <span>Settings</span></a>
+
+                    <ul class="nav nav-group-sub" data-submenu-title="Change password">
+                        <li class="nav-item"><a href="{{route('admin.password.password')}}"
+                                                class="nav-link legitRipple">Change password</a></li>
+                        <li class="nav-item"><a href="{{route('admin.configs.configs')}}" class="nav-link legitRipple">Global configs</a></li>
+                        <li class="nav-item"><a href="{{route('admin.profile.profile')}}"
+                                                class="nav-link legitRipple">Profile</a></li>
+                    </ul>
+                </li>
                 <li class="nav-item">
                     <a href="index.html" class="nav-link legitRipple">
                         <i class="icon-cart"></i>

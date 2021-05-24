@@ -102,6 +102,14 @@ Route::group(['as' => 'admin.', 'prefix' => 'admin', 'middleware' => 'adminauth'
     Route::delete('destroyMultipleLoyaltyPoint', 'LoyaltyPointController@destroyMultipleLoyaltyPoint')->name('loyalty_point.destroyMultipleLoyaltyPoint');
     Route::post('pointHistory', 'LoyaltyPointController@pointHistory')->name('loyalty_point.pointHistory');
 
+    // Settings
+    Route::get('settings/configs', 'SettingsController@configs')->name('configs.configs');
+    Route::put('settings/configStore', 'SettingsController@configStore')->name('configs.configStore');
+    Route::get('settings/password', 'SettingsController@password')->name('password.password');
+    Route::put('settings/passwordStore', 'SettingsController@passwordStore')->name('password.passwordStore');
+    Route::get('settings/profile', 'SettingsController@profile')->name('profile.profile');
+    Route::put('settings/profileStore', 'SettingsController@profileStore')->name('profile.profileStore');
+
     Route::post('ckeditor_upload', 'CkeditorController@upload')->name('ckeditor.upload');
 
 });
