@@ -124,6 +124,55 @@
                             <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
                             @enderror
                         </div>
+
+                        <div class="border border-success row col-sm-12 p-2 additional"
+                             style="margin: 0 auto 10px auto;">
+                            <h2 class="text-center col-sm-12">Promote coupon (Optional)</h2>
+                            <div class="form-group col-sm-6">
+                                <label class="font-weight-semibold @error('start_end_promote') text-danger @enderror"
+                                       for="start_end_promote">{{__('admin.start_end_promote')}}</label>
+                                <div class="form-group-feedback form-group-feedback-right">
+                                    <div class="input-group">
+                                        <span class="input-group-prepend">
+											<span class="input-group-text"><i class="icon-calendar22"></i></span>
+										</span>
+                                        @php
+                                            if(old('start_end_promote'))
+                                            {
+                                                echo '<input type="text" name="start_end_promote" id="start_end_promote" class="form-control daterange-basic"
+                                               value="'.old('start_end_promote').'">';
+                                            }
+                                            else
+                                            {
+                                                echo '<input type="text" name="start_end_promote" id="start_end_promote" class="form-control daterange-basic"
+                                               value="">';
+                                            }
+                                        @endphp
+
+                                    </div>
+                                </div>
+                                @error('start_end_promote')
+                                <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label class="font-weight-semibold @error('radius') text-danger @enderror"
+                                       for="radius">{{__('admin.radius')}} (km)</label>
+                                <div class="form-group-feedback form-group-feedback-right">
+                                    <select name="radius" class="select-search" id="radius">
+                                        <option value="0">{{__('admin.please_select')}} ...</option>
+                                        @foreach($radius as $keyRadius=>$valueRadius)
+                                            <option
+                                                {{ old('radius') == $keyRadius ? 'selected': '' }} value="{{$keyRadius}}">{{$valueRadius}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('radius')
+                                <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
                         <div class="col-sm-12">
                             <x-save/>
                             <x-back route="admin.coupon.index"></x-back>

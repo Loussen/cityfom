@@ -257,4 +257,22 @@ if (! function_exists('decode_text')) {
     }
 }
 
+if (! function_exists('radius_promote')) {
+
+    /**
+     * @param null $message
+     * @return array
+     */
+    function radius_promote(){
+
+        $radiusPromote = [];
+        for($i = 0; $i <= 10000; $i+=500)
+        {
+            $radiusPromote[$i] = $i / 1000;
+        }
+
+        return $radiusPromote;
+    }
+}
+
 

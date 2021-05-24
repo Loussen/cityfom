@@ -4,12 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ChannelPostRequest;
-use App\Http\Requests\ChannelRequest;
-use App\Http\Requests\CouponRequest;
 use App\Models\ChannelCategory;
-use App\Models\Channels;
 use App\Models\ChannelsDetails;
-use App\Models\Coupons;
 use App\Models\Stores;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -95,8 +91,9 @@ class ChannelPostController extends Controller
     public function create()
     {
         $stores = Stores::all();
+        $radius = radius_promote();
 
-        return view('admin.pages.channel_post.create',compact('stores'));
+        return view('admin.pages.channel_post.create',compact('stores','radius'));
     }
 
     /**
@@ -139,6 +136,8 @@ class ChannelPostController extends Controller
         $categoryId = $channelAndCategoryIdExplode[1];
 
         $additionalText = $price = $oldPrice = '';
+        $radius = 0;
+        $startPromote = $endPromote = NULL;
         if(in_array($categoryId,[4,5,6]))
         {
             $additionalText = $request->additional_text;
@@ -147,6 +146,14 @@ class ChannelPostController extends Controller
         {
             $price = $request->new_price;
             $oldPrice = $request->old_price;
+
+            if($request->radius > 0) {
+                $radius = intval($request->radius);
+                $startEndPromote = $request->start_end_promote;
+                $dateExplode = explode("-",$startEndPromote);
+                $startPromote = date("Y-m-d", strtotime($dateExplode[0]));
+                $endPromote = date("Y-m-d", strtotime($dateExplode[1]));
+            }
         }
         elseif(in_array($categoryId,[1,2]))
         {
@@ -169,6 +176,9 @@ class ChannelPostController extends Controller
             'old_price' => $oldPrice,
             'publication_date' => $publicDate,
             'expiration_date' => $expireDate,
+            'start_date_promote' => $startPromote,
+            'end_date_promote' => $endPromote,
+            'radius' => $radius,
             'reorder' => $request->reorder ?? 0,
         ];
 
@@ -197,6 +207,7 @@ class ChannelPostController extends Controller
     public function edit(ChannelsDetails $channelPost)
     {
         $stores = Stores::all();
+        $radius = radius_promote();
 
         $selectedStore = \Illuminate\Support\Facades\DB::table('channels_details AS cd')
             ->join('channels AS c', 'c.id', '=', 'cd.channel_id')
@@ -205,7 +216,7 @@ class ChannelPostController extends Controller
             ->select('s.id AS store_id')
             ->first();
 
-        return view('admin.pages.channel_post.edit', compact('stores','channelPost','selectedStore'));
+        return view('admin.pages.channel_post.edit', compact('stores','channelPost','selectedStore','radius'));
     }
 
     /**
@@ -255,6 +266,8 @@ class ChannelPostController extends Controller
         $categoryId = $channelAndCategoryIdExplode[1];
 
         $additionalText = $price = $oldPrice = '';
+        $radius = 0;
+        $startPromote = $endPromote = NULL;
         if(in_array($categoryId,[4,5,6]))
         {
             $additionalText = $request->additional_text;
@@ -263,6 +276,14 @@ class ChannelPostController extends Controller
         {
             $price = $request->new_price;
             $oldPrice = $request->old_price;
+
+            if($request->radius > 0) {
+                $radius = intval($request->radius);
+                $startEndPromote = $request->start_end_promote;
+                $dateExplode = explode("-",$startEndPromote);
+                $startPromote = date("Y-m-d", strtotime($dateExplode[0]));
+                $endPromote = date("Y-m-d", strtotime($dateExplode[1]));
+            }
         }
         elseif(in_array($categoryId,[1,2]))
         {
@@ -285,6 +306,9 @@ class ChannelPostController extends Controller
             'old_price' => $oldPrice,
             'publication_date' => $publicDate,
             'expiration_date' => $expireDate,
+            'start_date_promote' => $startPromote,
+            'end_date_promote' => $endPromote,
+            'radius' => $radius,
             'reorder' => $request->reorder ?? 0,
         ];
 

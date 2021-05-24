@@ -89,8 +89,9 @@ class CouponController extends Controller
     public function create()
     {
         $stores = Stores::all();
+        $radius = radius_promote();
 
-        return view('admin.pages.coupon.create',compact('stores'));
+        return view('admin.pages.coupon.create',compact('stores','radius'));
     }
 
     /**
@@ -124,6 +125,16 @@ class CouponController extends Controller
         $validFrom = date("Y-m-d", strtotime($validExplode[0]));
         $validTo = date("Y-m-d", strtotime($validExplode[1]));
 
+        $radius = 0;
+        $startPromote = $endPromote = NULL;
+        if($request->radius > 0) {
+            $radius = intval($request->radius);
+            $startEndPromote = $request->start_end_promote;
+            $dateExplode = explode("-",$startEndPromote);
+            $startPromote = date("Y-m-d", strtotime($dateExplode[0]));
+            $endPromote = date("Y-m-d", strtotime($dateExplode[1]));
+        }
+
         $couponData = [
             'title' => $request->title,
             'store_id' => $request->store_id,
@@ -132,6 +143,9 @@ class CouponController extends Controller
             'image' => $imageName,
             'valid_from' => $validFrom,
             'valid_to' => $validTo,
+            'start_date_promote' => $startPromote,
+            'end_date_promote' => $endPromote,
+            'radius' => $radius,
         ];
 
         $couponId = Coupons::insertGetId($couponData);
@@ -167,8 +181,9 @@ class CouponController extends Controller
     public function edit(Coupons $coupon)
     {
         $stores = Stores::all();
+        $radius = radius_promote();
 
-        return view('admin.pages.coupon.edit', compact('coupon','stores'));
+        return view('admin.pages.coupon.edit', compact('coupon','stores','radius'));
     }
 
     /**
@@ -207,6 +222,16 @@ class CouponController extends Controller
         $validFrom = date("Y-m-d", strtotime($validExplode[0]));
         $validTo = date("Y-m-d", strtotime($validExplode[1]));
 
+        $radius = 0;
+        $startPromote = $endPromote = NULL;
+        if($request->radius > 0) {
+            $radius = intval($request->radius);
+            $startEndPromote = $request->start_end_promote;
+            $dateExplode = explode("-",$startEndPromote);
+            $startPromote = date("Y-m-d", strtotime($dateExplode[0]));
+            $endPromote = date("Y-m-d", strtotime($dateExplode[1]));
+        }
+
         $couponData = [
             'title' => $request->title,
             'store_id' => $request->store_id,
@@ -215,6 +240,9 @@ class CouponController extends Controller
             'image' => $imageName,
             'valid_from' => $validFrom,
             'valid_to' => $validTo,
+            'start_date_promote' => $startPromote,
+            'end_date_promote' => $endPromote,
+            'radius' => $radius,
         ];
 
         $coupon->update($couponData);

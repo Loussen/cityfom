@@ -14,7 +14,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $code
  * @property string $valid_from
  * @property string $valid_to
+ * @property string $start_date_promote
+ * @property string $end_date_promote
  * @property int $redeem
+ * @property int $radius
  * @property string $status
  * @property string $created_at
  * @property string $updated_at
@@ -26,6 +29,6 @@ class Coupons extends Model
     /**
      * @var array
      */
-    protected $fillable = ['store_id', 'title', 'description', 'image', 'discount', 'code', 'valid_from', 'valid_to', 'redeem', 'status', 'created_at', 'updated_at'];
+    protected $fillable = ['store_id', 'title', 'description', 'image', 'discount', 'code', 'valid_from', 'valid_to', 'start_date_promote', 'end_date_promote', 'radius', 'redeem', 'status', 'created_at', 'updated_at'];
 
 }

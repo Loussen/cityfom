@@ -71,7 +71,8 @@
                                 <span class="input-group-prepend">
 											<span class="input-group-text"><i class="icon-calendar22"></i></span>
 										</span>
-                                    <input type="text" name="valid_from_to" id="valid_from_to" class="form-control daterange-basic"
+                                    <input type="text" name="valid_from_to" id="valid_from_to"
+                                           class="form-control daterange-basic"
                                            value="{{ old('valid_from_to',date("m/d/Y",strtotime($coupon->valid_from))." - ".date("m/d/Y",strtotime($coupon->valid_to))) }}">
                                 </div>
                             </div>
@@ -96,7 +97,10 @@
                             <label class="font-weight-semibold @error('description') text-danger @enderror"
                                    for="description">{{__('admin.description')}}</label>
                             <div class="form-group-feedback form-group-feedback-right">
-                                <textarea rows="3" cols="3" class="form-control @error('description') border-danger @enderror" name="description" placeholder="{{__('admin.description')}}">{{ old('description', $coupon->description) }}</textarea>
+                                <textarea rows="3" cols="3"
+                                          class="form-control @error('description') border-danger @enderror"
+                                          name="description"
+                                          placeholder="{{__('admin.description')}}">{{ old('description', $coupon->description) }}</textarea>
                             </div>
                             @error('description')
                             <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
@@ -142,6 +146,54 @@
                             @error('image')
                             <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
                             @enderror
+                        </div>
+                        <div class="border border-success row col-sm-12 p-2 additional"
+                             style="margin: 0 auto 10px auto;">
+                            <h2 class="text-center col-sm-12">Promote coupon (Optional)</h2>
+                            <div class="form-group col-sm-6 start_end_promote">
+                                <label class="font-weight-semibold @error('start_end_promote') text-danger @enderror"
+                                       for="start_end_promote">{{__('admin.start_end_promote')}}</label>
+                                <div class="form-group-feedback form-group-feedback-right">
+                                    <div class="input-group">
+                                <span class="input-group-prepend">
+											<span class="input-group-text"><i class="icon-calendar22"></i></span>
+										</span>
+                                        <?php
+                                        if($coupon->radius > 0) {
+                                        ?>
+                                        <input type="text" name="start_end_promote" id="start_end_promote"
+                                               class="form-control daterange-basic"
+                                               value="{{ old('start_end_promote',date("m/d/Y",strtotime($coupon->start_date_promote))." - ".date("m/d/Y",strtotime($coupon->end_date_promote))) }}">-
+                                        <?php
+                                        } else {
+                                        ?>
+                                        <input type="text" name="start_end_promote" id="start_end_promote"
+                                               class="form-control daterange-basic"
+                                               value="{{ old('start_end_promote',date("m/d/Y")." - ".date("m/d/Y")) }}">
+                                        <?php
+                                        }
+                                        ?>
+
+                                    </div>
+                                </div>
+                                @error('start_end_promote')
+                                <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label class="font-weight-semibold @error('radius') text-danger @enderror"
+                                       for="radius">{{__('admin.radius')}} (km)</label>
+                                <select name="radius" class="select-search" id="radius">
+                                    <option value="0">{{__('admin.please_select')}} ...</option>
+                                    @foreach($radius as $keyRadius => $valueRadius)
+                                        <option
+                                            {{ old('radius',$coupon->radius) == $keyRadius ? 'selected': '' }} value="{{$keyRadius}}">{{$valueRadius}}</option>
+                                    @endforeach
+                                </select>
+                                @error('radius')
+                                <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
                         </div>
                         <div class="col-sm-12">
                             <x-save/>
