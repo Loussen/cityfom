@@ -179,6 +179,8 @@ return [
 
         Mews\Captcha\CaptchaServiceProvider::class,
 
+        Laravel\Passport\PassportServiceProvider::class,
+
     ],
 
     /*
@@ -237,5 +239,7 @@ return [
         Spatie\Permission\PermissionServiceProvider::class,
 
     ],
+
+    'api_version'  => '2',
 
 ];

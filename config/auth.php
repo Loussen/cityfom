@@ -41,11 +41,15 @@ return [
             'provider' => 'users',
         ],
 
-        'api' => [
-            'driver' => 'token',
-            'provider' => 'users',
-            'hash' => false,
+        'api_version' => [
+            'driver' => 'passport',
+            'provider' => 'app_users',
         ],
+
+//        'api' => [
+//            'driver' => 'passport',
+//            'provider' => 'app_users',
+//        ],
 
         'admin' => [
             'driver' => 'session',
@@ -73,13 +77,13 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+            'model' => \App\Models\User::class,
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+         'app_users' => [
+             'driver' => 'eloquent',
+             'model' => \App\Models\AppUsers::class,
+         ],
 
         'cms_users' => [
             'driver' => 'eloquent',

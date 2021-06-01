@@ -3,6 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\HasApiTokens;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 /**
  * @property int $id
@@ -33,11 +36,22 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $created_at
  * @property string $updated_at
  */
-class AppUsers extends Model
+class AppUsers extends Authenticatable
 {
+    use HasApiTokens, Notifiable;
+
     /**
      * @var array
      */
     protected $fillable = ['cms_user_id', 'username', 'email', 'password', 'firstname', 'lastname', 'phone', 'photo', 'birthday', 'location', 'otp', 'verified', 'device_id', 'device_type', 'gender', 'facebook_id', 'twitter_id', 'apple_id', 'google_id', 'fav_notify', 'radius_notify', 'language', 'last_login', 'status', 'created_at', 'updated_at'];
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'password', 'remember_token',
+    ];
 
 }
