@@ -240,6 +240,6 @@ return [
 
     ],
 
-    'api_version'  => '2',
+    'api_version'  => '1',
 
 ];

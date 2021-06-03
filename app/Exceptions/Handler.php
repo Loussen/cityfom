@@ -71,6 +71,10 @@ class Handler extends ExceptionHandler
             return $this->errorResponse('The specified URL cannot be found', 404);
         }
 
+        if ($exception instanceof ValidationException) {
+            return $this->errorResponse($exception->errors(), $exception->status);
+        }
+
         if ($exception instanceof HttpException) {
             return $this->errorResponse($exception->getMessage(), $exception->getStatusCode());
         }

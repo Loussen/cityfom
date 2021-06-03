@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -15,15 +14,9 @@ class User extends Authenticatable
     protected $table = 'app_users';
 
     /**
-     * The attributes that are mass assignable.
-     *
      * @var array
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    protected $fillable = ['cms_user_id', 'username', 'email', 'password', 'firstname', 'lastname', 'phone', 'photo', 'birthday', 'location', 'otp', 'verified', 'device_id', 'device_type', 'gender', 'facebook_id', 'twitter_id', 'apple_id', 'google_id', 'fav_notify', 'radius_notify', 'language', 'last_login', 'status', 'created_at', 'updated_at'];
 
     /**
      * The attributes that should be hidden for arrays.

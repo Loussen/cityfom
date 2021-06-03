@@ -21,4 +21,6 @@ Route::post('register', 'UserController@register');
 
 Route::group(['middleware' => 'auth:api_version'], function(){
     Route::get('categories','CategoryController@all');
+    Route::get('user/detail','UserController@details');
+    Route::post('logout', 'UserController@logout');
 });
