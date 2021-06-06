@@ -18,9 +18,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('login', 'UserController@login');
 Route::post('register', 'UserController@register');
+Route::post('user/verifyAccount', 'UserController@verifyAccount');
+Route::post('user/resendOtp', 'UserController@resendOtp');
+Route::post('user/verifyOtp', 'UserController@verifyOtp');
 
 Route::group(['middleware' => 'auth:api_version'], function(){
     Route::get('categories','CategoryController@all');
     Route::get('user/detail','UserController@details');
+    Route::post('user/resetPassword', 'UserController@resetPassword');
     Route::post('logout', 'UserController@logout');
 });
