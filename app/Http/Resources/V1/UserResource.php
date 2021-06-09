@@ -3,6 +3,7 @@
 namespace App\Http\Resources\V1;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\File;
 
 class UserResource extends JsonResource
 {
@@ -14,6 +15,9 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        $arr = parent::toArray($request);
+
+        $arr['photo'] = (!empty($arr['photo']) && File::exists(public_path() . '/uploads/user_images/' . $arr['photo'])) ? asset("/uploads/user_images/" . $arr['photo']) : asset("/uploads/default/profile_picture.png");
+        return $arr;
     }
 }

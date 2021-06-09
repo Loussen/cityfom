@@ -25,7 +25,7 @@ class PagesController extends ApiController
     }
 
     /**
-     * Get page details api
+     * Get page details by slug api
      *
      * @return \Illuminate\Http\Response
      */
@@ -45,7 +45,7 @@ class PagesController extends ApiController
     }
 
     /**
-     * Get page details by language api
+     * Get page details by language and slug api
      *
      * @return \Illuminate\Http\Response
      */

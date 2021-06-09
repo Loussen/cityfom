@@ -18,8 +18,14 @@ use Illuminate\Support\Facades\Artisan;
 Route::get('clear-cache', function() {
     $exitCode = Artisan::call('cache:clear');
     $exitCode = Artisan::call('config:cache');
+    $exitCode = Artisan::call('route:cache');
     return 'DONE'; //Return anything
 });
+
+// Pages
+Route::post('pages/all', 'PagesController@all');
+Route::post('pages/detailsBySlug', 'PagesController@detailsBySlug');
+Route::post('pages/detailsByLangAndSlug', 'PagesController@detailsByLangAndSlug');
 
 Route::post('login', 'UserController@login');
 Route::post('register', 'UserController@register');
@@ -39,8 +45,6 @@ Route::group(['middleware' => 'auth:api_version'], function(){
     Route::post('user/updateProfile', 'UserController@updateProfile');
     Route::post('logout', 'UserController@logout');
 
-    // Pages
-    Route::post('pages/all', 'PagesController@all');
-    Route::post('pages/detailsBySlug', 'PagesController@detailsBySlug');
-    Route::post('pages/detailsByLangAndSlug', 'PagesController@detailsByLangAndSlug');
+    // Coupons
+    Route::post('coupons/all', 'CouponsController@all');
 });

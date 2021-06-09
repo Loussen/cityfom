@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Api\ApiController;
+use App\Http\Resources\V1\UserResource;
 use App\Mail\AppMail;
 use App\Models\AppUsers;
 use App\Models\EmailTemplates;
@@ -46,7 +47,7 @@ class UserController extends ApiController
 
                 $getUser->update($userData);
 
-                $userDetails = $this->userDetails($getUser->id);
+                $userDetails = new UserResource($getUser);
 
                 $userDetails['token'] = $user->createToken('CityFom')->accessToken;
 
@@ -125,7 +126,7 @@ class UserController extends ApiController
             Mail::to($validatedData['email'])->send(new AppMail($emailDetails));
         }
 
-        $userDetails = $this->userDetails($user->id);
+        $userDetails = new UserResource($user);
 
         return $this->successResponse($userDetails);
     }
@@ -197,7 +198,7 @@ class UserController extends ApiController
             $user = AppUsers::create($userData);
         }
 
-        $userDetails = $this->userDetails($user->id);
+        $userDetails = new UserResource($user);
 
         return $this->successResponse($userDetails);
     }
@@ -228,15 +229,11 @@ class UserController extends ApiController
 
             $user->update($userData);
 
-            $userDataResponse['user_id'] = $user->id;
-            $userDataResponse['email'] = $user->email;
-            $userDataResponse['firstname'] = $user->firstname;
-            $userDataResponse['lastname'] = $user->lastname;
-            $userDataResponse['profile_picture'] = (!empty($user->photo) && File::exists(public_path() . '/uploads/user_images/' . $user->photo)) ? asset("/uploads/user_images/" . $user->photo) : asset("/uploads/profile_picture.png");
+            $userDetails = new UserResource($user);
 
-            $userDataResponse['token'] = $user->createToken('CityFom')->accessToken;
+            $userDetails['token'] = $user->createToken('CityFom')->accessToken;
 
-            return $this->successResponse($userDataResponse);
+            return $this->successResponse($userDetails);
         }
 
         return $this->errorResponse('User not found', 404);
@@ -350,11 +347,11 @@ class UserController extends ApiController
         if ($user) {
             $isOtherToken = DB::table('password_resets')->where('email', $user->email)->first();
 
-            if ($isOtherToken) {
-                return $isOtherToken->token;
-            }
-
             $token = Str::random(80);
+
+            if ($isOtherToken) {
+                $token = $isOtherToken->token;
+            }
 
             DB::table('password_resets')->insert([
                 'email' => $user->email,
@@ -495,7 +492,7 @@ class UserController extends ApiController
 
             $user->update($userData);
 
-            $userDetails = $this->userDetails($user->id);
+            $userDetails = new UserResource($user);
 
             return $this->successResponse($userDetails);
         }
@@ -510,26 +507,9 @@ class UserController extends ApiController
      */
     public function details()
     {
-        $userDetails = $this->userDetails();
+        $user = Auth::user();
+        $userDetails = new UserResource($user);
         return $this->successResponse($userDetails);
-    }
-
-    /**
-     * details api
-     *
-     * @return \Illuminate\Http\Response
-     */
-    protected function userDetails($userId = 0)
-    {
-        if ($userId == 0) {
-            $user = Auth::user();
-        } else {
-            $user = AppUsers::where('id', $userId)->first();
-        }
-
-        $user['photo'] = (!empty($user->photo) && File::exists(public_path() . '/uploads/user_images/' . $user->photo)) ? asset("/uploads/user_images/" . $user->photo) : asset("/uploads/profile_picture.png");
-
-        return $user;
     }
 
     /**
