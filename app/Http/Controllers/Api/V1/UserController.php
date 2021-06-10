@@ -220,7 +220,6 @@ class UserController extends ApiController
 
         $user = AppUsers::where('otp', $validatedData['otp'])->where('id', $validatedData['user_id'])->where('status', config("global.disable"))->first();
 
-        $userDataResponse = [];
         if ($user) {
             $userData = [
                 'status' => config("global.enable"),
@@ -505,7 +504,7 @@ class UserController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function details()
+    public function detail()
     {
         $user = Auth::user();
         $userDetails = new UserResource($user);

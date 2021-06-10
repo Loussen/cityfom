@@ -24,8 +24,8 @@ Route::get('clear-cache', function() {
 
 // Pages
 Route::post('pages/all', 'PagesController@all');
-Route::post('pages/detailsBySlug', 'PagesController@detailsBySlug');
-Route::post('pages/detailsByLangAndSlug', 'PagesController@detailsByLangAndSlug');
+Route::post('pages/detailBySlug', 'PagesController@detailBySlug');
+Route::post('pages/detailByLangAndSlug', 'PagesController@detailByLangAndSlug');
 
 Route::post('login', 'UserController@login');
 Route::post('register', 'UserController@register');
@@ -40,11 +40,13 @@ Route::group(['middleware' => 'auth:api_version'], function(){
     Route::get('categories','CategoryController@all');
 
     // Users
-    Route::post('user/detail','UserController@details');
+    Route::post('user/detail','UserController@detail');
     Route::post('user/changePassword', 'UserController@changePassword');
     Route::post('user/updateProfile', 'UserController@updateProfile');
     Route::post('logout', 'UserController@logout');
 
     // Coupons
     Route::post('coupons/all', 'CouponsController@all');
+    Route::post('coupons/detail', 'CouponsController@detail');
+    Route::post('coupons/updateRedeem', 'CouponsController@updateRedeem');
 });

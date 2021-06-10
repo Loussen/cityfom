@@ -29,7 +29,7 @@ class PagesController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function detailsBySlug(Request $request)
+    public function detailBySlug(Request $request)
     {
         $validatedData = $request->validate([
             'slug' => 'required|string|min:3|max:55',
@@ -49,7 +49,7 @@ class PagesController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function detailsByLangAndSlug(Request $request)
+    public function detailByLangAndSlug(Request $request)
     {
         $langs = config("global.langs");
 
