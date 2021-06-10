@@ -11,7 +11,8 @@
         'login_types'                       => [1 => 'facebook_id', 2 => 'twitter_id', 3 => 'google_id', 4 => 'apple_id'],
         'enable'                            => 1,
         'disable'                           => 2,
-        'paginate_count_api'                => 10
+        'paginate_count_api'                => 10,
+        'channel_offer_id'                  => 3,
     ]
 
 ?>

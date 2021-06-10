@@ -49,4 +49,8 @@ Route::group(['middleware' => 'auth:api_version'], function(){
     Route::post('coupons/all', 'CouponsController@all');
     Route::post('coupons/detail', 'CouponsController@detail');
     Route::post('coupons/updateRedeem', 'CouponsController@updateRedeem');
+
+    // Offers
+    Route::post('offers/all', 'OffersController@all');
+    Route::post('offers/detail', 'OffersController@detail');
 });
