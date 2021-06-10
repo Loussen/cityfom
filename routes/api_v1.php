@@ -53,4 +53,7 @@ Route::group(['middleware' => 'auth:api_version'], function(){
     // Offers
     Route::post('offers/all', 'OffersController@all');
     Route::post('offers/detail', 'OffersController@detail');
+
+    // Contact us
+    Route::post('contactus', 'ContactUsController@index');
 });
