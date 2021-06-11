@@ -3,21 +3,12 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Api\ApiController;
-use App\Http\Resources\V1\UserResource;
 use App\Mail\AppMail;
-use App\Models\AppUsers;
 use App\Models\Configs;
 use App\Models\ContactUs;
 use App\Models\EmailTemplates;
-use Cake\Network\Email\Email;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
 
 class ContactUsController extends ApiController
 {

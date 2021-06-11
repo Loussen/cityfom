@@ -56,4 +56,11 @@ Route::group(['middleware' => 'auth:api_version'], function(){
 
     // Contact us
     Route::post('contactus', 'ContactUsController@index');
+
+    // Favourites
+    Route::post('favourite/store', 'FavouriteController@store');
+
+    // Rating reviews
+    Route::post('ratingReview/store', 'RatingReviewController@store');
+
 });
