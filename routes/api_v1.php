@@ -62,5 +62,8 @@ Route::group(['middleware' => 'auth:api_version'], function(){
 
     // Rating reviews
     Route::post('ratingReview/store', 'RatingReviewController@store');
+    Route::post('ratingReview/allByStoreId', 'RatingReviewController@allByStoreId');
+    Route::post('ratingReview/allByUserId', 'RatingReviewController@allByUserId');
+    Route::post('ratingReview/likeReview', 'RatingReviewController@likeReview');
 
 });

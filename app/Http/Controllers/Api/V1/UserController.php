@@ -512,6 +512,25 @@ class UserController extends ApiController
     }
 
     /**
+     * details api
+     *
+     * @return \Illuminate\Http\Response
+     */
+    protected function userDetailById($userId)
+    {
+        $userDetail = null;
+
+        $userId = intval($userId);
+
+        if($userId > 0)
+        {
+            $userDetail = AppUsers::find($userId);
+        }
+
+        return $userDetail;
+    }
+
+    /**
      * Logout api
      *
      * @return \Illuminate\Http\Response

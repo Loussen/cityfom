@@ -17,22 +17,22 @@ class RatingReviewResource extends JsonResource
     {
         $arr = [
             'id' => $this->id,
-            'store_name' => ($this->store_name) ? $this->store_name : 'CityFom Store',
-            'store_id' => $this->store_id,
-            'title' => (string) $this->title,
-            'description' => (string) $this->description,
-            'coupon_code' => (string) $this->code,
-            'discount' => (string) $this->discount,
-            'valid_to' => $this->valid_to,
-            'image' => (!empty($this->image) && File::exists(public_path() . '/uploads/coupons/' . $this->image)) ? asset("/uploads/coupons/" . $this->image) : asset("/uploads/default/no_image.png"),
+            'username' => $this->username,
+            'firstname' => $this->firstname,
+            'lastname' => $this->lastname,
+            'user_photo' => (!empty($this->user_photo) && File::exists(public_path() . '/uploads/user_images/' . $this->user_photo)) ? asset("/uploads/user_images/" . $this->user_photo) : asset("/uploads/default/profile_picture.png"),
+            'rating' => (int) $this->rating,
+            'review' => (string) $this->review,
+            'comment' => (string) $this->comment,
+            'date' => (string) date('d m Y',strtotime($this->created_at)),
+            'count_review_like' => (int) $this->count_review_like,
+            'user_like_check' => ($this->review_like_id > 0) ? true : false,
         ];
 
-        if(isset($this->distance) && $this->distance > 0) {
-            $arr['distance'] = sprintf("%.2f", $this->distance) . ' Km';
-        }
+        $review_images = explode(",",$this->review_images);
 
-        if(isset($this->redeem_exists)) {
-            $arr['user_redeem_coupon'] = $this->redeem_exists;
+        foreach ($review_images as $review_image) {
+            $arr['review_images'][] = (!empty($review_image) && File::exists(public_path() . '/uploads/rating_reviews/' . $review_image)) ? asset("/uploads/rating_reviews/" . $review_image) : null;
         }
 
         return $arr;
