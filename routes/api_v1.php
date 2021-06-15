@@ -43,6 +43,7 @@ Route::group(['middleware' => 'auth:api_version'], function(){
     Route::post('user/detail','UserController@detail');
     Route::post('user/changePassword', 'UserController@changePassword');
     Route::post('user/updateProfile', 'UserController@updateProfile');
+    Route::post('user/removeSearchFilter', 'UserController@removeSearchFilter');
     Route::post('logout', 'UserController@logout');
 
     // Coupons
@@ -74,5 +75,13 @@ Route::group(['middleware' => 'auth:api_version'], function(){
     Route::post('channels/allByStoreId', 'ChannelsController@allByStoreId');
     Route::post('channels/allByChannelId', 'ChannelsPostsController@allByChannelId');
     Route::post('channels/postDetail', 'ChannelsPostsController@detail');
+
+    // Notifications
+    Route::post('notifications/updateSetting', 'NotificationsController@updateSetting');
+    Route::post('notifications/getSetting', 'NotificationsController@getSetting');
+    Route::post('notifications/delete', 'NotificationsController@remove');
+    Route::post('notifications/count', 'NotificationsController@count');
+    Route::post('notifications/read', 'NotificationsController@read');
+    Route::post('notifications/reportStore', 'NotificationsController@reportStore');
 
 });

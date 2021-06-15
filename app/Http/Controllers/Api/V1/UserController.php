@@ -7,6 +7,7 @@ use App\Http\Resources\V1\UserResource;
 use App\Mail\AppMail;
 use App\Models\AppUsers;
 use App\Models\EmailTemplates;
+use App\Models\UserSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -509,6 +510,26 @@ class UserController extends ApiController
         $user = Auth::user();
         $userDetails = new UserResource($user);
         return $this->successResponse($userDetails);
+    }
+
+    /**
+     * Remove search filter api
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function removeSearchFilter(Request $request)
+    {
+        $langs = config("global.langs");
+
+        $user = Auth::user();
+
+        $request->validate([
+            'language' => 'required|string|in:' . implode(",", $langs),
+        ]);
+
+        UserSearch::where('user_id',$user->id)->delete();
+
+        return $this->successResponse(null);
     }
 
     /**

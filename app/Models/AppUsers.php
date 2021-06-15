@@ -28,6 +28,7 @@ use Laravel\Passport\HasApiTokens;
  * @property string $apple_id
  * @property string $google_id
  * @property string $fav_notify
+ * @property int $distance
  * @property string $radius_notify
  * @property string $language
  * @property string $last_login
@@ -42,7 +43,7 @@ class AppUsers extends Authenticatable
     /**
      * @var array
      */
-    protected $fillable = ['cms_user_id', 'username', 'email', 'password', 'firstname', 'lastname', 'phone', 'photo', 'birthday', 'location', 'otp', 'verified', 'device_id', 'device_type', 'gender', 'facebook_id', 'twitter_id', 'apple_id', 'google_id', 'fav_notify', 'radius_notify', 'language', 'last_login', 'status', 'created_at', 'updated_at'];
+    protected $fillable = ['cms_user_id', 'username', 'email', 'password', 'firstname', 'lastname', 'phone', 'photo', 'birthday', 'location', 'otp', 'verified', 'device_id', 'device_type', 'gender', 'facebook_id', 'twitter_id', 'apple_id', 'google_id', 'fav_notify', 'radius_notify', 'distance', 'language', 'last_login', 'status', 'created_at', 'updated_at'];
 
     /**
      * The attributes that should be hidden for arrays.

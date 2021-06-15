@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\DB;
 class ReportController extends ApiController
 {
     /**
-     * Report store api
+     * Report type list api
      *
      * @return \Illuminate\Http\Response
      */
@@ -41,7 +41,7 @@ class ReportController extends ApiController
     }
 
     /**
-     * Report type list api
+     * Report store api
      *
      * @return \Illuminate\Http\Response
      */
