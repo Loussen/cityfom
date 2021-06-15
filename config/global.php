@@ -14,6 +14,7 @@
         'paginate_count_api'                => 10,
         'channel_offer_id'                  => 3,
         'rating_sort'                       => ['date','rate_desc','rate_asc','like_desc'],
+        'api_key'                           => 'duTpd3dgCfaKIXJjAa6IR2az5EpPr6iF'
     ]
 
 ?>

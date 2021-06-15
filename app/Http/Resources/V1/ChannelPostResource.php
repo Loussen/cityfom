@@ -5,7 +5,7 @@ namespace App\Http\Resources\V1;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\File;
 
-class OfferResource extends JsonResource
+class ChannelPostResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -19,15 +19,13 @@ class OfferResource extends JsonResource
             'id' => $this->id,
             'store_name' => ($this->store_name) ? $this->store_name : 'CityFom Store',
             'store_id' => $this->store_id,
+            'description' => (string) $this->description,
+//            'additional' => (string) $this->additional,
             'title' => (string) $this->title,
             'old_price' => $this->old_price,
             'price' => $this->price,
-            'image' => (!empty($this->image) && File::exists(public_path() . '/uploads/channel_posts/' . $this->image)) ? asset("/uploads/channel_posts/" . $this->image) : asset("/uploads/default/no_image.png"),
+            'media' => (!empty($this->media) && File::exists(public_path() . '/uploads/channel_posts/' . $this->media)) ? asset("/uploads/channel_posts/" . $this->media) : asset("/uploads/default/no_image.png"),
         ];
-
-        if(isset($this->distance) && $this->distance > 0) {
-            $arr['distance'] = sprintf("%.2f", $this->distance) . ' Km';
-        }
 
         return $arr;
     }

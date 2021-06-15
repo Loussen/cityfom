@@ -61,7 +61,7 @@ class ReportController extends ApiController
             'language' => 'required|string|in:' . implode(",", $langs),
         ]);
 
-        if($request->reason && $validatedData['reason']) {
+        if($request->has('reason') && $validatedData['reason']) {
             $request->reason = $validatedData['reason'];
             $getExistsReport = ReportStore::where('user_id',$user->id)->where('type_id',$validatedData['report_type_id'])->where('store_id',$validatedData['store_id'])->where('status','!=',$reportStatus['Closed'])->where('reason',trim($validatedData['reason']))->first();
         } else {

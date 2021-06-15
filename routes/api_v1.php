@@ -36,9 +36,9 @@ Route::post('user/forgotPassword', 'UserController@forgotPassword');
 Route::post('user/verifyOtp', 'UserController@verifyOtp');
 Route::post('user/resetPassword', 'UserController@resetPassword');
 
-Route::group(['middleware' => 'auth:api_version'], function(){
-    Route::get('categories','CategoryController@all');
+Route::post('categories/all','CategoryController@all');
 
+Route::group(['middleware' => 'auth:api_version'], function(){
     // Users
     Route::post('user/detail','UserController@detail');
     Route::post('user/changePassword', 'UserController@changePassword');
@@ -69,5 +69,10 @@ Route::group(['middleware' => 'auth:api_version'], function(){
     // Reports
     Route::post('report/typeList', 'ReportController@typeList');
     Route::post('report/store', 'ReportController@store');
+
+    // Channels & Posts
+    Route::post('channels/allByStoreId', 'ChannelsController@allByStoreId');
+    Route::post('channels/allByChannelId', 'ChannelsPostsController@allByChannelId');
+    Route::post('channels/postDetail', 'ChannelsPostsController@detail');
 
 });
