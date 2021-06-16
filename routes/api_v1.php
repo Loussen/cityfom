@@ -37,6 +37,7 @@ Route::post('user/verifyOtp', 'UserController@verifyOtp');
 Route::post('user/resetPassword', 'UserController@resetPassword');
 
 Route::post('categories/all','CategoryController@all');
+Route::post('categories/auth','CategoryController@auth');
 
 Route::group(['middleware' => 'auth:api_version'], function(){
     // Users
