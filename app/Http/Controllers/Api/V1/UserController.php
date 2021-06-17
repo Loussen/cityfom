@@ -11,7 +11,6 @@ use App\Models\UserSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -113,6 +112,10 @@ class UserController extends ApiController
 
         $user = AppUsers::create($userData);
 
+        $cms = new CmsController();
+
+        $cms->userIdData();
+
         $emailTemplate = EmailTemplates::where('slug', 'user_registration_app')->first();
 
         if ($emailTemplate) {
@@ -197,6 +200,10 @@ class UserController extends ApiController
             $userData[$loginTypes[$validatedData["login_type"]]] = $validatedData['social_id'];
 
             $user = AppUsers::create($userData);
+
+            $cms = new CmsController();
+
+            $cms->userIdData();
         }
 
         $userDetails = new UserResource($user);
