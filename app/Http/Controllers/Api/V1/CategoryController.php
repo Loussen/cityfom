@@ -17,10 +17,6 @@ class CategoryController extends ApiController
      */
     public function all(Request $request)
     {
-        $cms = new CmsController();
-
-        echo $cms->userIdData();
-
         $langs = config("global.langs");
         $apiKey = config("global.api_key");
 
