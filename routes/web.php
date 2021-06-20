@@ -110,6 +110,15 @@ Route::group(['as' => 'admin.', 'prefix' => 'admin', 'middleware' => 'adminauth'
     Route::get('settings/profile', 'SettingsController@profile')->name('profile.profile');
     Route::put('settings/profileStore', 'SettingsController@profileStore')->name('profile.profileStore');
 
+    // Stores
+    Route::resource('store', 'StoreController');
+    Route::put('changeStoreStatus', 'StoreController@changeStoreStatus')->name('store.changeStoreStatus');
+    Route::put('changeStorePartnerType', 'StoreController@changeStorePartnerType')->name('store.changeStorePartnerType');
+    Route::put('changeStoreVerification', 'StoreController@changeStoreVerification')->name('store.changeStoreVerification');
+    Route::delete('destroyMultipleStore', 'StoreController@destroyMultipleStore')->name('store.destroyMultipleStore');
+    Route::put('typeMultipleStore', 'StoreController@typeMultipleStore')->name('store.typeMultipleStore');
+    Route::put('statusMultipleStore', 'StoreController@statusMultipleStore')->name('store.statusMultipleStore');
+
     Route::post('ckeditor_upload', 'CkeditorController@upload')->name('ckeditor.upload');
 
 });

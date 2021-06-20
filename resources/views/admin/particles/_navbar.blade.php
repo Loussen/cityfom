@@ -187,7 +187,7 @@
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="index.html" class="nav-link legitRipple">
+                    <a href="{{route('admin.store.index')}}" class="nav-link legitRipple">
                         <i class="icon-cart"></i>
                         <span>
 									Stores
