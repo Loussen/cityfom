@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Http\Requests\StoreRequest;
 use App\Models\Categories;
+use App\Models\StoreCategory;
 use App\Models\StoreImages;
 use App\Models\Stores;
 use Illuminate\Http\Request;
+use Illuminate\Session\Store;
 use Illuminate\Support\Facades\DB;
 
 class StoreController extends Controller
@@ -114,33 +116,59 @@ class StoreController extends Controller
      */
     public function store(StoreRequest $request)
     {
-//        $iconName = null;
-//        if($request->hasFile('icon') && $request->icon != '') {
-//            $icon = $request->file('icon');
-//            $iconName = time()."_".$icon->getClientOriginalName();
-//
-//            $iconType = explode(".",$iconName);
-//            $iconType = end($iconType);
-//
-//            if(in_array(strtolower($iconType),['jpg','jpeg','png', 'ico']))
-//            {
-//                $icon->move(public_path().'/uploads/categories/',$iconName);
-//            }
-//            else
-//            {
-//                return redirect()->route('admin.category.create')->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png,ico)", 'warning', true));
-//            }
-//        }
-//
-//        $categoryData = [
-//            'name_en' => $request->name_en,
-//            'name_az' => $request->name_az,
-//            'name_ru' => $request->name_ru,
-//            'name_es' => $request->name_es,
-//            'icon' => $iconName,
-//        ];
-//
-//        Categories::create($categoryData);
+        $storeData = [
+            'name' => $request->name,
+            'description' => $request->description,
+            'tags' => implode(",",$request->tags),
+            'address' => $request->address,
+            'country' => $request->country,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'website' => $request->website,
+            'facebook' => $request->facebook_url,
+            'twitter' => $request->twitter_url,
+            'instagram' => $request->instagram_url,
+            'type' => $request->partner_type,
+        ];
+
+        $store = Stores::create($storeData);
+
+        foreach ($request->category_id as $category) {
+            $categoryData = [
+                'store_id' => $store->id,
+                'category_id' => $category
+            ];
+
+            StoreCategory::create($categoryData);
+        }
+
+        $allowedfileExtension = ['jpeg','jpg','png'];
+
+        if($request->hasfile('image'))
+        {
+            foreach ($request->file('image') as $file) {
+
+                $extension = $file->getClientOriginalExtension();
+
+                $check = in_array($extension,$allowedfileExtension);
+
+                if($check) {
+
+                    $imageName = mt_rand() . "_" .$file->getClientOriginalName();
+                    $file->move(public_path('uploads/stores'), $imageName);
+
+                    $ratingReviewImage = new StoreImages();
+                    $ratingReviewImage->image = $imageName;
+                    $ratingReviewImage->store_id = $store->id;
+                    $ratingReviewImage->save();
+
+                } else {
+                    return redirect()->route('admin.store.create')->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png)", 'warning', true));
+                }
+            }
+        }
 
         return redirect()->route('admin.store.index')->with(_sessionmessage());
     }
@@ -159,12 +187,25 @@ class StoreController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param Categories $category
+     * @param Stores $store
      * @return \Illuminate\Http\Response
      */
-    public function edit(Categories $category)
+    public function edit(Stores $store)
     {
-        return view('admin.pages.category.edit', compact('category'));
+        $categories = Categories::all();
+        $partnerTypes = config('global.partner_type');
+
+        $categoriesStore = DB::table('store_category')->select('category_id')->where('store_id',$store->id)->get();
+
+        $categoryArr = [];
+
+        foreach ($categoriesStore as $category) {
+            $categoryArr[] = $category->category_id;
+        }
+
+        $storeImages = StoreImages::where('store_id',$store->id)->get();
+
+        return view('admin.pages.store.edit', compact('store','categories','partnerTypes','categoryArr', 'storeImages'));
     }
 
     /**
@@ -174,41 +215,66 @@ class StoreController extends Controller
      * @param int $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(CategoryRequest $request, $id)
+    public function update(StoreRequest $request, $id)
     {
-        $category = Categories::find($id);
+        $store = Stores::find($id);
 
-        $iconName = $category->icon;
-        if($request->hasFile('icon') && $request->icon != '') {
-            $icon = $request->file('icon');
-            $iconName = time()."_".$icon->getClientOriginalName();
+        $storeData = [
+            'name' => $request->name,
+            'description' => $request->description,
+            'tags' => implode(",",$request->tags),
+            'address' => $request->address,
+            'country' => $request->country,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'website' => $request->website,
+            'facebook' => $request->facebook_url,
+            'twitter' => $request->twitter_url,
+            'instagram' => $request->instagram_url,
+            'type' => $request->partner_type,
+        ];
 
-            $iconType = explode(".",$iconName);
-            $iconType = end($iconType);
+        $store->update($storeData);
 
-            if(in_array(strtolower($iconType),['jpg','jpeg','png', 'ico']))
-            {
-                $icon->move(public_path().'/uploads/categories/',$iconName);
+        StoreCategory::where('store_id',$store->id)->delete();
+        foreach ($request->category_id as $category) {
+            $categoryData = [
+                'store_id' => $store->id,
+                'category_id' => $category
+            ];
 
-                delete_old_files(public_path().'/uploads/categories/'.$category->icon);
-            }
-            else
-            {
-                return redirect()->route('admin.category.edit', [$id])->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png,ico)", 'warning', true));
+            StoreCategory::create($categoryData);
+        }
+
+        $allowedfileExtension = ['jpeg','jpg','png'];
+
+        if($request->hasfile('image'))
+        {
+            foreach ($request->file('image') as $file) {
+
+                $extension = $file->getClientOriginalExtension();
+
+                $check = in_array($extension,$allowedfileExtension);
+
+                if($check) {
+
+                    $imageName = mt_rand() . "_" .$file->getClientOriginalName();
+                    $file->move(public_path('uploads/stores'), $imageName);
+
+                    $ratingReviewImage = new StoreImages();
+                    $ratingReviewImage->image = $imageName;
+                    $ratingReviewImage->store_id = $store->id;
+                    $ratingReviewImage->save();
+
+                } else {
+                    return redirect()->route('admin.store.create')->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png)", 'warning', true));
+                }
             }
         }
 
-        $categoryData = [
-            'name_en' => $request->name_en,
-            'name_az' => $request->name_az,
-            'name_ru' => $request->name_ru,
-            'name_es' => $request->name_es,
-            'icon'    => $iconName
-        ];
-
-        $category->update($categoryData);
-
-        return redirect()->route('admin.category.index')->with(_sessionmessage());
+        return redirect()->route('admin.store.index')->with(_sessionmessage());
     }
 
     /**
@@ -362,6 +428,19 @@ class StoreController extends Controller
             }
         }
 
+        return response()->json(['response' => $response]);
+    }
+
+    public function destroyStoreImage(Request $request)
+    {
+        $imageId = $request->image_id;
+
+        $image = StoreImages::where('id',$imageId)->first();
+
+        delete_old_files(public_path().'/uploads/stores/'.$image->image);
+
+        $image->delete();
+        $response = ['status' => 'OK'];
         return response()->json(['response' => $response]);
     }
 

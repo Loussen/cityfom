@@ -60,11 +60,17 @@
                         </div>
 
                         <div class="form-group col-sm-6">
-                            <label class="font-weight-semibold @error('tags') text-danger @enderror" for="name_en">{{__('admin.tags')}}</label>
+                            <label class="font-weight-semibold @error('tags') text-danger @enderror" for="tags">{{__('admin.tags')}}</label>
                             <div class="form-group-feedback form-group-feedback-right">
-                                <select id="tags" class="form-control select-multiple-tags" multiple="multiple" data-fouc>
-
-                                </select>
+                                @if (is_array(old('tags')))
+                                    <select id="tags" name="tags[]" class="form-control select-multiple-tags" multiple="multiple" data-fouc>
+                                        @foreach (old('tags') as $tag)
+                                            <option value="{{ $tag }}" selected="selected">{{ $tag }}</option>
+                                        @endforeach
+                                    </select>
+                                @else
+                                    <select name="tags[]" id="tags" class="form-control select-multiple-tags" multiple="multiple" data-fouc></select>
+                                @endif
                             </div>
                             @error('tags')
                             <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
@@ -76,8 +82,7 @@
                             <div class="form-group-feedback form-group-feedback-right">
                                 <select name="category_id[]" id="category_id" class="form-control select-multiple-limited" multiple="multiple" data-fouc>
                                     @foreach($categories as $category)
-                                        <option
-                                            {{ collect(old('category_id'))->contains($category->id) ? 'selected': '' }} value="{{$category->id}}">{{$category->name_en}}</option>
+                                        <option {{ collect(old('category_id'))->contains($category->id) ? 'selected': '' }} value="{{$category->id}}">{{$category->name_en}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -90,8 +95,8 @@
                             <label class="font-weight-semibold @error('address') text-danger @enderror" for="address">{{__('admin.address')}}</label>
                             <div class="form-group-feedback form-group-feedback-right">
                                 <input type="text" name="address" id="address" class="form-control @error('address') border-danger @enderror" placeholder="{{__('admin.address')}}" value="{{ old('address') }}" onfocusout="get_long_let()">
-                                <input type="hidden" id="latitude" name="latitude">
-                                <input type="hidden" id="longitude" name="longitude">
+                                <input type="hidden" id="latitude" value="{{ old('latitude') }}" name="latitude">
+                                <input type="hidden" id="longitude" value="{{ old('longitude') }}" name="longitude">
                             </div>
                             @error('address')
                             <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
@@ -186,10 +191,10 @@
                         </div>
 
                         <div class="form-group col-sm-6">
-                            <label class="font-weight-semibold @error('images') text-danger @enderror" for="images">{{__('admin.images')}}</label>
-                            <input type="file" name="images[]" id="images" multiple accept="image/*" class="form-input-styled" data-fouc />
+                            <label class="font-weight-semibold @error('image') text-danger @enderror" for="image">{{__('admin.images')}}</label>
+                            <input type="file" name="image[]" id="image" multiple accept="image/*" />
                             <span class="form-text text-muted">Accepted formats: jpg, jpeg, png. Max file size 2Mb</span>
-                            @error('images')
+                            @error('image')
                             <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
                             @enderror
                         </div>

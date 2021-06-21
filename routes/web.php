@@ -118,6 +118,7 @@ Route::group(['as' => 'admin.', 'prefix' => 'admin', 'middleware' => 'adminauth'
     Route::delete('destroyMultipleStore', 'StoreController@destroyMultipleStore')->name('store.destroyMultipleStore');
     Route::put('typeMultipleStore', 'StoreController@typeMultipleStore')->name('store.typeMultipleStore');
     Route::put('statusMultipleStore', 'StoreController@statusMultipleStore')->name('store.statusMultipleStore');
+    Route::delete('destroyStoreImage', 'StoreController@destroyStoreImage')->name('store.destroyStoreImage');
 
     Route::post('ckeditor_upload', 'CkeditorController@upload')->name('ckeditor.upload');
 
