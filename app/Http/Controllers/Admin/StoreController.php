@@ -105,7 +105,8 @@ class StoreController extends Controller
     {
         $categories = Categories::all();
         $partnerTypes = config('global.partner_type');
-        return view('admin.pages.store.create',compact('categories','partnerTypes'));
+        $weekdays = config('global.weekdays');
+        return view('admin.pages.store.create',compact('categories','partnerTypes','weekdays'));
     }
 
     /**
@@ -116,6 +117,61 @@ class StoreController extends Controller
      */
     public function store(StoreRequest $request)
     {
+        // Opening hours
+        $openingHoursArr = $openingHoursArrEnd = [];
+        if($request->has('weekday')) {
+            $weekdays = $request->weekday;
+            $from = $request->from;
+            $to = $request->to;
+
+
+            foreach ($weekdays as $keyWeekday => $valueWeekday) {
+
+                if(isset($openingHoursArr[$valueWeekday])) {
+                    $openingHoursArr[$valueWeekday] .= ";".$from[$keyWeekday]."-".$to[$keyWeekday];
+                } else {
+                    $openingHoursArr[$valueWeekday] = $from[$keyWeekday]."-".$to[$keyWeekday];
+                }
+
+            }
+
+            $openingHoursArrEnd = [];
+            foreach ($openingHoursArr as $keyHour => $valueHour) {
+                $openingHoursArrEnd[$keyHour-1] = $valueHour;
+            }
+
+            for($i = 0; $i <= 6; $i++) {
+                if(!isset($openingHoursArrEnd[$i])) {
+                    $openingHoursArrEnd[$i] = '-';
+                }
+            }
+        }
+        $openingHoursArr = serialize($openingHoursArrEnd);
+
+        // Special days
+        $specialDaysHourArrEnd = [];
+        if($request->has('special_date')) {
+            $specialDates = $request->special_date;
+            $fromSpecialHour = $request->from_special_hour;
+            $toSpecialHour = $request->to_special_hour;
+
+            $specialDaysHourArr = [];
+            foreach ($specialDates as $keySpecialday => $valueSpecialday) {
+
+                if(isset($specialDaysHourArr[$valueSpecialday])) {
+                    $specialDaysHourArr[$valueSpecialday] .= ";".$fromSpecialHour[$keySpecialday]."-".$toSpecialHour[$keySpecialday];
+                } else {
+                    $specialDaysHourArr[$valueSpecialday] = $fromSpecialHour[$keySpecialday]."-".$toSpecialHour[$keySpecialday];
+                }
+            }
+
+            $specialDaysHourArrEnd = [];
+            foreach ($specialDaysHourArr as $keySpecial => $valueSpecial) {
+                $specialDaysHourArrEnd[] = $valueSpecial." --- ".$keySpecial;
+            }
+        }
+        $specialDaysHourArrEnd = serialize($specialDaysHourArrEnd);
+
         $storeData = [
             'name' => $request->name,
             'description' => $request->description,
@@ -131,6 +187,8 @@ class StoreController extends Controller
             'twitter' => $request->twitter_url,
             'instagram' => $request->instagram_url,
             'type' => $request->partner_type,
+            'hours' => $openingHoursArr,
+            'special_days' => $specialDaysHourArrEnd
         ];
 
         $store = Stores::create($storeData);
@@ -205,7 +263,12 @@ class StoreController extends Controller
 
         $storeImages = StoreImages::where('store_id',$store->id)->get();
 
-        return view('admin.pages.store.edit', compact('store','categories','partnerTypes','categoryArr', 'storeImages'));
+        $storeOpeningHours = unserialize($store->hours);
+        $storeSpecialDays = unserialize($store->special_days);
+
+        $weekdays = config('global.weekdays');
+
+        return view('admin.pages.store.edit', compact('store','categories','partnerTypes','categoryArr', 'storeImages','storeOpeningHours','storeSpecialDays','weekdays'));
     }
 
     /**
@@ -218,6 +281,61 @@ class StoreController extends Controller
     public function update(StoreRequest $request, $id)
     {
         $store = Stores::find($id);
+
+        // Opening hours
+        $openingHoursArr = $openingHoursArrEnd = [];
+        if($request->has('weekday')) {
+            $weekdays = $request->weekday;
+            $from = $request->from;
+            $to = $request->to;
+
+
+            foreach ($weekdays as $keyWeekday => $valueWeekday) {
+
+                if(isset($openingHoursArr[$valueWeekday])) {
+                    $openingHoursArr[$valueWeekday] .= ";".$from[$keyWeekday]."-".$to[$keyWeekday];
+                } else {
+                    $openingHoursArr[$valueWeekday] = $from[$keyWeekday]."-".$to[$keyWeekday];
+                }
+
+            }
+
+            $openingHoursArrEnd = [];
+            foreach ($openingHoursArr as $keyHour => $valueHour) {
+                $openingHoursArrEnd[$keyHour-1] = $valueHour;
+            }
+
+            for($i = 0; $i <= 6; $i++) {
+                if(!isset($openingHoursArrEnd[$i])) {
+                    $openingHoursArrEnd[$i] = '-';
+                }
+            }
+        }
+        $openingHoursArr = serialize($openingHoursArrEnd);
+
+        // Special days
+        $specialDaysHourArrEnd = [];
+        if($request->has('special_date')) {
+            $specialDates = $request->special_date;
+            $fromSpecialHour = $request->from_special_hour;
+            $toSpecialHour = $request->to_special_hour;
+
+            $specialDaysHourArr = [];
+            foreach ($specialDates as $keySpecialday => $valueSpecialday) {
+
+                if(isset($specialDaysHourArr[$valueSpecialday])) {
+                    $specialDaysHourArr[$valueSpecialday] .= ";".$fromSpecialHour[$keySpecialday]."-".$toSpecialHour[$keySpecialday];
+                } else {
+                    $specialDaysHourArr[$valueSpecialday] = $fromSpecialHour[$keySpecialday]."-".$toSpecialHour[$keySpecialday];
+                }
+            }
+
+            $specialDaysHourArrEnd = [];
+            foreach ($specialDaysHourArr as $keySpecial => $valueSpecial) {
+                $specialDaysHourArrEnd[] = $valueSpecial." --- ".$keySpecial;
+            }
+        }
+        $specialDaysHourArrEnd = serialize($specialDaysHourArrEnd);
 
         $storeData = [
             'name' => $request->name,
@@ -234,6 +352,8 @@ class StoreController extends Controller
             'twitter' => $request->twitter_url,
             'instagram' => $request->instagram_url,
             'type' => $request->partner_type,
+            'hours' => $openingHoursArr,
+            'special_days' => $specialDaysHourArrEnd
         ];
 
         $store->update($storeData);

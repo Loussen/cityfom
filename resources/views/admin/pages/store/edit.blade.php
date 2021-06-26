@@ -242,6 +242,173 @@
                             @enderror
                         </div>
 
+                        <div class="form-group col-sm-12">
+                            <fieldset class="mb-3 opening_hours_store">
+                                <legend
+                                    class="text-uppercase font-size-sm font-weight-bold">{{__('admin.opening_hours')}}</legend>
+
+                                @if(is_array(old('weekday')))
+                                    @php $oldWeekdays = old('weekday') @endphp
+                                    @php $oldFrom = old('from') @endphp
+                                    @php $oldTo = old('to') @endphp
+                                    @php $k = 1; @endphp
+                                    @foreach($oldWeekdays as $keyOldWeekDay => $valueOldWeekDay)
+                                        @php $j = $k + 1; @endphp
+                                        @php $id1 = 'anytime_'.$k; @endphp
+                                        @php $id2 = 'anytime_'.$j; @endphp
+                                        <div class="row opening_hours_area"
+                                             style="border: 1px solid #ccc; padding: 5px; margin-bottom: 5px;">
+                                            <div class="col-sm-2">
+                                                <select class="form-control" name="weekday[]">
+                                                    @foreach($weekdays as $keyWeekDay => $valueWeekDay)
+                                                        <option
+                                                            {{ $valueOldWeekDay == $keyWeekDay ? 'selected' : '' }} value="{{ $keyWeekDay }}">{{ $valueWeekDay }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <input type="text" name="from[]" class="form-control anytime"
+                                                       id="{{ $id1 }}" value="{{ $oldFrom[$keyOldWeekDay] }}"
+                                                       readonly="">
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <input type="text" name="to[]" class="form-control anytime"
+                                                       id="{{ $id2 }}" value="{{ $oldTo[$keyOldWeekDay] }}"
+                                                       readonly="">
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <i class="icon-close2 hour_close" style="cursor: pointer;"></i>
+                                            </div>
+                                        </div>
+                                        @php $k+=2 @endphp
+                                    @endforeach
+                                @else
+                                    @php $a = 1; @endphp
+                                    @foreach($storeOpeningHours as $keyHours => $valueHours)
+                                        @if(trim($valueHours) != '-')
+                                            @php $keyStoreHour = $keyHours + 1; @endphp
+                                            @php
+                                                $hourExplode = explode(";",$valueHours);
+                                                $hourCount = count($hourExplode);
+                                            @endphp
+                                            @for($k = 0; $k<$hourCount; $k++)
+                                                @php
+                                                    $hourExplode2 = explode("-",$hourExplode[$k]);
+                                                @endphp
+                                                <div class="row opening_hours_area"
+                                                     style="border: 1px solid #ccc; padding: 5px; margin-bottom: 5px;">
+                                                    <div class="col-sm-2">
+                                                        <select class="form-control" name="weekday[]">
+                                                            @foreach($weekdays as $keyWeekDay => $valueWeekDay)
+                                                                <option {{ $keyStoreHour == $keyWeekDay ? 'selected' : '' }} value="{{ $keyWeekDay }}">{{ $valueWeekDay }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-sm-2">
+                                                        <input type="text" name="from[]" class="form-control anytime" id="anytime_{{ $a }}"
+                                                               value="{{ $hourExplode2[0] }}"
+                                                               readonly="">
+                                                    </div>
+                                                    <div class="col-sm-2">
+                                                        <input type="text" name="to[]" class="form-control anytime" id="anytime_{{ $a+1 }}"
+                                                               value="{{ $hourExplode2[1] }}"
+                                                               readonly="">
+                                                    </div>
+                                                    <div class="col-sm-2">
+                                                        <i class="icon-close2 hour_close" style="cursor: pointer;"></i>
+                                                    </div>
+                                                </div>
+                                                @php $a+=2 @endphp
+                                            @endfor
+                                        @endif
+                                    @endforeach
+                                @endif
+
+                            </fieldset>
+                            <a href="javascript:void(0);" class="btn btn-outline-success add-hour"><i
+                                    class="icon-plus2"></i> Add Hour</a>
+                        </div>
+
+                        <div class="col-sm-12 mb-2" style="border: 1px solid #eee;"></div>
+
+                        <div class="form-group col-sm-12">
+                            <fieldset class="mb-3 special_days_store">
+                                <legend
+                                    class="text-uppercase font-size-sm font-weight-bold">{{__('admin.special_days')}}</legend>
+
+                                @if(is_array(old('special_date')))
+                                    @php $oldSpecialDays = old('special_date') @endphp
+                                    @php $oldSpecialHourFrom = old('from_special_hour') @endphp
+                                    @php $oldSpecialHourTo = old('to_special_hour') @endphp
+                                    @php $i = 1000; @endphp
+                                    @foreach($oldSpecialDays as $keyOldSpecialDay => $valueOldSpecialDay)
+                                        @php $j = $i + 1; @endphp
+                                        @php $id1 = 'anytime_'.$i; @endphp
+                                        @php $id2 = 'anytime_'.$j; @endphp
+                                        <div class="row special_days_area"
+                                             style="border: 1px solid #ccc; padding: 5px; margin-bottom: 5px;">
+                                            <div class="col-sm-2">
+                                                <input type="text" name="special_date[]" class="form-control daterange-single" value="{{ $valueOldSpecialDay }}">
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <input type="text" name="from_special_hour[]" class="form-control anytime"
+                                                       id="{{ $id1 }}" value="{{ $oldSpecialHourFrom[$keyOldSpecialDay] }}"
+                                                       readonly="">
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <input type="text" name="to_special_hour[]" class="form-control anytime"
+                                                       id="{{ $id2 }}" value="{{ $oldSpecialHourTo[$keyOldSpecialDay] }}"
+                                                       readonly="">
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <i class="icon-close2 special_day_close" style="cursor: pointer;"></i>
+                                            </div>
+                                        </div>
+                                        @php $i+=2 @endphp
+                                    @endforeach
+                                @else
+                                    @php $a = 998; @endphp
+                                    @foreach($storeSpecialDays as $specialDay)
+                                        @php
+                                            $specialDate = explode('---',$specialDay);
+                                            $hourExplode = explode(";",$specialDate[0]);
+                                            $hourCount = count($hourExplode);
+                                        @endphp
+                                        @for($i=0;$i<$hourCount;$i++)
+                                            @php
+                                                $hourExplode2 = explode("-",$hourExplode[$i]);
+                                            @endphp
+                                            <div class="row special_days_area"
+                                                 style="border: 1px solid #ccc; padding: 5px; margin-bottom: 5px;">
+                                                <div class="col-sm-2">
+                                                    <input type="text" name="special_date[]" class="form-control daterange-single" value="{{ $specialDate[1] }}">
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <input type="text" name="from_special_hour[]" class="form-control anytime" id="anytime_{{ $a }}"
+                                                           value="{{ $hourExplode2[0] }}"
+                                                           readonly="">
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <input type="text" name="to_special_hour[]" class="form-control anytime" id="anytime_{{ $a+1 }}"
+                                                           value="{{ $hourExplode2[1] }}"
+                                                           readonly="">
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <i class="icon-close2 special_day_close" style="cursor: pointer;"></i>
+                                                </div>
+                                            </div>
+                                            @php $a+=2; @endphp
+                                        @endfor
+                                    @endforeach
+                                @endif
+
+                            </fieldset>
+                            <a href="javascript:void(0);" class="btn btn-outline-success add-special-day"><i
+                                    class="icon-plus2"></i> Add Special Day</a>
+                        </div>
+
+                        <div class="col-sm-12 mb-2" style="border: 1px solid #eee;"></div>
+
                         <div class="col-sm-12">
                             <x-save />
                             <x-back route="admin.store.index"></x-back>
@@ -257,6 +424,16 @@
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places&key=AIzaSyB3F_B_YH0XuWy_EB-zK-w4hyNJ1vjEJqQ"></script>
 
     <script>
+
+        function opening_hour_mask() {
+            // $("input#anytime_1").AnyTime_picker(
+            //     {format: '%H:%i'});
+            // $("input#anytime_2").AnyTime_picker(
+            //     {format: '%H:%i'});
+            $("input[id^=anytime_]").AnyTime_picker(
+                {format: '%H:%i'});
+        }
+
         function initialize() {
             let input = document.getElementById('address');
             new google.maps.places.Autocomplete(input);
@@ -297,6 +474,74 @@
         }
 
         $(document).ready(function () {
+            $('a.add-hour').click(function (e) {
+                let anytime_count = $("fieldset.opening_hours_store input.anytime").length;
+                anytime_count = anytime_count + 1;
+                $("fieldset.opening_hours_store").append(
+                    '<div class="row opening_hours_area"\n' +
+                    '                                     style="border: 1px solid #ccc; padding: 5px; margin-bottom: 5px;">\n' +
+                    '                                    <div class="col-sm-2">\n' +
+                    '                                        <select class="form-control" name="weekday[]">\n' +
+                    '                                            @foreach($weekdays as $keyWeekday => $valueWeekday)\n' +
+                    '                                                <option value="{{ $keyWeekday }}">{{ $valueWeekday }}</option>\n' +
+                    '                                            @endforeach\n' +
+                    '                                        </select>\n' +
+                    '                                    </div>\n' +
+                    '                                    <div class="col-sm-2">\n' +
+                    '                                        <input type="text" class="form-control anytime" name="from[]" id="anytime_' + anytime_count + '" value="00:00"\n' +
+                    '                                               readonly="">\n' +
+                    '                                    </div>\n' +
+                    '                                    <div class="col-sm-2">\n' +
+                    '                                        <input type="text" class="form-control anytime" name="to[]" id="anytime_' + (anytime_count + 1) + '" value="00:00"\n' +
+                    '                                               readonly="">\n' +
+                    '                                    </div>\n' +
+                    '                                    <div class="col-sm-2">\n' +
+                    '                                        <i class="icon-close2 hour_close" style="cursor: pointer;"></i>\n' +
+                    '                                    </div>\n' +
+                    '                                </div>');
+
+                $("input#anytime_" + anytime_count).AnyTime_picker(
+                    {format: '%H:%i'});
+                $("input#anytime_" + (anytime_count + 1)).AnyTime_picker(
+                    {format: '%H:%i'});
+
+            });
+
+            $('a.add-special-day').click(function (e) {
+                let anytime_count = $("fieldset.special_days_store input.anytime").length;
+                anytime_count = anytime_count + 1;
+                $("fieldset.special_days_store").append(
+                    '<div class="row special_days_area"\n' +
+                    '                                     style="border: 1px solid #ccc; padding: 5px; margin-bottom: 5px;">\n' +
+                    '                                    <div class="col-sm-2">\n' +
+                    '                                        <input type="text" name="special_date[]" class="form-control daterange-single">\n' +
+                    '                                    </div>\n' +
+                    '                                    <div class="col-sm-2">\n' +
+                    '                                        <input type="text" class="form-control anytime" name="from_special_hour[]" id="anytime_' + anytime_count + '" value="00:00"\n' +
+                    '                                               readonly="">\n' +
+                    '                                    </div>\n' +
+                    '                                    <div class="col-sm-2">\n' +
+                    '                                        <input type="text" class="form-control anytime" name="to_special_hour[]" id="anytime_' + (anytime_count + 1) + '" value="00:00"\n' +
+                    '                                               readonly="">\n' +
+                    '                                    </div>\n' +
+                    '                                    <div class="col-sm-2">\n' +
+                    '                                        <i class="icon-close2 special_day_close" style="cursor: pointer;"></i>\n' +
+                    '                                    </div>\n' +
+                    '                                </div>');
+
+                $("input#anytime_" + anytime_count).AnyTime_picker(
+                    {format: '%H:%i'});
+                $("input#anytime_" + (anytime_count + 1)).AnyTime_picker(
+                    {format: '%H:%i'});
+
+                $("input.daterange-single").daterangepicker({
+                    singleDatePicker: true
+                });
+
+            });
+
+            opening_hour_mask();
+
             $(window).keydown(function (event) {
 
                 if (event.keyCode == 13) {
@@ -306,6 +551,14 @@
                     }, 500);
                     return false;
                 }
+            });
+
+            $(".opening_hours_store").on('click', '.hour_close', function () {
+                $(this).parents('div.opening_hours_area').remove();
+            });
+
+            $(".special_days_store").on('click', '.special_day_close', function () {
+                $(this).parents('div.special_days_area').remove();
             });
         });
 
