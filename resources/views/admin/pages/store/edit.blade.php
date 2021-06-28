@@ -368,38 +368,40 @@
                                     @endforeach
                                 @else
                                     @php $a = 998; @endphp
-                                    @foreach($storeSpecialDays as $specialDay)
-                                        @php
-                                            $specialDate = explode('---',$specialDay);
-                                            $hourExplode = explode(";",$specialDate[0]);
-                                            $hourCount = count($hourExplode);
-                                        @endphp
-                                        @for($i=0;$i<$hourCount;$i++)
+                                    @if(is_array($storeSpecialDays))
+                                        @foreach($storeSpecialDays as $specialDay)
                                             @php
-                                                $hourExplode2 = explode("-",$hourExplode[$i]);
+                                                $specialDate = explode('---',$specialDay);
+                                                $hourExplode = explode(";",$specialDate[0]);
+                                                $hourCount = count($hourExplode);
                                             @endphp
-                                            <div class="row special_days_area"
-                                                 style="border: 1px solid #ccc; padding: 5px; margin-bottom: 5px;">
-                                                <div class="col-sm-2">
-                                                    <input type="text" name="special_date[]" class="form-control daterange-single" value="{{ $specialDate[1] }}">
+                                            @for($i=0;$i<$hourCount;$i++)
+                                                @php
+                                                    $hourExplode2 = explode("-",$hourExplode[$i]);
+                                                @endphp
+                                                <div class="row special_days_area"
+                                                     style="border: 1px solid #ccc; padding: 5px; margin-bottom: 5px;">
+                                                    <div class="col-sm-2">
+                                                        <input type="text" name="special_date[]" class="form-control daterange-single" value="{{ $specialDate[1] }}">
+                                                    </div>
+                                                    <div class="col-sm-2">
+                                                        <input type="text" name="from_special_hour[]" class="form-control anytime" id="anytime_{{ $a }}"
+                                                               value="{{ $hourExplode2[0] }}"
+                                                               readonly="">
+                                                    </div>
+                                                    <div class="col-sm-2">
+                                                        <input type="text" name="to_special_hour[]" class="form-control anytime" id="anytime_{{ $a+1 }}"
+                                                               value="{{ $hourExplode2[1] }}"
+                                                               readonly="">
+                                                    </div>
+                                                    <div class="col-sm-2">
+                                                        <i class="icon-close2 special_day_close" style="cursor: pointer;"></i>
+                                                    </div>
                                                 </div>
-                                                <div class="col-sm-2">
-                                                    <input type="text" name="from_special_hour[]" class="form-control anytime" id="anytime_{{ $a }}"
-                                                           value="{{ $hourExplode2[0] }}"
-                                                           readonly="">
-                                                </div>
-                                                <div class="col-sm-2">
-                                                    <input type="text" name="to_special_hour[]" class="form-control anytime" id="anytime_{{ $a+1 }}"
-                                                           value="{{ $hourExplode2[1] }}"
-                                                           readonly="">
-                                                </div>
-                                                <div class="col-sm-2">
-                                                    <i class="icon-close2 special_day_close" style="cursor: pointer;"></i>
-                                                </div>
-                                            </div>
-                                            @php $a+=2; @endphp
-                                        @endfor
-                                    @endforeach
+                                                @php $a+=2; @endphp
+                                            @endfor
+                                        @endforeach
+                                    @endif
                                 @endif
 
                             </fieldset>

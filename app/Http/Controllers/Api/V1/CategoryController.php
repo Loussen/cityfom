@@ -24,7 +24,6 @@ class CategoryController extends ApiController
             'filter' => 'sometimes|string|in:1,2',
             'api_key' => 'required|string|in:'.$apiKey,
             'language' => 'required|string|in:' . implode(",", $langs),
-            'user_id' => 'sometimes|numeric|exists:app_users,id',
         ]);
 
         $getCategories = DB::table('categories AS c')

@@ -18,6 +18,7 @@
         'store_type'                        => [1 => 'Admin', 2 => 'CMS'],
         'store_verification'                => [1 => 'Verified', 2 => 'Not Verified'],
         'weekdays'                          => [1 => 'MONDAY', 2 => 'TUESDAY', 3 => 'WEDNESDAY', 4 => 'THURSDAY', 5 => 'FRIDAY', 6 => 'SATURDAY', 7 => 'SUNDAY'],
+        'minimum_distance'                  => 100,
         'api_key'                           => 'duTpd3dgCfaKIXJjAa6IR2az5EpPr6iF'
     ]
 

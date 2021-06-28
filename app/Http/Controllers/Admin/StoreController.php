@@ -124,8 +124,15 @@ class StoreController extends Controller
             $from = $request->from;
             $to = $request->to;
 
-
             foreach ($weekdays as $keyWeekday => $valueWeekday) {
+
+                if($from[$keyWeekday] == '00:00') {
+                    $from[$keyWeekday] = '24:00';
+                }
+
+                if($to[$keyWeekday] == '00:00') {
+                    $to[$keyWeekday] = '24:00';
+                }
 
                 if(isset($openingHoursArr[$valueWeekday])) {
                     $openingHoursArr[$valueWeekday] .= ";".$from[$keyWeekday]."-".$to[$keyWeekday];
@@ -291,6 +298,14 @@ class StoreController extends Controller
 
 
             foreach ($weekdays as $keyWeekday => $valueWeekday) {
+
+                if($from[$keyWeekday] == '00:00') {
+                    $from[$keyWeekday] = '24:00';
+                }
+
+                if($to[$keyWeekday] == '00:00') {
+                    $to[$keyWeekday] = '24:00';
+                }
 
                 if(isset($openingHoursArr[$valueWeekday])) {
                     $openingHoursArr[$valueWeekday] .= ";".$from[$keyWeekday]."-".$to[$keyWeekday];

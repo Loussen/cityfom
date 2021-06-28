@@ -29,10 +29,10 @@ class RatingReviewResource extends JsonResource
             'user_like_check' => ($this->review_like_id > 0) ? true : false,
         ];
 
-        $review_images = explode(",",$this->review_images);
+        $reviewImages = explode(",",$this->review_images);
 
-        foreach ($review_images as $review_image) {
-            $arr['review_images'][] = (!empty($review_image) && File::exists(public_path() . '/uploads/rating_reviews/' . $review_image)) ? asset("/uploads/rating_reviews/" . $review_image) : null;
+        foreach ($reviewImages as $reviewImage) {
+            $arr['images'][] = (!empty($reviewImage) && File::exists(public_path() . '/uploads/rating_reviews/' . $reviewImage)) ? asset("/uploads/rating_reviews/" . $reviewImage) : null;
         }
 
         return $arr;

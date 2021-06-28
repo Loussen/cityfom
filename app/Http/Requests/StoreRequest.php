@@ -27,10 +27,10 @@ class StoreRequest extends FormRequest
 
         return [
             'name'   => 'required|min:3',
-            'description'   => 'required|min:5',
+            'description'   => 'required|min:3',
             "category_id"    => "required|array|max:3",
             "category_id.*"  => "required|string|distinct|min:2",
-            "tags"    => "required|array|min:1|max:10",
+            "tags"    => "required|array|min:1|max:50",
             "tags.*"  => "required|string|distinct|min:2",
             "country"  => "required|string|min:3",
             "latitude"  => "required|string|min:3",

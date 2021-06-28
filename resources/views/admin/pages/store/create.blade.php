@@ -400,7 +400,7 @@
             // $("input#anytime_2").AnyTime_picker(
             //     {format: '%H:%i'});
             $("input[id^=anytime_]").AnyTime_picker(
-                {format: '%H:%i'});
+                {format: '%h:%i'});
         }
 
         function initialize() {

@@ -7,6 +7,7 @@ use App\Models\Favourites;
 use App\Models\NotificationsStore;
 use App\Models\NotificationsStoreUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class FavouriteController extends ApiController
@@ -20,13 +21,14 @@ class FavouriteController extends ApiController
     {
         $langs = config("global.langs");
 
+        $user = Auth::user();
+
         $validatedData = $request->validate([
-            'user_id' => 'required|numeric|exists:app_users,id',
             'store_id' => 'required|numeric|exists:stores,id',
             'language' => 'required|string|in:' . implode(",", $langs),
         ]);
 
-        $existsFavourite = Favourites::where('user_id',$validatedData['user_id'])->where('store_id',$validatedData['store_id'])->first();
+        $existsFavourite = Favourites::where('user_id',$user->id)->where('store_id',$validatedData['store_id'])->first();
 
         if($existsFavourite) {
 
@@ -37,7 +39,7 @@ class FavouriteController extends ApiController
         } else {
 
             $favouriteData = [
-                'user_id' => $validatedData['user_id'],
+                'user_id' => $user->id,
                 'store_id' => $validatedData['store_id']
             ];
 
@@ -48,7 +50,7 @@ class FavouriteController extends ApiController
 
         $notificationStoreData = [
             'store_id' => $validatedData['store_id'],
-            'inserted_by'  => $validatedData['user_id'],
+            'inserted_by'  => $user->id,
             'type'  => 4,
         ];
 
