@@ -282,29 +282,29 @@
                                         @php $i+=2 @endphp
                                     @endforeach
                                 @else
-                                    <div class="row opening_hours_area"
-                                         style="border: 1px solid #ccc; padding: 5px; margin-bottom: 5px;">
-                                        <div class="col-sm-2">
-                                            <select class="form-control" name="weekday[]">
-                                                @foreach($weekdays as $keyWeekDay => $valueWeekDay)
-                                                    <option value="{{ $keyWeekDay }}">{{ $valueWeekDay }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <input type="text" name="from[]" class="form-control anytime" id="anytime_1"
-                                                   value="00:00"
-                                                   readonly="">
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <input type="text" name="to[]" class="form-control anytime" id="anytime_2"
-                                                   value="00:00"
-                                                   readonly="">
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <i class="icon-close2 hour_close" style="cursor: pointer;"></i>
-                                        </div>
-                                    </div>
+{{--                                    <div class="row opening_hours_area"--}}
+{{--                                         style="border: 1px solid #ccc; padding: 5px; margin-bottom: 5px;">--}}
+{{--                                        <div class="col-sm-2">--}}
+{{--                                            <select class="form-control" name="weekday[]">--}}
+{{--                                                @foreach($weekdays as $keyWeekDay => $valueWeekDay)--}}
+{{--                                                    <option value="{{ $keyWeekDay }}">{{ $valueWeekDay }}</option>--}}
+{{--                                                @endforeach--}}
+{{--                                            </select>--}}
+{{--                                        </div>--}}
+{{--                                        <div class="col-sm-2">--}}
+{{--                                            <input type="text" name="from[]" class="form-control anytime" id="anytime_1"--}}
+{{--                                                   value="00:00"--}}
+{{--                                                   readonly="">--}}
+{{--                                        </div>--}}
+{{--                                        <div class="col-sm-2">--}}
+{{--                                            <input type="text" name="to[]" class="form-control anytime" id="anytime_2"--}}
+{{--                                                   value="00:00"--}}
+{{--                                                   readonly="">--}}
+{{--                                        </div>--}}
+{{--                                        <div class="col-sm-2">--}}
+{{--                                            <i class="icon-close2 hour_close" style="cursor: pointer;"></i>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
                                 @endif
 
                             </fieldset>
@@ -350,25 +350,25 @@
                                         @php $i+=2 @endphp
                                     @endforeach
                                 @else
-                                    <div class="row special_days_area"
-                                         style="border: 1px solid #ccc; padding: 5px; margin-bottom: 5px;">
-                                        <div class="col-sm-2">
-                                            <input type="text" name="special_date[]" class="form-control daterange-single">
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <input type="text" name="from_special_hour[]" class="form-control anytime" id="anytime_998"
-                                                   value="00:00"
-                                                   readonly="">
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <input type="text" name="to_special_hour[]" class="form-control anytime" id="anytime_999"
-                                                   value="00:00"
-                                                   readonly="">
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <i class="icon-close2 special_day_close" style="cursor: pointer;"></i>
-                                        </div>
-                                    </div>
+{{--                                    <div class="row special_days_area"--}}
+{{--                                         style="border: 1px solid #ccc; padding: 5px; margin-bottom: 5px;">--}}
+{{--                                        <div class="col-sm-2">--}}
+{{--                                            <input type="text" name="special_date[]" class="form-control daterange-single">--}}
+{{--                                        </div>--}}
+{{--                                        <div class="col-sm-2">--}}
+{{--                                            <input type="text" name="from_special_hour[]" class="form-control anytime" id="anytime_998"--}}
+{{--                                                   value="00:00"--}}
+{{--                                                   readonly="">--}}
+{{--                                        </div>--}}
+{{--                                        <div class="col-sm-2">--}}
+{{--                                            <input type="text" name="to_special_hour[]" class="form-control anytime" id="anytime_999"--}}
+{{--                                                   value="00:00"--}}
+{{--                                                   readonly="">--}}
+{{--                                        </div>--}}
+{{--                                        <div class="col-sm-2">--}}
+{{--                                            <i class="icon-close2 special_day_close" style="cursor: pointer;"></i>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
                                 @endif
 
                             </fieldset>
@@ -478,7 +478,7 @@
 
             $('a.add-special-day').click(function (e) {
                 let anytime_count = $("fieldset.special_days_store input.anytime").length;
-                anytime_count = anytime_count + 1;
+                anytime_count = anytime_count + 998;
                 $("fieldset.special_days_store").append(
                     '<div class="row special_days_area"\n' +
                     '                                     style="border: 1px solid #ccc; padding: 5px; margin-bottom: 5px;">\n' +

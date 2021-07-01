@@ -511,7 +511,7 @@
 
             $('a.add-special-day').click(function (e) {
                 let anytime_count = $("fieldset.special_days_store input.anytime").length;
-                anytime_count = anytime_count + 1;
+                anytime_count = anytime_count + 999;
                 $("fieldset.special_days_store").append(
                     '<div class="row special_days_area"\n' +
                     '                                     style="border: 1px solid #ccc; padding: 5px; margin-bottom: 5px;">\n' +

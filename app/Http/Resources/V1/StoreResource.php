@@ -74,15 +74,26 @@ class StoreResource extends JsonResource
             }
         }
 
-//        dd(serialize($openingHoursArr));
+        if($this->special_days) {
+            $specialDays = unserialize($this->special_days);
+
+            foreach ($specialDays as $specialDay) {
+                if($specialDay) {
+                    $specialDayOne = explode("---",$specialDay);
+                    $specialHoursOne = explode(";",$specialDayOne[0]);
+
+                    $openingHoursArr['exceptions'][date('Y-m-d',strtotime($specialDayOne[1]))] = array_map('trim', $specialHoursOne);;
+                }
+            }
+        }
 
         $openingHours = OpeningHours::create(
             $openingHoursArr
         );
 
-        echo $this->store_id." - ".$openingHours->isOpenAt(new \DateTime(date('Y-m-d H:i:s')))."<br />";
+        $openingHoursStore = $openingHours->isOpenAt(new \DateTime(date('Y-m-d H:i:s'))) == 1 ? 'Open' : 'Closed';
 
-//        $openingHoursStore = $openingHours->isOpenAt(new \DateTime('2021-06-28 16:00:00')) == 1 ? 'Open' : 'Closed';
+        $arrNew = [];
 
         $arr = [
             'id' => $this->store_id,
@@ -91,8 +102,9 @@ class StoreResource extends JsonResource
             'distance' => sprintf("%.2f", $this->distance) . ' Km',
             'categories' => $categoryArr,
             'rating' => $totalRating,
-//            'availability' => $openingHoursStore,
-            'availability_text' => '',
+            'tags' => $this->tags,
+            'availability' => $openingHoursStore,
+            'availability_text' => $openingHoursStore,
             'review_count' => $getRating->count(),
             'type' => $this->store_type == 1 ? true : false,
             'phone' => $this->store_phone,
@@ -100,11 +112,20 @@ class StoreResource extends JsonResource
         ];
 
         $storeImages = explode(",",$this->store_images);
+        $storeImages = array_unique($storeImages);
 
         foreach ($storeImages as $storeImage) {
             $arr['images'][] = (!empty($storeImage) && File::exists(public_path() . '/uploads/stores/' . $storeImage)) ? asset("/uploads/stores/" . $storeImage) : null;
         }
 
-        return $arr;
+        if($request->user_open_store === true) {
+            if($arr['availability'] == "Open") {
+                $arrNew[] = $arr;
+            }
+        } else {
+            $arrNew[] = $arr;
+        }
+
+        return $arrNew;
     }
 }

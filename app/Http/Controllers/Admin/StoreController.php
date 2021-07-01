@@ -126,12 +126,8 @@ class StoreController extends Controller
 
             foreach ($weekdays as $keyWeekday => $valueWeekday) {
 
-                if($from[$keyWeekday] == '00:00') {
-                    $from[$keyWeekday] = '24:00';
-                }
-
                 if($to[$keyWeekday] == '00:00') {
-                    $to[$keyWeekday] = '24:00';
+                    $to[$keyWeekday] = '23:59';
                 }
 
                 if(isset($openingHoursArr[$valueWeekday])) {
@@ -164,6 +160,10 @@ class StoreController extends Controller
 
             $specialDaysHourArr = [];
             foreach ($specialDates as $keySpecialday => $valueSpecialday) {
+
+                if($toSpecialHour[$keySpecialday] == '00:00') {
+                    $to[$keySpecialday] = '23:59';
+                }
 
                 if(isset($specialDaysHourArr[$valueSpecialday])) {
                     $specialDaysHourArr[$valueSpecialday] .= ";".$fromSpecialHour[$keySpecialday]."-".$toSpecialHour[$keySpecialday];
@@ -299,12 +299,8 @@ class StoreController extends Controller
 
             foreach ($weekdays as $keyWeekday => $valueWeekday) {
 
-                if($from[$keyWeekday] == '00:00') {
-                    $from[$keyWeekday] = '24:00';
-                }
-
                 if($to[$keyWeekday] == '00:00') {
-                    $to[$keyWeekday] = '24:00';
+                    $to[$keyWeekday] = '23:59';
                 }
 
                 if(isset($openingHoursArr[$valueWeekday])) {
@@ -337,6 +333,10 @@ class StoreController extends Controller
 
             $specialDaysHourArr = [];
             foreach ($specialDates as $keySpecialday => $valueSpecialday) {
+
+                if($toSpecialHour[$keySpecialday] == '00:00') {
+                    $toSpecialHour[$keySpecialday] = '23:59';
+                }
 
                 if(isset($specialDaysHourArr[$valueSpecialday])) {
                     $specialDaysHourArr[$valueSpecialday] .= ";".$fromSpecialHour[$keySpecialday]."-".$toSpecialHour[$keySpecialday];
