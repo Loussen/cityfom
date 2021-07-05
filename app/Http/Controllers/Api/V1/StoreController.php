@@ -3,18 +3,14 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Api\ApiController;
-use App\Http\Resources\V1\CategoryResource;
-use App\Http\Resources\V1\CouponResource;
 use App\Http\Resources\V1\StoreResource;
 use App\Models\AppUsers;
 use App\Models\Configs;
 use App\Models\Stores;
 use App\Models\UserSearch;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
-use Spatie\OpeningHours\OpeningHours;
 
 class StoreController extends ApiController
 {
@@ -232,20 +228,33 @@ class StoreController extends ApiController
 
         $validatedData = $request->validate([
             'user_id' => 'sometimes|numeric|exists:app_users,id',
-            'store_id' => 'required|numeric|exists:stores,id',
+            'store_id' => 'required|numeric',
             'api_key' => 'required|string|in:' . $apiKey,
             'latitude' => 'required|string',
             'longitude' => 'required|string',
             'language' => 'required|string|in:' . implode(",", $langs),
         ]);
 
-        $getStore = Stores::find($validatedData['store_id']);
+//        echo $validatedData['store_id'];
+
+        $getStore = DB::table('stores AS s')
+            ->selectRaw('s.id AS store_id, s.name AS store_name, s.address, s.type AS store_type, s.description AS store_description, s.email AS store_email, s.website AS store_website, s.facebook AS store_facebook, s.twitter AS store_twitter, s.instagram AS store_instagram, s.latitude AS store_latitude, s.longitude AS store_longitude, s.phone AS store_phone, s.hours AS opening_hours, s.special_days, s.tags, ( 6371 * acos( cos( radians(' . $validatedData['latitude'] . ') ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians(' . $validatedData['longitude'] . ') ) + sin( radians(' . $validatedData['latitude'] . ') ) * sin( radians( latitude ) ) ) ) AS distance, GROUP_CONCAT(si.image) AS store_images')
+            ->leftJoin('store_images AS si', 'si.store_id', '=', 's.id')
+            ->leftJoin('store_category AS sc', 'sc.store_id', '=', 's.id')
+            ->whereRaw("s.verified = " . config("global.enable") . " AND s.status = " . config("global.enable")." AND s.id = ".$validatedData['store_id'])
+            ->groupBy('s.id')
+            ->orderBy('distance', 'ASC')
+            ->first();
 
         if($getStore) {
             if (!empty($getStore->cms_store_id) && ($getStore->cms_store_id != 0)) {
                 $cmsChannel = new CmsController();
                 $cmsChannel->channelsData($validatedData['store_id']);
             }
+
+            $storeDetail = new StoreResource($getStore);
+
+            return $this->successResponse($storeDetail);
         }
 
         return $this->errorResponse('Store not found', 404);

@@ -34,6 +34,6 @@ class Stores extends Model
     /**
      * @var array
      */
-    protected $fillable = ['cms_store_id', 'cms_notification_id', 'name', 'description', 'tags', 'address', 'country', 'latitude', 'longitude', 'email', 'phone', 'hours', 'special_days', 'website', 'facebook', 'twitter', 'instagram', 'verified', 'type', 'status', 'created_at', 'updated_at'];
+    protected $fillable = ['id','cms_store_id', 'cms_notification_id', 'name', 'description', 'tags', 'address', 'country', 'latitude', 'longitude', 'email', 'phone', 'hours', 'special_days', 'website', 'facebook', 'twitter', 'instagram', 'verified', 'type', 'status', 'created_at', 'updated_at'];
 
 }
