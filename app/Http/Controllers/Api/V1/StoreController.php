@@ -8,6 +8,7 @@ use App\Http\Resources\V1\CouponResource;
 use App\Http\Resources\V1\StoreResource;
 use App\Models\AppUsers;
 use App\Models\Configs;
+use App\Models\Stores;
 use App\Models\UserSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -43,7 +44,7 @@ class StoreController extends ApiController
         $limit = config('global.paginate_count_api');
 
         $getStores = DB::table('stores AS s')
-            ->selectRaw('s.id AS store_id, s.name AS store_name, s.address, s.type AS store_type, s.phone AS store_phone, s.hours AS opening_hours, s.special_days, s.tags, ( 6371 * acos( cos( radians(' . $validatedData['latitude'] . ') ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians(' . $validatedData['longitude'] . ') ) + sin( radians(' . $validatedData['latitude'] . ') ) * sin( radians( latitude ) ) ) ) AS distance, GROUP_CONCAT(si.image) AS store_images')
+            ->selectRaw('s.id AS store_id, s.name AS store_name, s.address, s.type AS store_type, s.description AS store_description, s.email AS store_email, s.website AS store_website, s.facebook AS store_facebook, s.twitter AS store_twitter, s.instagram AS store_instagram, s.latitude AS store_latitude, s.longitude AS store_longitude, s.phone AS store_phone, s.hours AS opening_hours, s.special_days, s.tags, ( 6371 * acos( cos( radians(' . $validatedData['latitude'] . ') ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians(' . $validatedData['longitude'] . ') ) + sin( radians(' . $validatedData['latitude'] . ') ) * sin( radians( latitude ) ) ) ) AS distance, GROUP_CONCAT(si.image) AS store_images')
             ->leftJoin('store_images AS si', 'si.store_id', '=', 's.id')
             ->leftJoin('store_category AS sc', 'sc.store_id', '=', 's.id')
             ->whereRaw("s.verified = " . config("global.enable") . " AND s.status = " . config("global.enable"))
@@ -219,6 +220,32 @@ class StoreController extends ApiController
             $responseData['searchCount'] = $filterCount;
 
             return $this->successResponse($responseData);
+        }
+
+        return $this->errorResponse('Store not found', 404);
+    }
+
+    public function detail(Request $request)
+    {
+        $langs = config("global.langs");
+        $apiKey = config("global.api_key");
+
+        $validatedData = $request->validate([
+            'user_id' => 'sometimes|numeric|exists:app_users,id',
+            'store_id' => 'required|numeric|exists:stores,id',
+            'api_key' => 'required|string|in:' . $apiKey,
+            'latitude' => 'required|string',
+            'longitude' => 'required|string',
+            'language' => 'required|string|in:' . implode(",", $langs),
+        ]);
+
+        $getStore = Stores::find($validatedData['store_id']);
+
+        if($getStore) {
+            if (!empty($getStore->cms_store_id) && ($getStore->cms_store_id != 0)) {
+                $cmsChannel = new CmsController();
+                $cmsChannel->channelsData($validatedData['store_id']);
+            }
         }
 
         return $this->errorResponse('Store not found', 404);

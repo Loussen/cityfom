@@ -39,6 +39,7 @@ Route::post('user/resetPassword', 'UserController@resetPassword');
 Route::post('categories/all','CategoryController@all');
 
 Route::post('stores/all','StoreController@all');
+Route::post('stores/detail','StoreController@detail');
 
 Route::group(['middleware' => 'auth:api_version'], function(){
     // Users
