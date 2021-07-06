@@ -23,11 +23,11 @@ class ChannelsController extends ApiController
             'language' => 'required|string|in:' . implode(",", $langs),
         ]);
 
-        $getTypes = Channels::where('status',config("global.enable"))->where('store_id',$validatedData['store_id'])->orderBy('reorder','ASC')->get();
+        $getChannels = Channels::where('status',config("global.enable"))->where('store_id',$validatedData['store_id'])->orderBy('reorder','ASC')->get();
 
-        if ($getTypes) {
+        if ($getChannels) {
 
-            $responseData = ChannelResource::collection($getTypes);
+            $responseData = ChannelResource::collection($getChannels);
 
             return $this->successResponse($responseData);
         }

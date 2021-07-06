@@ -13,6 +13,7 @@
         'disable'                           => 2,
         'paginate_count_api'                => 10,
         'channel_offer_id'                  => 3,
+        'channel_product_id'                => 1,
         'rating_sort'                       => ['date','rate_desc','rate_asc','like_desc'],
         'partner_type'                      => [1 => 'Partner', 2 => 'Ordinary'],
         'store_type'                        => [1 => 'Admin', 2 => 'CMS'],
