@@ -232,7 +232,7 @@ class StoreController extends ApiController
 
         $validatedData = $request->validate([
             'user_id' => 'sometimes|numeric|exists:app_users,id',
-            'store_id' => 'required|numeric',
+            'store_id' => 'required|numeric|exists:stores,id',
             'api_key' => 'required|string|in:' . $apiKey,
             'latitude' => 'required|string',
             'longitude' => 'required|string',

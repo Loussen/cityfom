@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Controllers\Controller;
 use App\Models\AppUsers;
 use App\Models\Categories;
 use App\Models\Channels;
@@ -15,7 +14,6 @@ use App\Models\StoreCategory;
 use App\Models\StoreImages;
 use App\Models\Stores;
 use App\Models\UserCategory;
-use Illuminate\Session\Store;
 use Illuminate\Support\Facades\Session;
 
 class CmsController
@@ -285,6 +283,7 @@ class CmsController
             } else {
                 $loyaltyPointData = json_decode($loyaltyPointRes);
             }
+
         }
 
         return $loyaltyPointData;

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Resources\V1\CouponResource;
+use App\Http\Resources\V1\NotificationResource;
 use App\Models\AppUsers;
 use App\Models\CouponRedeem;
 use App\Models\Coupons;
@@ -212,5 +213,37 @@ class NotificationsController extends ApiController
         } else {
             return $this->errorResponse('Notification not found', 404);
         }
+    }
+
+    public function allByUser(Request $request)
+    {
+        $langs = config("global.langs");
+
+        $validatedData = $request->validate([
+            'offset' => 'sometimes|numeric',
+            'language' => 'required|string|in:' . implode(",", $langs),
+        ]);
+
+        $validatedData['offset'] = $validatedData['offset'] ?? 0;
+
+        $limit = config('global.paginate_count_api');
+
+        $user = Auth::user();
+
+        $getNotificationData = DB::table('push_notifications AS pn')
+            ->selectRaw('pn.*')
+            ->whereRaw("pn.user_id = " . $user->id)
+            ->offset($validatedData['offset'])
+            ->limit($limit)
+            ->orderBy('id','DESC')
+            ->get();
+
+        if($getNotificationData->count() > 0) {
+            $notificationData = NotificationResource::collection($getNotificationData);
+
+            return $this->successResponse($notificationData);
+        }
+
+        return $this->errorResponse('Notifications not found', 404);
     }
 }

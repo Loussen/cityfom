@@ -63,6 +63,7 @@ Route::group(['middleware' => 'auth:api_version'], function(){
 
     // Favourites
     Route::post('favourite/store', 'FavouriteController@store');
+    Route::post('favourite/all', 'FavouriteController@allByUserId');
 
     // Rating reviews
     Route::post('ratingReview/store', 'RatingReviewController@store');
@@ -86,5 +87,10 @@ Route::group(['middleware' => 'auth:api_version'], function(){
     Route::post('notifications/count', 'NotificationsController@count');
     Route::post('notifications/read', 'NotificationsController@read');
     Route::post('notifications/reportStore', 'NotificationsController@reportStore');
+    Route::post('notifications/allByUser', 'NotificationsController@allByUser');
+
+    // Loyalty
+    Route::post('loyalty/myPoints', 'LoyaltyController@myPoints');
+    Route::post('loyalty/myPointsHistory', 'LoyaltyController@myPointsHistory');
 
 });
