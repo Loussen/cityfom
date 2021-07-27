@@ -391,36 +391,6 @@ class ChannelPostController extends Controller
         return response()->json(['response' => $response]);
     }
 
-    // Ajax request for get channel categories by store id
-    public function channelCategoryFilter(Request $request)
-    {
-        $response = [];
-
-        $search = $request->q;
-
-        if ($request->has('store_id')) {
-            $storeId = intval($request->store_id);
-            if ($storeId > 0) {
-                $channels = DB::table('channels AS c')
-                    ->join('channel_category AS cc', 'cc.id', '=','c.channel_category_id')
-                    ->whereRaw('c.store_id = '.$storeId)
-                    ->select('c.id AS channel_id','c.title AS channel_title', 'cc.name AS category_name', 'cc.id AS category_id');
-            }
-
-            if ($request->has('q')) {
-                $channels->whereRaw('(c.title LIKE "%' . $search . '%" OR cc.name LIKE "%'.$search.'%")');
-            }
-
-            $channels = $channels->get();
-        }
-
-        if ($channels) {
-            $response = $channels;
-        }
-
-        return response()->json(['response' => $response]);
-    }
-
     /**
      * @return \Illuminate\Support\Collection
      */

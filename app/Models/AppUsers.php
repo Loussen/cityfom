@@ -40,6 +40,8 @@ class AppUsers extends Authenticatable
 {
     use HasApiTokens, Notifiable;
 
+    protected $table = 'app_users';
+
     /**
      * @var array
      */

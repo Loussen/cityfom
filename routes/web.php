@@ -22,7 +22,20 @@ Route::get('admin/login','Auth\AdminAuthController@getLogin')->name('adminLogin'
 Route::post('admin/login', 'Auth\AdminAuthController@postLogin')->name('adminLoginPost');
 Route::post('admin/logout', 'Auth\AdminAuthController@logout')->name('adminLogout');
 
+Route::get('cms/login','Auth\AdminAuthController@getLogin')->name('cmsLogin');
+Route::post('cms/login', 'Auth\AdminAuthController@postLogin')->name('cmsLoginPost');
+Route::post('cms/logout', 'Auth\AdminAuthController@logout')->name('cmsLoginLogout');
+
+Route::group(['as' => 'admin', 'prefix' => 'cms', 'middleware' => 'adminauth'], function() {
+    Route::resource('category','Admin\CategoryController');
+});
+
 Route::group(['as' => 'admin.', 'prefix' => 'admin', 'middleware' => 'adminauth', 'namespace' => 'Admin'], function () {
+
+    // Roles and Permissions
+    Route::resource('roles', 'RoleController');
+    Route::delete('destroyMultipleRole', 'RoleController@destroyMultipleRole')->name('roles.destroyMultipleRole');
+
     // Admin Dashboard
     Route::get('dashboard','DashboardController@dashboard')->name('dashboard');
 
@@ -119,6 +132,18 @@ Route::group(['as' => 'admin.', 'prefix' => 'admin', 'middleware' => 'adminauth'
     Route::put('typeMultipleStore', 'StoreController@typeMultipleStore')->name('store.typeMultipleStore');
     Route::put('statusMultipleStore', 'StoreController@statusMultipleStore')->name('store.statusMultipleStore');
     Route::delete('destroyStoreImage', 'StoreController@destroyStoreImage')->name('store.destroyStoreImage');
+
+    // APP users
+    Route::resource('app_users', 'AppUsersController');
+    Route::put('changeAppUserStatus', 'AppUsersController@changeAppUserStatus')->name('app_users.changeAppUserStatus');
+    Route::delete('destroyMultipleAppUser', 'AppUsersController@destroyMultipleAppUser')->name('app_users.destroyMultipleAppUser');
+    Route::put('statusMultipleAppUser', 'AppUsersController@statusMultipleAppUser')->name('app_users.statusMultipleAppUser');
+
+    // CMS users
+    Route::resource('cms_users', 'CmsUsersController');
+    Route::put('changeCmsUserStatus', 'CmsUsersController@changeCmsUserStatus')->name('cms_users.changeCmsUserStatus');
+    Route::delete('destroyMultipleCmsUser', 'CmsUsersController@destroyMultipleCmsUser')->name('cms_users.destroyMultipleCmsUser');
+    Route::put('statusMultipleCmsUser', 'CmsUsersController@statusMultipleCmsUser')->name('cms_users.statusMultipleCmsUser');
 
     Route::post('ckeditor_upload', 'CkeditorController@upload')->name('ckeditor.upload');
 

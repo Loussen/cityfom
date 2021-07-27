@@ -28,61 +28,6 @@ class SettingsController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $query = DB::table('categories AS c')
-            ->selectRaw('c.*, sum((case when sc.category_id is not null then 1 else 0 end)) AS store_count')
-            ->leftJoin('store_category as sc', 'sc.category_id','=','c.id')
-            ->groupByRaw('c.id');
-
-        $pageCount = config('global.pagination_count');
-
-        if(request('id')) {
-            $filterId = intval(request('id'));
-
-            if($filterId > 0)
-                $query->whereRaw('c.id = '.request('id'));
-        }
-
-        if(request('name')) {
-            $query->whereRaw('name_en LIKE "%'.request('name').'%" or name_az LIKE "%'.request('name').'%" or name_ru LIKE "%'.request('name').'%" or name_es LIKE "%'.request('name').'%"');
-        }
-
-        if(request('status') && in_array(request('status'),[1,2])) {
-            $filterStatus = intval(request('status'));
-
-            if($filterStatus > 0)
-                $query->whereRaw('status = '.$filterStatus);
-        }
-
-        if(request('filter_type') && in_array(request('filter_type'),[1,2])) {
-            $filterType = intval(request('filter_type'));
-
-            if($filterType > 0)
-                $query->whereRaw('filter = '.$filterType);
-        }
-
-        $storeCount = 'ASC';
-        if(request('store_count') && in_array(request('store_count'),['ASC','DESC'])) {
-            $query->orderBy('store_count',request('store_count'));
-
-            $storeCount = request('store_count');
-        }
-
-        $query = $query->paginate($pageCount);
-        $categories = $query->appends(request()->query());
-
-        $status = config('global.status');
-        $filterType = config('global.filter_type');
-
-        return view('admin.pages.category.index', compact('categories','storeCount','status','filterType'));
-    }
-
-    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
@@ -189,13 +134,5 @@ class SettingsController extends Controller
         $user->update($userData);
 
         return redirect()->route('admin.profile.profile')->with(_sessionmessage());
-    }
-
-    /**
-     * @return \Illuminate\Support\Collection
-     */
-    public function export()
-    {
-        return Excel::download(new SchoolExportMapping(), 'schools.xlsx');
     }
 }

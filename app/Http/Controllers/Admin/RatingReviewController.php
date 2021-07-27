@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AppUsers;
 use App\Models\RateReviewImages;
 use App\Models\RateReviews;
 use App\Models\Stores;
@@ -50,6 +51,17 @@ class RatingReviewController extends Controller
 
                 if($storeExists)
                     $query->whereRaw('rr.store_id = '.$storeId);
+            }
+        }
+
+        if(request('user_id')) {
+            $userId = intval(request('user_id'));
+
+            if($userId > 0) {
+                $userExists = AppUsers::find($userId);
+
+                if($userExists)
+                    $query->whereRaw('rr.user_id = '.$userId);
             }
         }
 
@@ -237,19 +249,6 @@ class RatingReviewController extends Controller
         }
 
         return response()->json(['response' => $response]);
-    }
-
-    protected function generatecouponcode()
-    {
-        $length = 6;
-        $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $string = '';
-
-        for ($p = 0; $p < $length; $p++) {
-            $string .= $characters[mt_rand(0, strlen($characters))];
-        }
-
-        return $string;
     }
 
     /**

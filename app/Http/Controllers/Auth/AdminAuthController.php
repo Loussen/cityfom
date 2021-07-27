@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
-use Validator;
-use Session;
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
-use App\Http\Requests;
-use App\Models\Admin;
+use Session;
+use Validator;
 
 class AdminAuthController extends Controller
 {

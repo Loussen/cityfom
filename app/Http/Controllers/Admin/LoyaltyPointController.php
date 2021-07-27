@@ -32,8 +32,9 @@ class LoyaltyPointController extends Controller
             ->selectRaw('lp.*, au.firstname, au.lastname, au.email, s.name AS store_name')
             ->join('stores AS s','s.id','=','lp.store_id')
             ->join('app_users AS au','au.id','=','lp.user_id')
-            ->whereRaw('lp.id = (SELECT MAX(lp2.id) FROM loyalty_points lp2 WHERE lp2.user_id = lp.user_id)')
+            ->whereRaw('lp.id = (SELECT MAX(lp2.id) FROM loyalty_points lp2 WHERE lp2.store_id = lp.store_id)')
             ->orderBy('lp.id','DESC')
+            ->groupBy('lp.store_id')
             ;
 
         $pageCount = config('global.pagination_count');
@@ -95,7 +96,7 @@ class LoyaltyPointController extends Controller
             ->selectRaw('lp.*')
             ->join('stores AS s','s.id','=','lp.store_id')
             ->join('app_users AS au','au.id','=','lp.user_id')
-            ->whereRaw('lp.id = (SELECT MAX(lp2.id) FROM loyalty_points lp2 WHERE lp2.user_id = lp.user_id) AND user_id = '.intval($request->user_id).' AND store_id = '.intval($request->store_id))->first()
+            ->whereRaw('lp.id = (SELECT MAX(lp2.id) FROM loyalty_points lp2 WHERE lp2.store_id = lp.store_id) AND user_id = '.intval($request->user_id).' AND store_id = '.intval($request->store_id))->groupBy('lp.store_id')->first()
         ;
 
         $loyaltyPointData = [

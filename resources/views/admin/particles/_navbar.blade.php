@@ -97,16 +97,16 @@
                     <a href="#" class="nav-link legitRipple"><i class="icon-users"></i> <span>Users</span></a>
 
                     <ul class="nav nav-group-sub" data-submenu-title="Users">
-                        <li class="nav-item"><a href="../../../../layout_1/LTR/default/full/index.html"
+                        <li class="nav-item"><a href="{{route('admin.cms_users.index')}}"
                                                 class="nav-link legitRipple">Subadmins</a></li>
-                        <li class="nav-item"><a href="index.html" class="nav-link active legitRipple">App users</a></li>
-                        <li class="nav-item"><a href="../../../../layout_3/LTR/default/full/index.html"
+                        <li class="nav-item"><a href="{{route('admin.app_users.index')}}" class="nav-link active legitRipple">App users</a></li>
+                        <li class="nav-item"><a href="{{route('admin.app_users.index')}}"
                                                 class="nav-link legitRipple">Store users</a></li>
                     </ul>
                 </li>
                 <li class="nav-item">
                     <a href="{{route('admin.category.index')}}" class="nav-link legitRipple">
-                        <i class="icon-list"></i>
+                        <i class="icon-menu"></i>
                         <span>
 									Category
 								</span>
@@ -130,7 +130,7 @@
                 </li>
                 <li class="nav-item">
                     <a href="{{route('admin.cms_pages.index')}}" class="nav-link legitRipple">
-                        <i class="icon-list"></i>
+                        <i class="icon-list2"></i>
                         <span>
 									CMS pages
 								</span>
@@ -176,7 +176,7 @@
                     </ul>
                 </li>
                 <li class="nav-item nav-item-submenu">
-                    <a href="#" class="nav-link legitRipple"><i class="icon-mailbox"></i> <span>Settings</span></a>
+                    <a href="#" class="nav-link legitRipple"><i class="icon-cog"></i> <span>Settings</span></a>
 
                     <ul class="nav nav-group-sub" data-submenu-title="Change password">
                         <li class="nav-item"><a href="{{route('admin.password.password')}}"
@@ -191,6 +191,14 @@
                         <i class="icon-cart"></i>
                         <span>
 									Stores
+								</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{route('admin.roles.index')}}" class="nav-link legitRipple">
+                        <i class="icon-cogs"></i>
+                        <span>
+									Roles
 								</span>
                     </a>
                 </li>
