@@ -13,7 +13,7 @@
 
             <div class="header-elements d-none">
                 <div class="d-flex justify-content-center">
-                    <a href="{{route('admin.coupon.create')}}" class="btn btn-outline-success float-right"><i
+                    <a href="{{route($module_name.'.coupon.create')}}" class="btn btn-outline-success float-right"><i
                             class="icon-plus2"></i> Add New</a>
                 </div>
             </div>
@@ -22,7 +22,7 @@
         <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
             <div class="d-flex">
                 <div class="breadcrumb">
-                    <a href="{{ route('admin.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
+                    <a href="{{ route($module_name.'.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
                     <span class="breadcrumb-item active">Coupons</span>
                 </div>
 
@@ -80,7 +80,7 @@
                         </div>
                         <div class="col-sm-12">
                             <x-search/>
-                            <x-showall route="admin.coupon.index"/>
+                            <x-showall route="{{$module_name}}.coupon.index"/>
                             <x-clear/>
                         </div>
                     </div>
@@ -91,7 +91,7 @@
     @include('admin.particles._sessionmessage')
     <!-- Basic table -->
         <a class="btn btn-info legitRipple col-md-2 mr-2 mb-2"
-           href="{{ route('admin.coupon.index',['redeem_count' => $redeemCount == 'ASC' ? 'DESC' : 'ASC']) }}">
+           href="{{ route($module_name.'.coupon.index',['redeem_count' => $redeemCount == 'ASC' ? 'DESC' : 'ASC']) }}">
             {!! $redeemCount == 'ASC' ? "<i class='icon-arrow-up-left2'></i>" : "<i class='icon-arrow-down-left2'></i>" !!}
             Sorting by redeem count
         </a>
@@ -184,8 +184,8 @@
                             </td>
                             <td class="text-center">
                                 <div class="btn-group">
-                                    <x-edit route="admin.coupon.edit" :id="$coupon->id"/>
-                                    <x-delete route="admin.coupon.destroy" :id="$coupon->id"/>
+                                    <x-edit route="{{$module_name}}.coupon.edit" :id="$coupon->id"/>
+                                    <x-delete route="{{$module_name}}.coupon.destroy" :id="$coupon->id"/>
                                 </div>
                             </td>
                         </tr>
@@ -235,7 +235,7 @@
                 }).then(function (result) {
                     if (result.value) {
                         $.ajax({
-                            url: "{{ route('admin.coupon.changeCouponStatus') }}",
+                            url: "{{ route($module_name.'.coupon.changeCouponStatus') }}",
                             data: {status: status, coupon_id: coupon_id},
                             method: 'PUT',
                             dataType: 'json',
@@ -313,7 +313,7 @@
                         let join_selected_values = allVals.join(",");
 
                         $.ajax({
-                            url: "{{ route('admin.coupon.destroyMultipleCoupon') }}",
+                            url: "{{ route($module_name.'.coupon.destroyMultipleCoupon') }}",
                             data: {ids: join_selected_values},
                             method: 'DELETE',
                             dataType: 'json',
@@ -389,7 +389,7 @@
                         let join_selected_values = allVals.join(",");
 
                         $.ajax({
-                            url: "{{ route('admin.coupon.statusMultipleCoupon') }}",
+                            url: "{{ route($module_name.'.coupon.statusMultipleCoupon') }}",
                             data: {ids: join_selected_values, status: status},
                             method: 'PUT',
                             dataType: 'json',

@@ -3,13 +3,13 @@
     <!-- Header with logos -->
     <div class="navbar-header navbar-dark d-none d-md-flex align-items-md-center text-center">
         <div class="navbar-brand navbar-brand-md">
-            <a href="index.html" class="d-inline-block">
+            <a href="{{route($module_name.".dashboard")}}" class="d-inline-block">
                 <img src="{{asset("admin/img/logotype_white.png")}}" alt="" style="height: 3rem;">
             </a>
         </div>
 
         <div class="navbar-brand navbar-brand-xs">
-            <a href="index.html" class="d-inline-block">
+            <a href="{{route($module_name.".dashboard")}}" class="d-inline-block">
                 <img src="{{asset("admin/img/logotype_white.png")}}" alt="">
             </a>
         </div>
@@ -20,7 +20,7 @@
     <!-- Mobile controls -->
     <div class="d-flex flex-1 d-md-none">
         <div class="navbar-brand mr-auto">
-            <a href="index.html" class="d-inline-block">
+            <a href="{{route($module_name.".dashboard")}}" class="d-inline-block">
                 <img src="{{asset("admin/img/logotype_white.png")}}" alt="">
             </a>
         </div>
@@ -44,227 +44,155 @@
                     <i class="icon-paragraph-justify3"></i>
                 </a>
             </li>
-
-            <li class="nav-item dropdown">
-                <a href="#" class="navbar-nav-link dropdown-toggle caret-0 legitRipple" data-toggle="dropdown">
-                    <i class="icon-people"></i>
-                    <span class="d-md-none ml-2">Users</span>
-                    <span class="badge badge-mark border-pink-400 ml-auto ml-md-0"></span>
-                </a>
-
-                <div class="dropdown-menu dropdown-content wmin-md-300">
-                    <div class="dropdown-content-header">
-                        <span class="font-weight-semibold">Users online</span>
-                        <a href="#" class="text-default"><i class="icon-search4 font-size-base"></i></a>
-                    </div>
-
-                    <div class="dropdown-content-body dropdown-scrollable">
-                        <ul class="media-list">
-                            <li class="media">
-                                <div class="mr-3">
-                                    <img src="{{asset("admin/global_assets/images/placeholders/placeholder.jpg")}}" width="36" height="36" class="rounded-circle" alt="">
-                                </div>
-                                <div class="media-body">
-                                    <a href="#" class="media-title font-weight-semibold">Jordana Ansley</a>
-                                    <span class="d-block text-muted font-size-sm">Lead web developer</span>
-                                </div>
-                                <div class="ml-3 align-self-center"><span class="badge badge-mark border-success"></span></div>
-                            </li>
-
-                            <li class="media">
-                                <div class="mr-3">
-                                    <img src="{{asset("admin/global_assets/images/placeholders/placeholder.jpg")}}" width="36" height="36" class="rounded-circle" alt="">
-                                </div>
-                                <div class="media-body">
-                                    <a href="#" class="media-title font-weight-semibold">Will Brason</a>
-                                    <span class="d-block text-muted font-size-sm">Marketing manager</span>
-                                </div>
-                                <div class="ml-3 align-self-center"><span class="badge badge-mark border-danger"></span></div>
-                            </li>
-
-                            <li class="media">
-                                <div class="mr-3">
-                                    <img src="{{asset("admin/global_assets/images/placeholders/placeholder.jpg")}}" width="36" height="36" class="rounded-circle" alt="">
-                                </div>
-                                <div class="media-body">
-                                    <a href="#" class="media-title font-weight-semibold">Hanna Walden</a>
-                                    <span class="d-block text-muted font-size-sm">Project manager</span>
-                                </div>
-                                <div class="ml-3 align-self-center"><span class="badge badge-mark border-success"></span></div>
-                            </li>
-
-                            <li class="media">
-                                <div class="mr-3">
-                                    <img src="{{asset("admin/global_assets/images/placeholders/placeholder.jpg")}}" width="36" height="36" class="rounded-circle" alt="">
-                                </div>
-                                <div class="media-body">
-                                    <a href="#" class="media-title font-weight-semibold">Dori Laperriere</a>
-                                    <span class="d-block text-muted font-size-sm">Business developer</span>
-                                </div>
-                                <div class="ml-3 align-self-center"><span class="badge badge-mark border-warning-300"></span></div>
-                            </li>
-
-                            <li class="media">
-                                <div class="mr-3">
-                                    <img src="{{asset("admin/global_assets/images/placeholders/placeholder.jpg")}}" width="36" height="36" class="rounded-circle" alt="">
-                                </div>
-                                <div class="media-body">
-                                    <a href="#" class="media-title font-weight-semibold">Vanessa Aurelius</a>
-                                    <span class="d-block text-muted font-size-sm">UX expert</span>
-                                </div>
-                                <div class="ml-3 align-self-center"><span class="badge badge-mark border-grey-400"></span></div>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="dropdown-content-footer bg-light">
-                        <a href="#" class="text-grey mr-auto">All users</a>
-                        <a href="#" class="text-grey"><i class="icon-gear"></i></a>
-                    </div>
-                </div>
-            </li>
         </ul>
 
-        <span class="badge bg-pink-400 badge-pill ml-md-3 mr-md-auto">16 orders</span>
+        <span class="mr-md-auto"></span>
 
         <ul class="navbar-nav">
-            <li class="nav-item dropdown">
-                <a href="#" class="navbar-nav-link dropdown-toggle legitRipple" data-toggle="dropdown">
-                    <img src="{{asset("admin/global_assets/images/lang/gb.png")}}" class="img-flag mr-2" alt="">
-                    English
-                </a>
 
-                <div class="dropdown-menu dropdown-menu-right">
-                    <a href="#" class="dropdown-item english active"><img src="{{asset("admin/global_assets/images/lang/gb.png")}}" class="img-flag" alt=""> English</a>asset("admin/
-                    <a href="#" class="dropdown-item ukrainian"><img src="{{asset("admin/global_assets/images/lang/ua.png")}}" class="img-flag" alt=""> Українська</a>
-                    <a href="#" class="dropdown-item deutsch"><img src="{{asset("admin/global_assets/images/lang/de.png")}}" class="img-flag" alt=""> Deutsch</a>
-                    <a href="#" class="dropdown-item espana"><img src="{{asset("admin/global_assets/images/lang/es.png")}}" class="img-flag" alt=""> España</a>
-                    <a href="#" class="dropdown-item russian"><img src="{{asset("admin/global_assets/images/lang/ru.png")}}" class="img-flag" alt=""> Русский</a>
-                </div>
-            </li>
+            @if($module_name == 'cms')
+                <li class="nav-item dropdown">
+                    <a href="#" class="navbar-nav-link dropdown-toggle caret-0 legitRipple" data-toggle="dropdown">
+                        <i class="icon-bubbles4"></i>
+                        <span class="d-md-none ml-2">Messages</span>
+                        <span class="badge badge-mark border-pink-400 ml-auto ml-md-0"></span>
+                    </a>
 
-            <li class="nav-item dropdown">
-                <a href="#" class="navbar-nav-link dropdown-toggle caret-0 legitRipple" data-toggle="dropdown">
-                    <i class="icon-bubbles4"></i>
-                    <span class="d-md-none ml-2">Messages</span>
-                    <span class="badge badge-mark border-pink-400 ml-auto ml-md-0"></span>
-                </a>
+                    <div class="dropdown-menu dropdown-menu-right dropdown-content wmin-md-350">
+                        <div class="dropdown-content-header">
+                            <span class="font-weight-semibold">Messages</span>
+                            <a href="#" class="text-default"><i class="icon-compose"></i></a>
+                        </div>
 
-                <div class="dropdown-menu dropdown-menu-right dropdown-content wmin-md-350">
-                    <div class="dropdown-content-header">
-                        <span class="font-weight-semibold">Messages</span>
-                        <a href="#" class="text-default"><i class="icon-compose"></i></a>
-                    </div>
-
-                    <div class="dropdown-content-body dropdown-scrollable">
-                        <ul class="media-list">
-                            <li class="media">
-                                <div class="mr-3 position-relative">
-                                    <img src="{{asset("admin/global_assets/images/placeholders/placeholder.jpg")}}" width="36" height="36" class="rounded-circle" alt="">
-                                </div>
-
-                                <div class="media-body">
-                                    <div class="media-title">
-                                        <a href="#">
-                                            <span class="font-weight-semibold">James Alexander</span>
-                                            <span class="text-muted float-right font-size-sm">04:58</span>
-                                        </a>
+                        <div class="dropdown-content-body dropdown-scrollable">
+                            <ul class="media-list">
+                                <li class="media">
+                                    <div class="mr-3 position-relative">
+                                        <img src="{{asset("admin/global_assets/images/placeholders/placeholder.jpg")}}" width="36" height="36" class="rounded-circle" alt="">
                                     </div>
 
-                                    <span class="text-muted">who knows, maybe that would be the best thing for me...</span>
-                                </div>
-                            </li>
+                                    <div class="media-body">
+                                        <div class="media-title">
+                                            <a href="#">
+                                                <span class="font-weight-semibold">James Alexander</span>
+                                                <span class="text-muted float-right font-size-sm">04:58</span>
+                                            </a>
+                                        </div>
 
-                            <li class="media">
-                                <div class="mr-3 position-relative">
-                                    <img src="{{asset("admin/global_assets/images/placeholders/placeholder.jpg")}}" width="36" height="36" class="rounded-circle" alt="">
-                                </div>
+                                        <span class="text-muted">who knows, maybe that would be the best thing for me...</span>
+                                    </div>
+                                </li>
 
-                                <div class="media-body">
-                                    <div class="media-title">
-                                        <a href="#">
-                                            <span class="font-weight-semibold">Margo Baker</span>
-                                            <span class="text-muted float-right font-size-sm">12:16</span>
-                                        </a>
+                                <li class="media">
+                                    <div class="mr-3 position-relative">
+                                        <img src="{{asset("admin/global_assets/images/placeholders/placeholder.jpg")}}" width="36" height="36" class="rounded-circle" alt="">
                                     </div>
 
-                                    <span class="text-muted">That was something he was unable to do because...</span>
-                                </div>
-                            </li>
+                                    <div class="media-body">
+                                        <div class="media-title">
+                                            <a href="#">
+                                                <span class="font-weight-semibold">Margo Baker</span>
+                                                <span class="text-muted float-right font-size-sm">12:16</span>
+                                            </a>
+                                        </div>
 
-                            <li class="media">
-                                <div class="mr-3">
-                                    <img src="{{asset("admin/global_assets/images/placeholders/placeholder.jpg")}}" width="36" height="36" class="rounded-circle" alt="">
-                                </div>
-                                <div class="media-body">
-                                    <div class="media-title">
-                                        <a href="#">
-                                            <span class="font-weight-semibold">Jeremy Victorino</span>
-                                            <span class="text-muted float-right font-size-sm">22:48</span>
-                                        </a>
+                                        <span class="text-muted">That was something he was unable to do because...</span>
                                     </div>
+                                </li>
 
-                                    <span class="text-muted">But that would be extremely strained and suspicious...</span>
-                                </div>
-                            </li>
-
-                            <li class="media">
-                                <div class="mr-3">
-                                    <img src="{{asset("admin/global_assets/images/placeholders/placeholder.jpg")}}" width="36" height="36" class="rounded-circle" alt="">
-                                </div>
-                                <div class="media-body">
-                                    <div class="media-title">
-                                        <a href="#">
-                                            <span class="font-weight-semibold">Beatrix Diaz</span>
-                                            <span class="text-muted float-right font-size-sm">Tue</span>
-                                        </a>
+                                <li class="media">
+                                    <div class="mr-3">
+                                        <img src="{{asset("admin/global_assets/images/placeholders/placeholder.jpg")}}" width="36" height="36" class="rounded-circle" alt="">
                                     </div>
+                                    <div class="media-body">
+                                        <div class="media-title">
+                                            <a href="#">
+                                                <span class="font-weight-semibold">Jeremy Victorino</span>
+                                                <span class="text-muted float-right font-size-sm">22:48</span>
+                                            </a>
+                                        </div>
 
-                                    <span class="text-muted">What a strenuous career it is that I've chosen...</span>
-                                </div>
-                            </li>
-
-                            <li class="media">
-                                <div class="mr-3">
-                                    <img src="{{asset("admin/global_assets/images/placeholders/placeholder.jpg")}}" width="36" height="36" class="rounded-circle" alt="">
-                                </div>
-                                <div class="media-body">
-                                    <div class="media-title">
-                                        <a href="#">
-                                            <span class="font-weight-semibold">Richard Vango</span>
-                                            <span class="text-muted float-right font-size-sm">Mon</span>
-                                        </a>
+                                        <span class="text-muted">But that would be extremely strained and suspicious...</span>
                                     </div>
+                                </li>
 
-                                    <span class="text-muted">Other travelling salesmen live a life of luxury...</span>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
+                                <li class="media">
+                                    <div class="mr-3">
+                                        <img src="{{asset("admin/global_assets/images/placeholders/placeholder.jpg")}}" width="36" height="36" class="rounded-circle" alt="">
+                                    </div>
+                                    <div class="media-body">
+                                        <div class="media-title">
+                                            <a href="#">
+                                                <span class="font-weight-semibold">Beatrix Diaz</span>
+                                                <span class="text-muted float-right font-size-sm">Tue</span>
+                                            </a>
+                                        </div>
 
-                    <div class="dropdown-content-footer bg-light">
-                        <a href="#" class="text-grey mr-auto">All messages</a>
-                        <div>
-                            <a href="#" class="text-grey" data-popup="tooltip" title="" data-original-title="Mark all as read"><i class="icon-radio-unchecked"></i></a>
-                            <a href="#" class="text-grey ml-2" data-popup="tooltip" title="" data-original-title="Settings"><i class="icon-cog3"></i></a>
+                                        <span class="text-muted">What a strenuous career it is that I've chosen...</span>
+                                    </div>
+                                </li>
+
+                                <li class="media">
+                                    <div class="mr-3">
+                                        <img src="{{asset("admin/global_assets/images/placeholders/placeholder.jpg")}}" width="36" height="36" class="rounded-circle" alt="">
+                                    </div>
+                                    <div class="media-body">
+                                        <div class="media-title">
+                                            <a href="#">
+                                                <span class="font-weight-semibold">Richard Vango</span>
+                                                <span class="text-muted float-right font-size-sm">Mon</span>
+                                            </a>
+                                        </div>
+
+                                        <span class="text-muted">Other travelling salesmen live a life of luxury...</span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="dropdown-content-footer bg-light">
+                            <a href="#" class="text-grey mr-auto">All messages</a>
+                            <div>
+                                <a href="#" class="text-grey" data-popup="tooltip" title="" data-original-title="Mark all as read"><i class="icon-radio-unchecked"></i></a>
+                                <a href="#" class="text-grey ml-2" data-popup="tooltip" title="" data-original-title="Settings"><i class="icon-cog3"></i></a>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </li>
+                </li>
+            @endif
 
             <li class="nav-item dropdown dropdown-user">
                 <a href="#" class="navbar-nav-link d-flex align-items-center dropdown-toggle legitRipple" data-toggle="dropdown" aria-expanded="false">
-                    <img src="{{asset("admin/global_assets/images/placeholders/placeholder.jpg")}}" class="rounded-circle mr-2" height="34" alt="">
-                    <span>Victoria</span>
+                    <img src="{{asset('/uploads/profile_admin/'.auth()->guard('admin')->user()->photo)}}" class="rounded-circle mr-2" height="34" alt="">
+                    <span>{{auth()->guard('admin')->user()->firstname." ".auth()->guard('admin')->user()->lastname}}</span>
                 </a>
 
                 <div class="dropdown-menu dropdown-menu-right">
-                    <a href="#" class="dropdown-item"><i class="icon-user-plus"></i> My profile</a>
-                    <a href="#" class="dropdown-item"><i class="icon-coins"></i> My balance</a>
-                    <a href="#" class="dropdown-item"><i class="icon-comment-discussion"></i> Messages <span class="badge badge-pill bg-indigo-400 ml-auto">58</span></a>
+                    <a href="{{route($module_name.'.profile.profile')}}" class="dropdown-item"><i class="icon-user-plus"></i> My profile</a>
+                    <a href="{{route($module_name.'.password.password')}}" class="dropdown-item"><i class="icon-lock"></i> Change password</a>
                     <div class="dropdown-divider"></div>
-                    <a href="#" class="dropdown-item"><i class="icon-cog5"></i> Account settings</a>
-                    <a href="#" class="dropdown-item"><i class="icon-switch2"></i> Logout</a>
+                    @if($module_name=='admin')
+                        <a href="#" class="dropdown-item"
+                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="icon-switch2"></i>
+                            Logout</a>
+                        <form id="logout-form" action="{{ route('adminLogout') }}" method="POST" >
+                            @csrf
+                        </form>
+                    @elseif($module_name == 'cms')
+                        <a href="#" class="dropdown-item"
+                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="icon-switch2"></i>
+                            Logout</a>
+                        <form id="logout-form" action="{{ route('cmsLogout') }}" method="POST" >
+                            @csrf
+                        </form>
+                    @elseif($module_name == 'subadmin')
+                        <a href="#" class="dropdown-item"
+                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="icon-switch2"></i>
+                            Logout</a>
+                        <form id="logout-form" action="{{ route('subadminLogout') }}" method="POST" >
+                            @csrf
+                        </form>
+                    @endif
                 </div>
             </li>
         </ul>

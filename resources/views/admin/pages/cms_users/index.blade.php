@@ -13,7 +13,7 @@
 
             <div class="header-elements d-none">
                 <div class="d-flex justify-content-center">
-                    <a href="{{route('admin.cms_users.create')}}" class="btn btn-outline-success float-right"><i
+                    <a href="{{route($module_name.'.cms_users.create')}}" class="btn btn-outline-success float-right"><i
                             class="icon-plus2"></i> Add New</a>
                 </div>
             </div>
@@ -22,7 +22,7 @@
         <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
             <div class="d-flex">
                 <div class="breadcrumb">
-                    <a href="{{ route('admin.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i>
+                    <a href="{{ route($module_name.'.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i>
                         Home</a>
                     <span class="breadcrumb-item active">CMS users</span>
                 </div>
@@ -81,7 +81,7 @@
                         </div>
                         <div class="col-sm-12">
                             <x-search/>
-                            <x-showall route="admin.cms_users.index"/>
+                            <x-showall route="{{$module_name}}.cms_users.index"/>
                             <x-clear/>
                         </div>
                     </div>
@@ -159,8 +159,8 @@
                             </td>
                             <td class="text-center">
                                 <div class="btn-group">
-                                    <x-edit route="admin.cms_users.edit" :id="$user->id"/>
-                                    <x-delete route="admin.cms_users.destroy" :id="$user->id"/>
+                                    <x-edit route="{{$module_name}}.cms_users.edit" :id="$user->id"/>
+                                    <x-delete route="{{$module_name}}.cms_users.destroy" :id="$user->id"/>
                                 </div>
                             </td>
                         </tr>
@@ -206,7 +206,7 @@
                 }).then(function (result) {
                     if (result.value) {
                         $.ajax({
-                            url: "{{ route('admin.cms_users.changeCmsUserStatus') }}",
+                            url: "{{ route($module_name.'.cms_users.changeCmsUserStatus') }}",
                             data: {status: status, user_id: user_id},
                             method: 'PUT',
                             dataType: 'json',
@@ -284,7 +284,7 @@
                         let join_selected_values = allVals.join(",");
 
                         $.ajax({
-                            url: "{{ route('admin.cms_users.destroyMultipleCmsUser') }}",
+                            url: "{{ route($module_name.'.cms_users.destroyMultipleCmsUser') }}",
                             data: {ids: join_selected_values},
                             method: 'DELETE',
                             dataType: 'json',
@@ -360,7 +360,7 @@
                         let join_selected_values = allVals.join(",");
 
                         $.ajax({
-                            url: "{{ route('admin.cms_users.statusMultipleCmsUser') }}",
+                            url: "{{ route($module_name.'.cms_users.statusMultipleCmsUser') }}",
                             data: {ids: join_selected_values, status: status},
                             method: 'PUT',
                             dataType: 'json',

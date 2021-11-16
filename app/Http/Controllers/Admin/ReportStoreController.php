@@ -14,11 +14,12 @@ class ReportStoreController extends Controller
 {
     public function __construct()
     {
-//        $this->middleware('permission:school-list|school-create|school-edit|school-delete', ['only' => ['index', 'store']]);
-//        $this->middleware('permission:school-create', ['only' => ['create', 'store']]);
-//        $this->middleware('permission:school-edit', ['only' => ['edit', 'update']]);
-//        $this->middleware('permission:school-delete', ['only' => ['destroy']]);
-//        $this->middleware('permission:school-export', ['only' => ['export']]);
+        parent::__construct();
+        $this->middleware('permission:report-stores-list|report-stores-create|report-stores-edit|report-stores-delete', ['only' => ['index', 'store']]);
+        $this->middleware('permission:report-stores-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:report-stores-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:report-stores-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:report-stores-export', ['only' => ['export']]);
     }
 
     /**

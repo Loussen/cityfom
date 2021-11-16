@@ -13,7 +13,7 @@
 
             <div class="header-elements d-none">
                 <div class="d-flex justify-content-center">
-                    <a href="{{route('admin.loyalty_point.create')}}" class="btn btn-outline-success float-right"><i
+                    <a href="{{route($module_name.'.loyalty_point.create')}}" class="btn btn-outline-success float-right"><i
                             class="icon-plus2"></i> Add New</a>
                 </div>
             </div>
@@ -22,7 +22,7 @@
         <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
             <div class="d-flex">
                 <div class="breadcrumb">
-                    <a href="{{ route('admin.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
+                    <a href="{{ route($module_name.'.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
                     <span class="breadcrumb-item active">Loyalty points</span>
                 </div>
 
@@ -70,7 +70,7 @@
                         </div>
                         <div class="col-sm-12">
                             <x-search/>
-                            <x-showall route="admin.loyalty_point.index"/>
+                            <x-showall route="{{$module_name}}.loyalty_point.index"/>
                             <x-clear/>
                         </div>
                     </div>
@@ -116,7 +116,7 @@
                             <td class="text-center">
                                 <div class="btn-group">
                                     <button class="btn btn btn-success mr-2" data-id="{{$loyaltyPoint->id}}" id="point_history"><i class="icon-history"></i> {{ __('admin.history') }}</button>
-                                    <x-delete route="admin.loyalty_point.destroy" :id="$loyaltyPoint->id"/>
+                                    <x-delete route="{{$module_name}}.loyalty_point.destroy" :id="$loyaltyPoint->id"/>
                                 </div>
                             </td>
                         </tr>
@@ -181,7 +181,7 @@
                         let join_selected_values = allVals.join(",");
 
                         $.ajax({
-                            url: "{{ route('admin.loyalty_point.destroyMultipleLoyaltyPoint') }}",
+                            url: "{{ route($module_name.'.loyalty_point.destroyMultipleLoyaltyPoint') }}",
                             data: {ids: join_selected_values},
                             method: 'DELETE',
                             dataType: 'json',
@@ -233,7 +233,7 @@
                 "<tr><th>ID</th><th>Firstname</th><th>Lastname</th><th>Email</th><th>Store</th></tr></thead><tbody>";
 
             $.ajax({
-                url: "{{ route('admin.loyalty_point.pointHistory') }}",
+                url: "{{ route($module_name.'.loyalty_point.pointHistory') }}",
                 data: {point_id : $(this).data('id')},
                 method: 'POST',
                 dataType: 'json',

@@ -13,7 +13,7 @@
 
             <div class="header-elements d-none">
                 <div class="d-flex justify-content-center">
-                    <a href="{{route('admin.loyalty_message.create')}}" class="btn btn-outline-success float-right"><i
+                    <a href="{{route($module_name.'.loyalty_message.create')}}" class="btn btn-outline-success float-right"><i
                             class="icon-plus2"></i> Add New</a>
                 </div>
             </div>
@@ -22,7 +22,7 @@
         <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
             <div class="d-flex">
                 <div class="breadcrumb">
-                    <a href="{{ route('admin.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
+                    <a href="{{ route($module_name.'.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
                     <span class="breadcrumb-item active">Loyalty messages</span>
                 </div>
 
@@ -85,7 +85,7 @@
                         </div>
                         <div class="col-sm-12">
                             <x-search/>
-                            <x-showall route="admin.loyalty_message.index"/>
+                            <x-showall route="{{$module_name}}.loyalty_message.index"/>
                             <x-clear/>
                         </div>
                     </div>
@@ -184,8 +184,8 @@
                             </td>
                             <td class="text-center">
                                 <div class="btn-group">
-                                    <x-edit route="admin.loyalty_message.edit" :id="$loyaltyMessage->id"/>
-                                    <x-delete route="admin.loyalty_message.destroy" :id="$loyaltyMessage->id"/>
+                                    <x-edit route="{{$module_name}}.loyalty_message.edit" :id="$loyaltyMessage->id"/>
+                                    <x-delete route="{{$module_name}}.loyalty_message.destroy" :id="$loyaltyMessage->id"/>
                                 </div>
                             </td>
                         </tr>
@@ -235,7 +235,7 @@
                 }).then(function (result) {
                     if (result.value) {
                         $.ajax({
-                            url: "{{ route('admin.loyalty_message.changeLoyaltyMessageStatus') }}",
+                            url: "{{ route($module_name.'.loyalty_message.changeLoyaltyMessageStatus') }}",
                             data: {status: status, loyalty_message_id: loyalty_message_id},
                             method: 'PUT',
                             dataType: 'json',
@@ -313,7 +313,7 @@
                         let join_selected_values = allVals.join(",");
 
                         $.ajax({
-                            url: "{{ route('admin.loyalty_message.destroyMultipleLoyaltyMessage') }}",
+                            url: "{{ route($module_name.'.loyalty_message.destroyMultipleLoyaltyMessage') }}",
                             data: {ids: join_selected_values},
                             method: 'DELETE',
                             dataType: 'json',
@@ -389,7 +389,7 @@
                         let join_selected_values = allVals.join(",");
 
                         $.ajax({
-                            url: "{{ route('admin.loyalty_message.statusMultipleLoyaltyMessage') }}",
+                            url: "{{ route($module_name.'.loyalty_message.statusMultipleLoyaltyMessage') }}",
                             data: {ids: join_selected_values, status: status},
                             method: 'PUT',
                             dataType: 'json',

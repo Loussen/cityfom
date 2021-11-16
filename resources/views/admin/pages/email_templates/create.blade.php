@@ -15,9 +15,9 @@
         <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
             <div class="d-flex">
                 <div class="breadcrumb">
-                    <a href="{{ route('admin.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i>
+                    <a href="{{ route($module_name.'.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i>
                         Home</a>
-                    <a href="{{ route('admin.email_templates.index') }}" class="breadcrumb-item">Email templates</a>
+                    <a href="{{ route($module_name.'.email_templates.index') }}" class="breadcrumb-item">Email templates</a>
                     <span class="breadcrumb-item active">Add Email template</span>
                 </div>
 
@@ -31,7 +31,7 @@
         <div class="card">
             <div class="card-body">
                 @include('admin.particles._sessionmessage',['error_type' => 'warning'])
-                <form action="{{route('admin.email_templates.store')}}" method="POST">
+                <form action="{{route($module_name.'.email_templates.store')}}" method="POST">
                     @csrf
                     <div class="form-row">
                         <div class="form-group col-sm-12">
@@ -144,7 +144,7 @@
                         </div>
                         <div class="col-sm-12">
                             <x-save/>
-                            <x-back route="admin.email_templates.index"></x-back>
+                            <x-back route="{{$module_name}}.email_templates.index"></x-back>
                         </div>
                     </div>
                 </form>
@@ -158,7 +158,7 @@
         $(".editor").each(function () {
             let id = $(this).attr('id');
             CKEDITOR.replace(id, {
-                filebrowserUploadUrl: "{{route('admin.ckeditor.upload', ['_token' => csrf_token() ])}}",
+                filebrowserUploadUrl: "{{route($module_name.'.ckeditor.upload', ['_token' => csrf_token() ])}}",
                 filebrowserUploadMethod: 'form',
                 allowedContent: true
             });

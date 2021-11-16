@@ -13,11 +13,12 @@ class CouponController extends Controller
 {
     public function __construct()
     {
-//        $this->middleware('permission:school-list|school-create|school-edit|school-delete', ['only' => ['index', 'store']]);
-//        $this->middleware('permission:school-create', ['only' => ['create', 'store']]);
-//        $this->middleware('permission:school-edit', ['only' => ['edit', 'update']]);
-//        $this->middleware('permission:school-delete', ['only' => ['destroy']]);
-//        $this->middleware('permission:school-export', ['only' => ['export']]);
+        parent::__construct();
+        $this->middleware('permission:coupons-list|coupons-create|coupons-edit|coupons-delete', ['only' => ['index', 'store']]);
+        $this->middleware('permission:coupons-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:coupons-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:coupons-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:coupons-export', ['only' => ['export']]);
     }
 
     /**
@@ -116,7 +117,7 @@ class CouponController extends Controller
             }
             else
             {
-                return redirect()->route('admin.coupon.create')->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png)", 'warning', true));
+                return redirect()->route($this->module_name.'.coupon.create')->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png)", 'warning', true));
             }
         }
 
@@ -155,9 +156,9 @@ class CouponController extends Controller
             DB::table("coupons")->where('id','=',$couponId)
                 ->update(['code' => $generateCouponCode.$couponId]);
 
-            return redirect()->route('admin.coupon.index')->with(_sessionmessage());
+            return redirect()->route($this->module_name.'.coupon.index')->with(_sessionmessage());
         } else {
-            return redirect()->route('admin.coupon.create')->with(_sessionmessage(null, "Coupon code cannot create", 'warning', true));
+            return redirect()->route($this->module_name.'.coupon.create')->with(_sessionmessage(null, "Coupon code cannot create", 'warning', true));
         }
     }
 
@@ -213,7 +214,7 @@ class CouponController extends Controller
             }
             else
             {
-                return redirect()->route('admin.coupon.edit', [$id])->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png)", 'warning', true));
+                return redirect()->route($this->module_name.'.coupon.edit', [$id])->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png)", 'warning', true));
             }
         }
 
@@ -247,7 +248,7 @@ class CouponController extends Controller
 
         $coupon->update($couponData);
 
-        return redirect()->route('admin.coupon.index')->with(_sessionmessage());
+        return redirect()->route($this->module_name.'.coupon.index')->with(_sessionmessage());
     }
 
     /**

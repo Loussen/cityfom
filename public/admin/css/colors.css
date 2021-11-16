@@ -2416,3 +2416,13 @@
 
 .bg-body {
   background-color: #eeeded; }
+
+.text-aqua-400 {
+    color: #00c0ef; }
+.text-aqua-400[href]:hover, .text-indigo-400[href]:focus {
+    color: #00c0ef; }
+
+.text-darkblue-400 {
+    color: #0073b7; }
+.text-darkblue-400[href]:hover, .text-indigo-400[href]:focus {
+    color: #0073b7; }

@@ -13,11 +13,12 @@ class EmailTemplatesController extends Controller
 {
     public function __construct()
     {
-//        $this->middleware('permission:school-list|school-create|school-edit|school-delete', ['only' => ['index', 'store']]);
-//        $this->middleware('permission:school-create', ['only' => ['create', 'store']]);
-//        $this->middleware('permission:school-edit', ['only' => ['edit', 'update']]);
-//        $this->middleware('permission:school-delete', ['only' => ['destroy']]);
-//        $this->middleware('permission:school-export', ['only' => ['export']]);
+        parent::__construct();
+        $this->middleware('permission:email-templates-list|email-templates-create|email-templates-edit|email-templates-delete', ['only' => ['index', 'store']]);
+        $this->middleware('permission:email-templates-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:email-templates-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:email-templates-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:email-templates-export', ['only' => ['export']]);
     }
 
     /**
@@ -89,7 +90,7 @@ class EmailTemplatesController extends Controller
 
         EmailTemplates::create($emailTemplateData);
 
-        return redirect()->route('admin.email_templates.index')->with(_sessionmessage());
+        return redirect()->route($this->module_name.'.email_templates.index')->with(_sessionmessage());
     }
 
     /**
@@ -140,7 +141,7 @@ class EmailTemplatesController extends Controller
 
         $emailTemplate->update($emailTemplateData);
 
-        return redirect()->route('admin.email_templates.index')->with(_sessionmessage());
+        return redirect()->route($this->module_name.'.email_templates.index')->with(_sessionmessage());
     }
 
     public function statusMultipleEmailTemplate(Request $request)

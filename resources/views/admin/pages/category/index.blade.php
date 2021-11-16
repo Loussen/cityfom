@@ -13,7 +13,7 @@
 
             <div class="header-elements d-none">
                 <div class="d-flex justify-content-center">
-                    <a href="{{route('admin.category.create')}}" class="btn btn-outline-success float-right"><i
+                    <a href="{{route($module_name.'.category.create')}}" class="btn btn-outline-success float-right"><i
                             class="icon-plus2"></i> Add New</a>
                 </div>
             </div>
@@ -22,7 +22,7 @@
         <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
             <div class="d-flex">
                 <div class="breadcrumb">
-                    <a href="{{ route('admin.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
+                    <a href="{{ route($module_name.'.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
                     <span class="breadcrumb-item active">Categories</span>
                 </div>
 
@@ -80,7 +80,7 @@
                         </div>
                         <div class="col-sm-12">
                             <x-search/>
-                            <x-showall route="admin.category.index"/>
+                            <x-showall route="{{$module_name}}.category.index"/>
                             <x-clear/>
                         </div>
                     </div>
@@ -91,7 +91,7 @@
     @include('admin.particles._sessionmessage')
     <!-- Basic table -->
         <a class="btn btn-info legitRipple col-md-2 mr-2 mb-2"
-           href="{{ route('admin.category.index',['store_count' => $storeCount == 'ASC' ? 'DESC' : 'ASC']) }}">
+           href="{{ route($module_name.'.category.index',['store_count' => $storeCount == 'ASC' ? 'DESC' : 'ASC']) }}">
             {!! $storeCount == 'ASC' ? "<i class='icon-arrow-up-left2'></i>" : "<i class='icon-arrow-down-left2'></i>" !!}
             Sorting by store count
         </a>
@@ -204,8 +204,8 @@
                             </td>
                             <td class="text-center">
                                 <div class="btn-group">
-                                    <x-edit route="admin.category.edit" :id="$category->id"/>
-                                    <x-delete route="admin.category.destroy" :id="$category->id"/>
+                                    <x-edit route="{{$module_name}}.category.edit" :id="$category->id"/>
+                                    <x-delete route="{{$module_name}}.category.destroy" :id="$category->id"/>
                                 </div>
                             </td>
                         </tr>
@@ -255,7 +255,7 @@
                 }).then(function (result) {
                     if (result.value) {
                         $.ajax({
-                            url: "{{ route('admin.category.changeCategoryStatus') }}",
+                            url: "{{ route($module_name.'.category.changeCategoryStatus') }}",
                             data: {status: status, category_id: category_id},
                             method: 'PUT',
                             dataType: 'json',
@@ -314,7 +314,7 @@
                 }).then(function (result) {
                     if (result.value) {
                         $.ajax({
-                            url: "{{ route('admin.category.changeCategoryFilterType') }}",
+                            url: "{{ route($module_name.'.category.changeCategoryFilterType') }}",
                             data: {filter_type: filter_type, category_id: category_id},
                             method: 'PUT',
                             dataType: 'json',
@@ -392,7 +392,7 @@
                         let join_selected_values = allVals.join(",");
 
                         $.ajax({
-                            url: "{{ route('admin.category.destroyMultipleCategory') }}",
+                            url: "{{ route($module_name.'.category.destroyMultipleCategory') }}",
                             data: {ids: join_selected_values},
                             method: 'DELETE',
                             dataType: 'json',
@@ -468,7 +468,7 @@
                         let join_selected_values = allVals.join(",");
 
                         $.ajax({
-                            url: "{{ route('admin.category.filterMultipleCategory') }}",
+                            url: "{{ route($module_name.'.category.filterMultipleCategory') }}",
                             data: {ids: join_selected_values, filter_type: filter_type},
                             method: 'PUT',
                             dataType: 'json',
@@ -540,7 +540,7 @@
                         let join_selected_values = allVals.join(",");
 
                         $.ajax({
-                            url: "{{ route('admin.category.statusMultipleCategory') }}",
+                            url: "{{ route($module_name.'.category.statusMultipleCategory') }}",
                             data: {ids: join_selected_values, status: status},
                             method: 'PUT',
                             dataType: 'json',

@@ -15,9 +15,9 @@
         <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
             <div class="d-flex">
                 <div class="breadcrumb">
-                    <a href="{{ route('admin.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i>
+                    <a href="{{ route($module_name.'.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i>
                         Home</a>
-                    <a href="{{ route('admin.general_message.index') }}" class="breadcrumb-item">General messages</a>
+                    <a href="{{ route($module_name.'.general_message.index') }}" class="breadcrumb-item">General messages</a>
                     <span class="breadcrumb-item active">Edit general message</span>
                 </div>
 
@@ -31,7 +31,7 @@
         <div class="card">
             <div class="card-body">
                 @include('admin.particles._sessionmessage',['error_type' => 'warning'])
-                <form action="{{route('admin.general_message.update', $generalMessage->id)}}" method="POST" enctype="multipart/form-data">
+                <form action="{{route($module_name.'.general_message.update', $generalMessage->id)}}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="form-row">
@@ -174,7 +174,7 @@
                         </div>
                         <div class="col-sm-12">
                             <x-save/>
-                            <x-back route="admin.general_message.index"></x-back>
+                            <x-back route="{{$module_name}}.general_message.index"></x-back>
                         </div>
                     </div>
                 </form>
@@ -193,7 +193,7 @@
         $(".editor").each(function () {
             let id = $(this).attr('id');
             CKEDITOR.replace(id, {
-                filebrowserUploadUrl: "{{route('admin.ckeditor.upload', ['_token' => csrf_token() ])}}",
+                filebrowserUploadUrl: "{{route($module_name.'.ckeditor.upload', ['_token' => csrf_token() ])}}",
                 filebrowserUploadMethod: 'form'
             });
         });

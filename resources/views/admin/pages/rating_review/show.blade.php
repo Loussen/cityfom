@@ -15,9 +15,9 @@
         <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
             <div class="d-flex">
                 <div class="breadcrumb">
-                    <a href="{{ route('admin.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i>
+                    <a href="{{ route($module_name.'.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i>
                         Home</a>
-                    <a href="{{ route('admin.rating_review.index') }}" class="breadcrumb-item">Rating review</a>
+                    <a href="{{ route($module_name.'.rating_review.index') }}" class="breadcrumb-item">Rating review</a>
                     <span class="breadcrumb-item active">Show Rating review</span>
                 </div>
 
@@ -159,7 +159,7 @@
                             @enderror
                         </div>
                         <div class="col-sm-12">
-                            <x-back route="admin.coupon.index"></x-back>
+                            <x-back route="{{$module_name}}.coupon.index"></x-back>
                         </div>
                     </div>
                 </form>
@@ -194,7 +194,7 @@
                 if (result.value) {
 
                     $.ajax({
-                        url: "{{ route('admin.rating_review.destroyImage') }}",
+                        url: "{{ route($module_name.'.rating_review.destroyImage') }}",
                         data: {image_id: image_id},
                         method: 'DELETE',
                         dataType: 'json',

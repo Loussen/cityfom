@@ -15,9 +15,9 @@
         <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
             <div class="d-flex">
                 <div class="breadcrumb">
-                    <a href="{{ route('admin.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i>
+                    <a href="{{ route($module_name.'.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i>
                         Home</a>
-                    <a href="{{ route('admin.cms_pages.index') }}" class="breadcrumb-item">CMS Pages</a>
+                    <a href="{{ route($module_name.'.cms_pages.index') }}" class="breadcrumb-item">CMS Pages</a>
                     <span class="breadcrumb-item active">Add CMS page</span>
                 </div>
 
@@ -31,7 +31,7 @@
         <div class="card">
             <div class="card-body">
                 @include('admin.particles._sessionmessage',['error_type' => 'warning'])
-                <form action="{{route('admin.cms_pages.store')}}" method="POST">
+                <form action="{{route($module_name.'.cms_pages.store')}}" method="POST">
                     @csrf
                     <div class="form-row">
                         <div class="form-group col-sm-6">
@@ -108,7 +108,7 @@
                         </div>
                         <div class="col-sm-12">
                             <x-save/>
-                            <x-back route="admin.cms_pages.index"></x-back>
+                            <x-back route="{{$module_name}}.cms_pages.index"></x-back>
                         </div>
                     </div>
                 </form>
@@ -122,7 +122,7 @@
         $(".editor").each(function () {
             let id = $(this).attr('id');
             CKEDITOR.replace(id, {
-                filebrowserUploadUrl: "{{route('admin.ckeditor.upload', ['_token' => csrf_token() ])}}",
+                filebrowserUploadUrl: "{{route($module_name.'.ckeditor.upload', ['_token' => csrf_token() ])}}",
                 filebrowserUploadMethod: 'form',
                 allowedContent: true
             });

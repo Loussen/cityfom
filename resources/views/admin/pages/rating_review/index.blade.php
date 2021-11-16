@@ -15,7 +15,7 @@
         <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
             <div class="d-flex">
                 <div class="breadcrumb">
-                    <a href="{{ route('admin.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
+                    <a href="{{ route($module_name.'.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
                     <span class="breadcrumb-item active">Rating & Reviews</span>
                 </div>
 
@@ -68,7 +68,7 @@
                         </div>
                         <div class="col-sm-12">
                             <x-search/>
-                            <x-showall route="admin.rating_review.index"/>
+                            <x-showall route="{{$module_name}}.rating_review.index"/>
                             <x-clear/>
                         </div>
                     </div>
@@ -79,7 +79,7 @@
     @include('admin.particles._sessionmessage')
     <!-- Basic table -->
         <a class="btn btn-info legitRipple col-md-2 mr-2 mb-2"
-           href="{{ route('admin.rating_review.index',['like_count' => $likeCount == 'ASC' ? 'DESC' : 'ASC']) }}">
+           href="{{ route($module_name.'.rating_review.index',['like_count' => $likeCount == 'ASC' ? 'DESC' : 'ASC']) }}">
             {!! $likeCount == 'ASC' ? "<i class='icon-arrow-up-left2'></i>" : "<i class='icon-arrow-down-left2'></i>" !!}
             Sorting by like count
         </a>
@@ -194,8 +194,8 @@
                             </td>
                             <td class="text-center">
                                 <div class="btn-group">
-                                    <x-show route="admin.rating_review.show" :id="$ratingReview->rate_review_id"/>
-                                    <x-delete route="admin.rating_review.destroy" :id="$ratingReview->rate_review_id"/>
+                                    <x-show route="{{$module_name}}.rating_review.show" :id="$ratingReview->rate_review_id"/>
+                                    <x-delete route="{{$module_name}}.rating_review.destroy" :id="$ratingReview->rate_review_id"/>
                                 </div>
                             </td>
                         </tr>
@@ -245,7 +245,7 @@
                 }).then(function (result) {
                     if (result.value) {
                         $.ajax({
-                            url: "{{ route('admin.rating_review.changeRatingReviewStatus') }}",
+                            url: "{{ route($module_name.'.rating_review.changeRatingReviewStatus') }}",
                             data: {status: status, rate_review_id: rate_review_id},
                             method: 'PUT',
                             dataType: 'json',
@@ -323,7 +323,7 @@
                         let join_selected_values = allVals.join(",");
 
                         $.ajax({
-                            url: "{{ route('admin.rating_review.destroyMultipleRatingReview') }}",
+                            url: "{{ route($module_name.'.rating_review.destroyMultipleRatingReview') }}",
                             data: {ids: join_selected_values},
                             method: 'DELETE',
                             dataType: 'json',
@@ -399,7 +399,7 @@
                         let join_selected_values = allVals.join(",");
 
                         $.ajax({
-                            url: "{{ route('admin.rating_review.statusMultipleRatingReview') }}",
+                            url: "{{ route($module_name.'.rating_review.statusMultipleRatingReview') }}",
                             data: {ids: join_selected_values, status: status},
                             method: 'PUT',
                             dataType: 'json',

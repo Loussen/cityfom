@@ -13,7 +13,7 @@
 
             <div class="header-elements d-none">
                 <div class="d-flex justify-content-center">
-                    <a href="{{route('admin.roles.create')}}" class="btn btn-outline-success float-right"><i
+                    <a href="{{route($module_name.'.roles.create')}}" class="btn btn-outline-success float-right"><i
                             class="icon-plus2"></i> Add New</a>
                 </div>
             </div>
@@ -22,7 +22,7 @@
         <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
             <div class="d-flex">
                 <div class="breadcrumb">
-                    <a href="{{ route('admin.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
+                    <a href="{{ route($module_name.'.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
                     <span class="breadcrumb-item active">Roles</span>
                 </div>
 
@@ -67,8 +67,8 @@
                             <td>{{ $role->name }}</td>
                             <td class="text-center">
                                 <div class="btn-group">
-                                    <x-edit route="admin.roles.edit" :id="$role->id"/>
-                                    <x-delete route="admin.roles.destroy" :id="$role->id"/>
+                                    <x-edit route="{{$module_name}}.roles.edit" :id="$role->id"/>
+                                    <x-delete route="{{$module_name}}.roles.destroy" :id="$role->id"/>
                                 </div>
                             </td>
                         </tr>
@@ -124,7 +124,7 @@
                         let join_selected_values = allVals.join(",");
 
                         $.ajax({
-                            url: "{{ route('admin.roles.destroyMultipleRole') }}",
+                            url: "{{ route($module_name.'.roles.destroyMultipleRole') }}",
                             data: {ids: join_selected_values},
                             method: 'DELETE',
                             dataType: 'json',

@@ -20,6 +20,7 @@
         "spatie/opening-hours": "^2.10"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.6",
         "facade/ignition": "^2.5",
         "fakerphp/faker": "^1.9.1",
         "krlove/eloquent-model-generator": "^1.3",

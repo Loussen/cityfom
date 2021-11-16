@@ -1,6 +1,6 @@
 @extends('admin.layouts.login')
 @section('content')
-    <form class="login-form" action="{{ route($adminLoginName.'Post') }}" method="POST">
+    <form class="login-form" action="{{ route('subAdminLoginPost') }}" method="POST">
         @csrf
         <div class="card-body">
             <div class="text-center mb-3">

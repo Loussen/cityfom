@@ -13,7 +13,7 @@
 
             <div class="header-elements d-none">
                 <div class="d-flex justify-content-center">
-                    <a href="{{route('admin.email_templates.create')}}" class="btn btn-outline-success float-right"><i
+                    <a href="{{route($module_name.'.email_templates.create')}}" class="btn btn-outline-success float-right"><i
                             class="icon-plus2"></i> Add New</a>
                 </div>
             </div>
@@ -22,7 +22,7 @@
         <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
             <div class="d-flex">
                 <div class="breadcrumb">
-                    <a href="{{ route('admin.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
+                    <a href="{{ route($module_name.'.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
                     <span class="breadcrumb-item active">Email templates</span>
                 </div>
 
@@ -70,7 +70,7 @@
                         </div>
                         <div class="col-sm-12">
                             <x-search/>
-                            <x-showall route="admin.email_templates.index"/>
+                            <x-showall route="{{$module_name}}.email_templates.index"/>
                             <x-clear/>
                         </div>
                     </div>
@@ -126,7 +126,7 @@
                             </td>
                             <td class="text-center">
                                 <div class="btn-group">
-                                    <x-edit route="admin.email_templates.edit" :id="$emailTemplate->id"/>
+                                    <x-edit route="{{$module_name}}.email_templates.edit" :id="$emailTemplate->id"/>
                                 </div>
                             </td>
                         </tr>
@@ -171,7 +171,7 @@
                 }).then(function (result) {
                     if (result.value) {
                         $.ajax({
-                            url: "{{ route('admin.email_templates.changeEmailTemplateStatus') }}",
+                            url: "{{ route($module_name.'.email_templates.changeEmailTemplateStatus') }}",
                             data: {status: status, email_template_id: email_template_id},
                             method: 'PUT',
                             dataType: 'json',
@@ -250,7 +250,7 @@
                         let join_selected_values = allVals.join(",");
 
                         $.ajax({
-                            url: "{{ route('admin.email_templates.statusMultipleEmailTemplate') }}",
+                            url: "{{ route($module_name.'.email_templates.statusMultipleEmailTemplate') }}",
                             data: {ids: join_selected_values, status: status},
                             method: 'PUT',
                             dataType: 'json',

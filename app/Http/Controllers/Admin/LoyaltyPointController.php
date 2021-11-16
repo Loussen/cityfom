@@ -14,11 +14,12 @@ class LoyaltyPointController extends Controller
 {
     public function __construct()
     {
-//        $this->middleware('permission:school-list|school-create|school-edit|school-delete', ['only' => ['index', 'store']]);
-//        $this->middleware('permission:school-create', ['only' => ['create', 'store']]);
-//        $this->middleware('permission:school-edit', ['only' => ['edit', 'update']]);
-//        $this->middleware('permission:school-delete', ['only' => ['destroy']]);
-//        $this->middleware('permission:school-export', ['only' => ['export']]);
+        parent::__construct();
+        $this->middleware('permission:loyalty-point-list|loyalty-point-create|loyalty-point-edit|loyalty-point-delete', ['only' => ['index', 'store']]);
+        $this->middleware('permission:loyalty-point-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:loyalty-point-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:loyalty-point-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:loyalty-point-export', ['only' => ['export']]);
     }
 
     /**
@@ -108,7 +109,7 @@ class LoyaltyPointController extends Controller
 
         LoyaltyPoints::create($loyaltyPointData);
 
-        return redirect()->route('admin.loyalty_point.index')->with(_sessionmessage());
+        return redirect()->route($this->module_name.'.loyalty_point.index')->with(_sessionmessage());
     }
 
     /**
@@ -130,7 +131,7 @@ class LoyaltyPointController extends Controller
      */
     public function edit(LoyaltyPoints $loyaltyPoint)
     {
-        return redirect()->route('admin.loyalty_point.index')->with(_sessionmessage());
+        return redirect()->route($this->module_name.'.loyalty_point.index')->with(_sessionmessage());
     }
 
     /**
@@ -142,7 +143,7 @@ class LoyaltyPointController extends Controller
      */
     public function update(Request $request, $id)
     {
-        return redirect()->route('admin.loyalty_point.index')->with(_sessionmessage());
+        return redirect()->route($this->module_name.'.loyalty_point.index')->with(_sessionmessage());
     }
 
     /**

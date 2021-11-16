@@ -14,11 +14,12 @@ class ChannelPostController extends Controller
 {
     public function __construct()
     {
-//        $this->middleware('permission:school-list|school-create|school-edit|school-delete', ['only' => ['index', 'store']]);
-//        $this->middleware('permission:school-create', ['only' => ['create', 'store']]);
-//        $this->middleware('permission:school-edit', ['only' => ['edit', 'update']]);
-//        $this->middleware('permission:school-delete', ['only' => ['destroy']]);
-//        $this->middleware('permission:school-export', ['only' => ['export']]);
+        parent::__construct();
+        $this->middleware('permission:channel-post-list|channel-post-create|channel-post-edit|channel-post-delete', ['only' => ['index', 'store']]);
+        $this->middleware('permission:channel-post-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:channel-post-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:channel-post-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:channel-post-export', ['only' => ['export']]);
     }
 
     /**
@@ -126,7 +127,7 @@ class ChannelPostController extends Controller
             }
             else
             {
-                return redirect()->route('admin.channel_post.create')->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png,mpeg,mov,wav,avi,dat,flv,3gp,m4v,mp4)", 'warning', true));
+                return redirect()->route($this->module_name.'.channel_post.create')->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png,mpeg,mov,wav,avi,dat,flv,3gp,m4v,mp4)", 'warning', true));
             }
         }
 
@@ -184,7 +185,7 @@ class ChannelPostController extends Controller
 
         ChannelsDetails::create($channelPostData);
 
-        return redirect()->route('admin.channel_post.index')->with(_sessionmessage());
+        return redirect()->route($this->module_name.'.channel_post.index')->with(_sessionmessage());
     }
 
     /**
@@ -256,7 +257,7 @@ class ChannelPostController extends Controller
             }
             else
             {
-                return redirect()->route('admin.channel_post.edit', [$id])->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png,mpeg,mov,wav,avi,dat,flv,3gp,m4v,mp4)", 'warning', true));
+                return redirect()->route($this->module_name.'.channel_post.edit', [$id])->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png,mpeg,mov,wav,avi,dat,flv,3gp,m4v,mp4)", 'warning', true));
             }
         }
 
@@ -314,7 +315,7 @@ class ChannelPostController extends Controller
 
         $channelPost->update($channelPostData);
 
-        return redirect()->route('admin.channel_post.index')->with(_sessionmessage());
+        return redirect()->route($this->module_name.'.channel_post.index')->with(_sessionmessage());
     }
 
     /**

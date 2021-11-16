@@ -22,12 +22,12 @@
             <div class="sidebar-user-material-body"
                  style="background: url({{asset("admin/global_assets/images/backgrounds/user_bg3.jpg")}}) center center no-repeat; background-size: cover;">
                 <div class="card-body text-center">
-                    <a href="#">
-                        <img src="{{asset("admin/global_assets/images/placeholders/user.png")}}"
-                             class="img-fluid rounded-circle shadow-1 mb-3" width="80" height="80" alt="">
+                    <a href="{{ route($module_name.'.profile.profile') }}">
+                        <img src="{{asset('/uploads/profile_admin/'.auth()->guard('admin')->user()->photo)}}"
+                             class="img-fluid rounded-circle shadow-1 mb-3 " width="100" height="100" alt="">
                     </a>
-                    <h6 class="mb-0 text-white text-shadow-dark">Victoria Baker</h6>
-                    <span class="font-size-sm text-white text-shadow-dark">Santa Ana, CA</span>
+                    <h6 class="mb-0 text-white text-shadow-dark">{{auth()->guard('admin')->user()->firstname." ".auth()->guard('admin')->user()->lastname}}</h6>
+                    <span class="font-size-sm text-white text-shadow-dark">{{auth()->guard('admin')->user()->email}}</span>
                 </div>
 
                 <div class="sidebar-user-material-footer">
@@ -40,35 +40,41 @@
             <div class="collapse" id="user-nav">
                 <ul class="nav nav-sidebar">
                     <li class="nav-item">
-                        <a href="#" class="nav-link legitRipple">
+                        <a href="{{route($module_name.'.profile.profile')}}" class="nav-link legitRipple">
                             <i class="icon-user-plus"></i>
                             <span>My profile</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link legitRipple">
-                            <i class="icon-coins"></i>
-                            <span>My balance</span>
+                        <a href="{{route($module_name.'.password.password')}}" class="nav-link legitRipple">
+                            <i class="icon-lock"></i>
+                            <span>Change password</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link legitRipple">
-                            <i class="icon-comment-discussion"></i>
-                            <span>Messages</span>
-                            <span class="badge bg-success-400 badge-pill align-self-center ml-auto">58</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link legitRipple">
-                            <i class="icon-cog5"></i>
-                            <span>Account settings</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link legitRipple">
-                            <i class="icon-switch2"></i>
-                            <span>Logout</span>
-                        </a>
+                        @if($module_name == 'admin')
+                            <a href="#" class="nav-link legitRipple"
+                               onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="icon-switch2"></i>
+                                Logout</a>
+                            <form id="logout-form" action="{{ route('adminLogout') }}" method="POST" >
+                                @csrf
+                            </form>
+                        @elseif($module_name == 'cms')
+                            <a href="#" class="nav-link legitRipple"
+                               onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="icon-switch2"></i>
+                                Logout</a>
+                            <form id="logout-form" action="{{ route('cmsLogout') }}" method="POST" >
+                                @csrf
+                            </form>
+                        @elseif($module_name == 'subadmin')
+                            <a href="#" class="nav-link legitRipple"
+                               onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="icon-switch2"></i>
+                                Logout</a>
+                            <form id="logout-form" action="{{ route('subadminLogout') }}" method="POST" >
+                                @csrf
+                            </form>
+                        @endif
+
                     </li>
                 </ul>
             </div>
@@ -85,128 +91,176 @@
                     <div class="text-uppercase font-size-xs line-height-xs">Main</div>
                     <i class="icon-menu" title="Main"></i></li>
                 <li class="nav-item">
-                    <a href="index.html" class="nav-link active legitRipple">
+                    <a href="{{route($module_name.'.dashboard')}}" class="nav-link active legitRipple">
                         <i class="icon-home"></i>
                         <span>
 									Dashboard
-									<span class="d-block font-weight-normal opacity-50">No active orders</span>
-								</span>
-                    </a>
-                </li>
-                <li class="nav-item nav-item-submenu">
-                    <a href="#" class="nav-link legitRipple"><i class="icon-users"></i> <span>Users</span></a>
 
-                    <ul class="nav nav-group-sub" data-submenu-title="Users">
-                        <li class="nav-item"><a href="{{route('admin.cms_users.index')}}"
-                                                class="nav-link legitRipple">Subadmins</a></li>
-                        <li class="nav-item"><a href="{{route('admin.app_users.index')}}" class="nav-link active legitRipple">App users</a></li>
-                        <li class="nav-item"><a href="{{route('admin.app_users.index')}}"
-                                                class="nav-link legitRipple">Store users</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a href="{{route('admin.category.index')}}" class="nav-link legitRipple">
-                        <i class="icon-menu"></i>
-                        <span>
-									Category
 								</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="{{route('admin.coupon.index')}}" class="nav-link legitRipple">
-                        <i class="icon-price-tag2"></i>
-                        <span>
-									Coupon
-								</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{route('admin.rating_review.index')}}" class="nav-link legitRipple">
-                        <i class="icon-star-full2"></i>
-                        <span>
-									Rating & Review
-								</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{route('admin.cms_pages.index')}}" class="nav-link legitRipple">
-                        <i class="icon-list2"></i>
-                        <span>
-									CMS pages
-								</span>
-                    </a>
-                </li>
-                <li class="nav-item nav-item-submenu">
-                    <a href="#" class="nav-link legitRipple"><i class="icon-blocked"></i> <span>Reports</span></a>
+                @if(auth()->guard('admin')->user()->can('cms-users-list') || auth()->guard('admin')->user()->can('app-users-list'))
+                    <li class="nav-item nav-item-submenu">
+                        <a href="#" class="nav-link legitRipple"><i class="icon-users"></i> <span>Users</span></a>
 
-                    <ul class="nav nav-group-sub" data-submenu-title="Reports">
-                        <li class="nav-item"><a href="{{route('admin.report_notification.index')}}"
-                                                class="nav-link legitRipple">Notification</a></li>
-                        <li class="nav-item"><a href="{{route('admin.report_store.index')}}" class="nav-link legitRipple">Store</a></li>
-                        <li class="nav-item"><a href="{{route('admin.report_type.index')}}"
-                                                class="nav-link legitRipple">Report types</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item nav-item-submenu">
-                    <a href="#" class="nav-link legitRipple"><i class="icon-megaphone"></i> <span>Channels & Posts</span></a>
+                        <ul class="nav nav-group-sub" data-submenu-title="Users">
+                            @if(auth()->guard('admin')->user()->can('cms-users-list'))
+                                <li class="nav-item"><a href="{{route($module_name.'.cms_users.index')}}"
+                                                    class="nav-link legitRipple">CMS users</a></li>
+                            @endif
+                            @if(auth()->guard('admin')->user()->can('app-users-list'))
+                                <li class="nav-item"><a href="{{route($module_name.'.app_users.index')}}" class="nav-link active legitRipple">App users</a></li>
+                            @endif
+                        </ul>
+                    </li>
+                @endif
+                @if(auth()->guard('admin')->user()->can('category-list'))
+                    <li class="nav-item">
+                        <a href="{{route($module_name.'.category.index')}}" class="nav-link legitRipple">
+                            <i class="icon-menu"></i>
+                            <span>
+                                        Category
+                                    </span>
+                        </a>
+                    </li>
+                @endif
+                @if(auth()->guard('admin')->user()->can('coupons-list'))
+                    <li class="nav-item">
+                        <a href="{{route($module_name.'.coupon.index')}}" class="nav-link legitRipple">
+                            <i class="icon-price-tag2"></i>
+                            <span>
+                                        Coupon
+                                    </span>
+                        </a>
+                    </li>
+                @endif
+                @if(auth()->guard('admin')->user()->can('rating-reviews-list'))
+                    <li class="nav-item">
+                        <a href="{{route($module_name.'.rating_review.index')}}" class="nav-link legitRipple">
+                            <i class="icon-star-full2"></i>
+                            <span>
+                                        Rating & Review
+                                    </span>
+                        </a>
+                    </li>
+                @endif
+                @if(auth()->guard('admin')->user()->can('cms-pages-list'))
+                    <li class="nav-item">
+                        <a href="{{route($module_name.'.cms_pages.index')}}" class="nav-link legitRipple">
+                            <i class="icon-list2"></i>
+                            <span>
+                                        CMS pages
+                                    </span>
+                        </a>
+                    </li>
+                @endif
+                @if(auth()->guard('admin')->user()->can('report-notifications-list') || auth()->guard('admin')->user()->can('report-stores-list') || auth()->guard('admin')->user()->can('report-type-list'))
+                    <li class="nav-item nav-item-submenu">
+                        <a href="#" class="nav-link legitRipple"><i class="icon-blocked"></i> <span>Reports</span></a>
 
-                    <ul class="nav nav-group-sub" data-submenu-title="Channels & Posts">
-                        <li class="nav-item"><a href="{{route('admin.channel.index')}}"
-                                                class="nav-link legitRipple">Channel</a></li>
-                        <li class="nav-item"><a href="{{route('admin.channel_post.index')}}" class="nav-link legitRipple">Posts</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a href="{{route('admin.email_templates.index')}}" class="nav-link legitRipple">
-                        <i class="icon-mail5"></i>
-                        <span>
-									Email templates
-								</span>
-                    </a>
-                </li>
-                <li class="nav-item nav-item-submenu">
-                    <a href="#" class="nav-link legitRipple"><i class="icon-mailbox"></i> <span>Loyalty messages</span></a>
+                        <ul class="nav nav-group-sub" data-submenu-title="Reports">
+                            @if(auth()->guard('admin')->user()->can('report-notifications-list'))
+                                <li class="nav-item"><a href="{{route($module_name.'.report_notification.index')}}"
+                                                        class="nav-link legitRipple">Notification</a></li>
+                            @endif
+                            @if(auth()->guard('admin')->user()->can('report-stores-list'))
+                                <li class="nav-item"><a href="{{route($module_name.'.report_store.index')}}" class="nav-link legitRipple">Store</a></li>
+                            @endif
+                            @if(auth()->guard('admin')->user()->can('report-type-list'))
+                                <li class="nav-item"><a href="{{route($module_name.'.report_type.index')}}"
+                                                        class="nav-link legitRipple">Report types</a></li>
+                            @endif
+                        </ul>
+                    </li>
+                @endif
+                @if(auth()->guard('admin')->user()->can('channel-list') || auth()->guard('admin')->user()->can('channel-post-list'))
+                    <li class="nav-item nav-item-submenu">
+                        <a href="#" class="nav-link legitRipple"><i class="icon-megaphone"></i> <span>Channels & Posts</span></a>
 
-                    <ul class="nav nav-group-sub" data-submenu-title="General message">
-                        <li class="nav-item"><a href="{{route('admin.general_message.index')}}"
-                                                class="nav-link legitRipple">General message</a></li>
-                        <li class="nav-item"><a href="{{route('admin.loyalty_message.index')}}" class="nav-link legitRipple">Conditions</a></li>
-                        <li class="nav-item"><a href="{{route('admin.loyalty_point.index')}}"
-                                                class="nav-link legitRipple">Points</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item nav-item-submenu">
-                    <a href="#" class="nav-link legitRipple"><i class="icon-cog"></i> <span>Settings</span></a>
+                        <ul class="nav nav-group-sub" data-submenu-title="Channels & Posts">
+                            @if(auth()->guard('admin')->user()->can('channel-list'))
+                                <li class="nav-item"><a href="{{route($module_name.'.channel.index')}}"
+                                                        class="nav-link legitRipple">Channel</a></li>
+                            @endif
+                            @if(auth()->guard('admin')->user()->can('channel-post-list'))
+                                <li class="nav-item"><a href="{{route($module_name.'.channel_post.index')}}" class="nav-link legitRipple">Posts</a></li>
+                            @endif
+                        </ul>
+                    </li>
+                @endif
+                @if(auth()->guard('admin')->user()->can('email-templates-list'))
+                    <li class="nav-item">
+                        <a href="{{route($module_name.'.email_templates.index')}}" class="nav-link legitRipple">
+                            <i class="icon-mail5"></i>
+                            <span>
+                                        Email templates
+                                    </span>
+                        </a>
+                    </li>
+                @endif
+                @if(auth()->guard('admin')->user()->can('general-messages-list') || auth()->guard('admin')->user()->can('loyalty-messages-list') || auth()->guard('admin')->user()->can('loyalty-point-list'))
+                    <li class="nav-item nav-item-submenu">
+                        <a href="#" class="nav-link legitRipple"><i class="icon-mailbox"></i> <span>Loyalty messages</span></a>
 
-                    <ul class="nav nav-group-sub" data-submenu-title="Change password">
-                        <li class="nav-item"><a href="{{route('admin.password.password')}}"
-                                                class="nav-link legitRipple">Change password</a></li>
-                        <li class="nav-item"><a href="{{route('admin.configs.configs')}}" class="nav-link legitRipple">Global configs</a></li>
-                        <li class="nav-item"><a href="{{route('admin.profile.profile')}}"
-                                                class="nav-link legitRipple">Profile</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a href="{{route('admin.store.index')}}" class="nav-link legitRipple">
-                        <i class="icon-cart"></i>
-                        <span>
-									Stores
-								</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{route('admin.roles.index')}}" class="nav-link legitRipple">
-                        <i class="icon-cogs"></i>
-                        <span>
-									Roles
-								</span>
-                    </a>
-                </li>
+                        <ul class="nav nav-group-sub" data-submenu-title="General message">
+                            @if(auth()->guard('admin')->user()->can('general-messages-list'))
+                                <li class="nav-item"><a href="{{route($module_name.'.general_message.index')}}"
+                                                        class="nav-link legitRipple">General message</a></li>
+                            @endif
+                            @if(auth()->guard('admin')->user()->can('loyalty-messages-list'))
+                                <li class="nav-item"><a href="{{route($module_name.'.loyalty_message.index')}}" class="nav-link legitRipple">Conditions</a></li>
+                            @endif
+                            @if(auth()->guard('admin')->user()->can('loyalty-point-list'))
+                                <li class="nav-item"><a href="{{route($module_name.'.loyalty_point.index')}}"
+                                                        class="nav-link legitRipple">Points</a></li>
+                            @endif
+                        </ul>
+                    </li>
+                @endif
+                @if(auth()->guard('admin')->user()->can('settings-password') || auth()->guard('admin')->user()->can('settings-configs') || auth()->guard('admin')->user()->can('settings-profile'))
+                    <li class="nav-item nav-item-submenu">
+                        <a href="#" class="nav-link legitRipple"><i class="icon-cog"></i> <span>Settings</span></a>
+
+                        <ul class="nav nav-group-sub" data-submenu-title="Change password">
+                            @if(auth()->guard('admin')->user()->can('settings-password'))
+                                <li class="nav-item"><a href="{{route($module_name.'.password.password')}}"
+                                                        class="nav-link legitRipple">Change password</a></li>
+                            @endif
+                            @if(auth()->guard('admin')->user()->can('settings-configs'))
+                                <li class="nav-item"><a href="{{route($module_name.'.configs.configs')}}" class="nav-link legitRipple">Global configs</a></li>
+                            @endif
+                            @if(auth()->guard('admin')->user()->can('settings-profile'))
+                                <li class="nav-item"><a href="{{route($module_name.'.profile.profile')}}"
+                                                        class="nav-link legitRipple">Profile</a></li>
+                            @endif
+                        </ul>
+                    </li>
+                @endif
+                @if(auth()->guard('admin')->user()->can('stores-list'))
+                    <li class="nav-item">
+                        <a href="{{route($module_name.'.store.index')}}" class="nav-link legitRipple">
+                            <i class="icon-cart"></i>
+                            <span>
+                                        Stores
+                                    </span>
+                        </a>
+                    </li>
+                @endif
+                @if(auth()->guard('admin')->user()->can('role-list'))
+                    <li class="nav-item">
+                        <a href="{{route($module_name.'.roles.index')}}" class="nav-link legitRipple">
+                            <i class="icon-cogs"></i>
+                            <span>
+                                        Roles
+                                    </span>
+                        </a>
+                    </li>
+                @endif
                 <li class="nav-item">
                     <a href="#" class="nav-link legitRipple"
                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="icon-switch2"></i>
                         Logout</a>
-                    <form id="logout-form" action="{{ route('adminLogout') }}" method="POST" >
+                    <form id="logout-form" action="{{ route($module_name.'Logout') }}" method="POST" >
                         @csrf
                     </form>
                 </li>

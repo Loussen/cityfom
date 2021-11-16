@@ -8,22 +8,25 @@ use App\Http\Requests\CmsUserRequest;
 use App\Models\AppUsers;
 use App\Models\Categories;
 use App\Models\CmsUsers;
+use App\Models\Stores;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Role;
 
 class CmsUsersController extends Controller
 {
     public function __construct()
     {
-//        $this->middleware('permission:school-list|school-create|school-edit|school-delete', ['only' => ['index', 'store']]);
-//        $this->middleware('permission:school-create', ['only' => ['create', 'store']]);
-//        $this->middleware('permission:school-edit', ['only' => ['edit', 'update']]);
-//        $this->middleware('permission:school-delete', ['only' => ['destroy']]);
-//        $this->middleware('permission:school-export', ['only' => ['export']]);
+        parent::__construct();
+        $this->middleware('permission:cms-users-list|cms-users-create|cms-users-edit|cms-users-delete', ['only' => ['index', 'store']]);
+        $this->middleware('permission:cms-users-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:cms-users-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:cms-users-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:cms-users-export', ['only' => ['export']]);
     }
 
     /**
@@ -76,8 +79,9 @@ class CmsUsersController extends Controller
     public function create()
     {
         $roles = Role::all();
+        $stores = Stores::all();
 
-        return view('admin.pages.cms_users.create', compact('roles'));
+        return view('admin.pages.cms_users.create', compact('roles','stores'));
     }
 
     /**
@@ -88,15 +92,54 @@ class CmsUsersController extends Controller
      */
     public function store(CmsUserRequest $request)
     {
-        $input = $request->all();
-        $input['password'] = Hash::make($input['password']);
+        $request->validate([
+            'password'              => 'required|string|min:6',
+            'confirm_password'      => 'required|same:password',
+        ]);
 
-//        dd($request->input('roles'));
+        $imageName = null;
+        if($request->hasFile('image') && $request->image != '') {
+            $image = $request->file('image');
+            $imageName = time()."_".$image->getClientOriginalName();
 
-        $user = CmsUsers::create($input);
-        $user->assignRole($request->input('roles'));
+            $imageType = explode(".",$imageName);
+            $imageType = end($imageType);
 
-        return redirect()->route('admin.cms_users.index')->with(_sessionmessage());
+            if(in_array(strtolower($imageType),['jpg','jpeg','png']))
+            {
+                $image->move(public_path().'/uploads/cms_users/',$imageName);
+            }
+            else
+            {
+                return redirect()->route($this->module_name.'.cms_users.create')->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png)", 'warning', true));
+            }
+        }
+
+        if($request->has('never_expire')) {
+            $expireDate = NULL;
+        } else {
+            $expireDate = date("Y-m-d H:i:s",strtotime($request->expire_date));
+        }
+
+        $storeIds = NULL;
+        if($request->has('store_ids')) {
+            $storeIds = implode(",",$request->store_ids);
+        }
+
+        $cmsUserData = [
+            'firstname' => $request->firstname,
+            'lastname' => $request->lastname,
+            'email' => $request->email,
+            'photo' => $imageName,
+            'password' => Hash::make($request->password),
+            'expiration_date' => $expireDate,
+            'store_ids' => $storeIds,
+        ];
+
+        $user = CmsUsers::create($cmsUserData);
+        $user->assignRole($request->input('role_id'));
+
+        return redirect()->route($this->module_name.'.cms_users.index')->with(_sessionmessage());
     }
 
     /**
@@ -105,20 +148,26 @@ class CmsUsersController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(CmsUsers $cms_user)
     {
-
+        dd($cms_user);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param Categories $category
+     * @param CmsUsers $cmsUsers
      * @return \Illuminate\Http\Response
      */
-    public function edit(Categories $category)
+    public function edit(CmsUsers $cms_user)
     {
-        return view('admin.pages.category.edit', compact('category'));
+        $userRole = $cms_user->roles->pluck('id','name')->first();
+        $roles = Role::all();
+        $stores = Stores::all();
+
+        $cmsUsers = $cms_user;
+
+        return view('admin.pages.cms_users.edit', compact('cmsUsers','userRole','roles','stores'));
     }
 
     /**
@@ -128,75 +177,99 @@ class CmsUsersController extends Controller
      * @param int $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(CategoryRequest $request, $id)
+    public function update(CmsUserRequest $request, $id)
     {
-        $category = Categories::find($id);
+        $cmsUser = CmsUsers::find($id);
 
-        $iconName = $category->icon;
-        if($request->hasFile('icon') && $request->icon != '') {
-            $icon = $request->file('icon');
-            $iconName = time()."_".$icon->getClientOriginalName();
+        $imageName = $cmsUser->photo;
+        if($request->hasFile('image') && $request->image != '') {
+            $image = $request->file('image');
+            $imageName = time()."_".$image->getClientOriginalName();
 
-            $iconType = explode(".",$iconName);
-            $iconType = end($iconType);
+            $imageType = explode(".",$imageName);
+            $imageType = end($imageType);
 
-            if(in_array(strtolower($iconType),['jpg','jpeg','png', 'ico']))
+            if(in_array(strtolower($imageType),['jpg','jpeg','png', 'ico']))
             {
-                $icon->move(public_path().'/uploads/categories/',$iconName);
+                $image->move(public_path().'/uploads/cms_users/',$imageName);
 
-                delete_old_files(public_path().'/uploads/categories/'.$category->icon);
+                delete_old_files(public_path().'/uploads/cms_users/'.$cmsUser->photo);
             }
             else
             {
-                return redirect()->route('admin.category.edit', [$id])->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png,ico)", 'warning', true));
+                return redirect()->route($this->module_name.'.cms_users.edit', [$id])->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png,ico)", 'warning', true));
             }
         }
 
-        $categoryData = [
-            'name_en' => $request->name_en,
-            'name_az' => $request->name_az,
-            'name_ru' => $request->name_ru,
-            'name_es' => $request->name_es,
-            'icon'    => $iconName
+        if($request->has('never_expire')) {
+            $expireDate = NULL;
+        } else {
+            $expireDate = date("Y-m-d H:i:s",strtotime($request->expire_date));
+        }
+
+        $storeIds = NULL;
+        if($request->has('store_ids')) {
+            $storeIds = implode(",",$request->store_ids);
+        }
+
+        $cmsUserData = [
+            'firstname' => $request->firstname,
+            'lastname' => $request->lastname,
+            'email' => $request->email,
+            'photo' => $imageName,
+            'expiration_date' => $expireDate,
+            'store_ids' => $storeIds,
         ];
 
-        $category->update($categoryData);
+        $cmsUser->update($cmsUserData);
 
-        return redirect()->route('admin.category.index')->with(_sessionmessage());
+        if ($request->get('password')){
+            $request->validate([
+                'password'              => 'required|string|min:6',
+                'confirm_password'      => 'required|same:password',
+            ]);
+
+            $cmsUser->update(['password' => Hash::make($request->get('password'))]);
+        }
+
+        DB::table('model_has_roles')->where('model_id', $id)->delete();
+        $cmsUser->assignRole($request->input('role_id'));
+
+        return redirect()->route($this->module_name.'.cms_users.index')->with(_sessionmessage());
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param AppUsers $appUsers
+     * @param CmsUsers $cmsUsers
      * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy($id)
     {
-        $appUsers = AppUsers::find($id);
-        delete_old_files(public_path().'/uploads/app_users/'.$appUsers->photo);
-        $appUsers->delete();
+        $cmsUsers = CmsUsers::find($id);
+        delete_old_files(public_path().'/uploads/cms_users/'.$cmsUsers->photo);
+        $cmsUsers->delete();
         $arr = _sessionmessage(null, null, null, true);
         return response($arr);
     }
 
-    public function destroyMultipleAppUser(Request $request)
+    public function destroyMultipleCmsUser(Request $request)
     {
         $ids = $request->ids;
         $explodeIds = explode(",",$ids);
 
         foreach ($explodeIds as $id)
         {
-            $user = AppUsers::find($id);
-            delete_old_files(public_path().'/uploads/app_users/'.$user->photo);
+            $user = CmsUsers::find($id);
+            delete_old_files(public_path().'/uploads/cms_users/'.$user->photo);
         }
 
-        DB::table("app_users")->whereIn('id',$explodeIds)->delete();
+        DB::table("cms_users")->whereIn('id',$explodeIds)->delete();
         $response = ['status' => 'OK'];
         return response()->json(['response' => $response]);
     }
 
-    public function statusMultipleAppUser(Request $request)
+    public function statusMultipleCmsUser(Request $request)
     {
         $response = ['status' => 'Fail'];
 
@@ -206,7 +279,7 @@ class CmsUsersController extends Controller
             $explodeIds = explode(",",$ids);
 
             if ($status > 0 && count($explodeIds) > 0) {
-                DB::table("app_users")->whereIn('id',$explodeIds)
+                DB::table("cms_users")->whereIn('id',$explodeIds)
                     ->update(['status' => $status]);
 
                 $response = ['status' => 'OK', 'status_type' => $status];
@@ -216,7 +289,7 @@ class CmsUsersController extends Controller
         return response()->json(['response' => $response]);
     }
 
-    public function changeAppUserStatus(Request $request)
+    public function changeCmsUserStatus(Request $request)
     {
         $response = ['status' => 'Fail'];
 
@@ -225,7 +298,7 @@ class CmsUsersController extends Controller
             $userId = intval($request->user_id);
 
             if ($status > 0 && $userId > 0) {
-                $user = AppUsers::find($userId);
+                $user = CmsUsers::find($userId);
 
                 $userData = [
                     'status' => $status,

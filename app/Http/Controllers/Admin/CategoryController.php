@@ -6,17 +6,20 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Categories;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
 
 class CategoryController extends Controller
 {
     public function __construct()
     {
-//        $this->middleware('permission:school-list|school-create|school-edit|school-delete', ['only' => ['index', 'store']]);
-//        $this->middleware('permission:school-create', ['only' => ['create', 'store']]);
-//        $this->middleware('permission:school-edit', ['only' => ['edit', 'update']]);
-//        $this->middleware('permission:school-delete', ['only' => ['destroy']]);
-//        $this->middleware('permission:school-export', ['only' => ['export']]);
+        parent::__construct();
+        $this->middleware('permission:category-list|category-create|category-edit|category-delete', ['only' => ['index', 'store']]);
+        $this->middleware('permission:category-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:category-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:category-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:category-export', ['only' => ['export']]);
     }
 
     /**
@@ -106,7 +109,7 @@ class CategoryController extends Controller
             }
             else
             {
-                return redirect()->route('admin.category.create')->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png,ico)", 'warning', true));
+                return redirect()->route($this->module_name.'.category.create')->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png,ico)", 'warning', true));
             }
         }
 
@@ -120,7 +123,7 @@ class CategoryController extends Controller
 
         Categories::create($categoryData);
 
-        return redirect()->route('admin.category.index')->with(_sessionmessage());
+        return redirect()->route($this->module_name.'.category.index')->with(_sessionmessage());
     }
 
     /**
@@ -129,7 +132,7 @@ class CategoryController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Categories $category)
     {
 
     }
@@ -172,7 +175,7 @@ class CategoryController extends Controller
             }
             else
             {
-                return redirect()->route('admin.category.edit', [$id])->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png,ico)", 'warning', true));
+                return redirect()->route($this->module_name.'.category.edit', [$id])->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png,ico)", 'warning', true));
             }
         }
 
@@ -186,7 +189,7 @@ class CategoryController extends Controller
 
         $category->update($categoryData);
 
-        return redirect()->route('admin.category.index')->with(_sessionmessage());
+        return redirect()->route($this->module_name.'.category.index')->with(_sessionmessage());
     }
 
     /**

@@ -15,7 +15,7 @@
         <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
             <div class="d-flex">
                 <div class="breadcrumb">
-                    <a href="{{ route('admin.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
+                    <a href="{{ route($module_name.'.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
                     <span class="breadcrumb-item active">Report for stores</span>
                 </div>
 
@@ -83,7 +83,7 @@
                         </div>
                         <div class="col-sm-12">
                             <x-search/>
-                            <x-showall route="admin.report_store.index"/>
+                            <x-showall route="{{$module_name}}.report_store.index"/>
                             <x-clear/>
                         </div>
                     </div>
@@ -157,7 +157,7 @@
                             </td>
                             <td class="text-center">
                                 <div class="btn-group">
-                                    <x-delete route="admin.report_store.destroy" :id="$report->id"/>
+                                    <x-delete route="{{$module_name}}.report_store.destroy" :id="$report->id"/>
                                 </div>
                             </td>
                         </tr>
@@ -202,7 +202,7 @@
                 }).then(function (result) {
                     if (result.value) {
                         $.ajax({
-                            url: "{{ route('admin.report_store.changeReportStoreStatus') }}",
+                            url: "{{ route($module_name.'.report_store.changeReportStoreStatus') }}",
                             data: {status: status, report_id: report_id},
                             method: 'PUT',
                             dataType: 'json',
@@ -280,7 +280,7 @@
                         let join_selected_values = allVals.join(",");
 
                         $.ajax({
-                            url: "{{ route('admin.report_store.destroyMultipleReportStore') }}",
+                            url: "{{ route($module_name.'.report_store.destroyMultipleReportStore') }}",
                             data: {ids: join_selected_values},
                             method: 'DELETE',
                             dataType: 'json',
@@ -356,7 +356,7 @@
                         let join_selected_values = allVals.join(",");
 
                         $.ajax({
-                            url: "{{ route('admin.report_store.statusMultipleReportStore') }}",
+                            url: "{{ route($module_name.'.report_store.statusMultipleReportStore') }}",
                             data: {ids: join_selected_values, status: status},
                             method: 'PUT',
                             dataType: 'json',

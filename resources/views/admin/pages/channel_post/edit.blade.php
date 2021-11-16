@@ -15,9 +15,9 @@
         <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
             <div class="d-flex">
                 <div class="breadcrumb">
-                    <a href="{{ route('admin.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i>
+                    <a href="{{ route($module_name.'.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i>
                         Home</a>
-                    <a href="{{ route('admin.channel_post.index') }}" class="breadcrumb-item">Channel Posts</a>
+                    <a href="{{ route($module_name.'.channel_post.index') }}" class="breadcrumb-item">Channel Posts</a>
                     <span class="breadcrumb-item active">Edit Channel</span>
                 </div>
 
@@ -31,7 +31,7 @@
         <div class="card">
             <div class="card-body">
                 @include('admin.particles._sessionmessage',['error_type' => 'warning'])
-                <form action="{{route('admin.channel_post.update', $channelPost->id)}}" method="POST"
+                <form action="{{route($module_name.'.channel_post.update', $channelPost->id)}}" method="POST"
                       enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
@@ -286,7 +286,7 @@
                         </div>
                         <div class="col-sm-12">
                             <x-save/>
-                            <x-back route="admin.channel_post.index"></x-back>
+                            <x-back route="{{$module_name}}.channel_post.index"></x-back>
                         </div>
                     </div>
                 </form>
@@ -302,7 +302,7 @@
                 placeholder: 'Select category',
                 allowClear: true,
                 ajax: {
-                    url: "{{ route('admin.channel_post.channelCategoryFilter') }}",
+                    url: "{{ route($module_name.'.channel_post.channelCategoryFilter') }}",
                     dataType: 'json',
                     delay: 250,
                     data: function (params) {

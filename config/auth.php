@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
+        'guard' => 'admin',
         'passwords' => 'users',
     ],
 
@@ -55,6 +55,16 @@ return [
             'driver' => 'session',
             'provider' => 'cms_users',
         ],
+
+//        'cms' => [
+//            'driver' => 'session',
+//            'provider' => 'cms_users',
+//        ],
+//
+//        'subadmin' => [
+//            'driver' => 'session',
+//            'provider' => 'cms_users',
+//        ],
     ],
 
     /*
@@ -87,7 +97,7 @@ return [
 
         'cms_users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Admin::class,
+            'model' => App\Models\CmsUsers::class,
         ],
     ],
 

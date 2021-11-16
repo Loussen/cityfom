@@ -11,11 +11,12 @@ class ReportNotificationController extends Controller
 {
     public function __construct()
     {
-//        $this->middleware('permission:school-list|school-create|school-edit|school-delete', ['only' => ['index', 'store']]);
-//        $this->middleware('permission:school-create', ['only' => ['create', 'store']]);
-//        $this->middleware('permission:school-edit', ['only' => ['edit', 'update']]);
-//        $this->middleware('permission:school-delete', ['only' => ['destroy']]);
-//        $this->middleware('permission:school-export', ['only' => ['export']]);
+        parent::__construct();
+        $this->middleware('permission:report-notifications-list|report-notifications-create|report-notifications-edit|report-notifications-delete', ['only' => ['index', 'store']]);
+        $this->middleware('permission:report-notifications-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:report-notifications-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:report-notifications-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:report-notifications-export', ['only' => ['export']]);
     }
 
     /**

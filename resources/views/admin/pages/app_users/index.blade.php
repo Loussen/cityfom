@@ -15,7 +15,7 @@
         <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
             <div class="d-flex">
                 <div class="breadcrumb">
-                    <a href="{{ route('admin.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i>
+                    <a href="{{ route($module_name.'.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i>
                         Home</a>
                     <span class="breadcrumb-item active">Application users</span>
                 </div>
@@ -74,7 +74,7 @@
                         </div>
                         <div class="col-sm-12">
                             <x-search/>
-                            <x-showall route="admin.app_users.index"/>
+                            <x-showall route="{{$module_name}}.app_users.index"/>
                             <x-clear/>
                         </div>
                     </div>
@@ -152,10 +152,10 @@
                             </td>
                             <td class="text-center">
                                 <div class="btn-group">
-                                    <x-edit route="admin.app_users.edit" :id="$user->id"/>
-                                    <x-delete route="admin.app_users.destroy" :id="$user->id"/>
-                                    <a href="{{route('admin.rating_review.index', ['user_id' => $user->id])}}" type="button" class="btn btn-success" data-popup="tooltip" data-placement="right" data-original-title="{{ __('admin.rating_review') }}"><i class="icon-star-full2"></i></a>
-                                    <a href="{{route('admin.loyalty_point.index', ['user_id' => $user->id])}}" type="button" class="btn btn-success" data-popup="tooltip" data-placement="right" data-original-title="{{ __('admin.loyalty_points') }}"><i class="icon-mailbox"></i></a>
+                                    <x-edit route="{{$module_name}}.app_users.edit" :id="$user->id"/>
+                                    <x-delete route="{{$module_name}}.app_users.destroy" :id="$user->id"/>
+                                    <a href="{{route($module_name.'.rating_review.index', ['user_id' => $user->id])}}" type="button" class="btn btn-success" data-popup="tooltip" data-placement="right" data-original-title="{{ __('admin.rating_review') }}"><i class="icon-star-full2"></i></a>
+                                    <a href="{{route($module_name.'.loyalty_point.index', ['user_id' => $user->id])}}" type="button" class="btn btn-success" data-popup="tooltip" data-placement="right" data-original-title="{{ __('admin.loyalty_points') }}"><i class="icon-mailbox"></i></a>
                                 </div>
                             </td>
                         </tr>
@@ -201,7 +201,7 @@
                 }).then(function (result) {
                     if (result.value) {
                         $.ajax({
-                            url: "{{ route('admin.app_users.changeAppUserStatus') }}",
+                            url: "{{ route($module_name.'.app_users.changeAppUserStatus') }}",
                             data: {status: status, user_id: user_id},
                             method: 'PUT',
                             dataType: 'json',
@@ -279,7 +279,7 @@
                         let join_selected_values = allVals.join(",");
 
                         $.ajax({
-                            url: "{{ route('admin.app_users.destroyMultipleAppUser') }}",
+                            url: "{{ route($module_name.'.app_users.destroyMultipleAppUser') }}",
                             data: {ids: join_selected_values},
                             method: 'DELETE',
                             dataType: 'json',
@@ -355,7 +355,7 @@
                         let join_selected_values = allVals.join(",");
 
                         $.ajax({
-                            url: "{{ route('admin.app_users.statusMultipleAppUser') }}",
+                            url: "{{ route($module_name.'.app_users.statusMultipleAppUser') }}",
                             data: {ids: join_selected_values, status: status},
                             method: 'PUT',
                             dataType: 'json',

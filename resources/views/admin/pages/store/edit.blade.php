@@ -15,8 +15,8 @@
         <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
             <div class="d-flex">
                 <div class="breadcrumb">
-                    <a href="{{ route('admin.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
-                    <a href="{{ route('admin.store.index') }}" class="breadcrumb-item">Stores</a>
+                    <a href="{{ route($module_name.'.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
+                    <a href="{{ route($module_name.'.store.index') }}" class="breadcrumb-item">Stores</a>
                     <span class="breadcrumb-item active">Edit Store</span>
                 </div>
 
@@ -35,7 +35,7 @@
                     </div>
                 @endif
                 @include('admin.particles._sessionmessage',['error_type' => 'warning'])
-                <form action="{{route('admin.store.update', $store->id)}}" method="POST" enctype="multipart/form-data">
+                <form action="{{route($module_name.'.store.update', $store->id)}}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="form-row">
@@ -413,7 +413,7 @@
 
                         <div class="col-sm-12">
                             <x-save />
-                            <x-back route="admin.store.index"></x-back>
+                            <x-back route="{{$module_name}}.store.index"></x-back>
                         </div>
                     </div>
                 </form>
@@ -583,7 +583,7 @@
                 if (result.value) {
 
                     $.ajax({
-                        url: "{{ route('admin.store.destroyStoreImage') }}",
+                        url: "{{ route($module_name.'.store.destroyStoreImage') }}",
                         data: {image_id: image_id},
                         method: 'DELETE',
                         dataType: 'json',

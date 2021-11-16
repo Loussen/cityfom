@@ -13,7 +13,7 @@
 
             <div class="header-elements d-none">
                 <div class="d-flex justify-content-center">
-                    <a href="{{route('admin.report_type.create')}}" class="btn btn-outline-success float-right"><i
+                    <a href="{{route($module_name.'.report_type.create')}}" class="btn btn-outline-success float-right"><i
                             class="icon-plus2"></i> Add New</a>
                 </div>
             </div>
@@ -22,7 +22,7 @@
         <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
             <div class="d-flex">
                 <div class="breadcrumb">
-                    <a href="{{ route('admin.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
+                    <a href="{{ route($module_name.'.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
                     <span class="breadcrumb-item active">Report types</span>
                 </div>
 
@@ -65,7 +65,7 @@
                         </div>
                         <div class="col-sm-12">
                             <x-search/>
-                            <x-showall route="admin.report_type.index"/>
+                            <x-showall route="{{$module_name}}.report_type.index"/>
                             <x-clear/>
                         </div>
                     </div>
@@ -127,10 +127,10 @@
                             <td>{{ $reportType->name_az }}</td>
                             <td>{{ $reportType->name_es }}</td>
                             <td>{{ $reportType->name_ru }}</td>
-                            <td>{!! $reportType->not_reviewed > 0 ? "<a class='count_type' href='".route('admin.report_store.index',['status' => 1, 'type_id' => $reportType->id])."'>".$reportType->not_reviewed."</a>" : $reportType->not_reviewed !!}</td>
-                            <td>{!! $reportType->under_review > 0 ? "<a class='count_type' href='".route('admin.report_store.index',['status' => 2, 'type_id' => $reportType->id])."'>".$reportType->under_review."</a>" : $reportType->under_review !!}</td>
-                            <td>{!! $reportType->closed > 0 ? "<a class='count_type' href='".route('admin.report_store.index',['status' => 3, 'type_id' => $reportType->id])."'>".$reportType->closed."</a>" : $reportType->closed !!}</td>
-                            <td>{!! $reportType->total > 0 ? "<a class='count_type' href='".route('admin.report_store.index',['type_id' => $reportType->id])."'>".$reportType->total."</a>" : $reportType->total !!}</td>
+                            <td>{!! $reportType->not_reviewed > 0 ? "<a class='count_type' href='".route($module_name.'.report_store.index',['status' => 1, 'type_id' => $reportType->id])."'>".$reportType->not_reviewed."</a>" : $reportType->not_reviewed !!}</td>
+                            <td>{!! $reportType->under_review > 0 ? "<a class='count_type' href='".route($module_name.'.report_store.index',['status' => 2, 'type_id' => $reportType->id])."'>".$reportType->under_review."</a>" : $reportType->under_review !!}</td>
+                            <td>{!! $reportType->closed > 0 ? "<a class='count_type' href='".route($module_name.'.report_store.index',['status' => 3, 'type_id' => $reportType->id])."'>".$reportType->closed."</a>" : $reportType->closed !!}</td>
+                            <td>{!! $reportType->total > 0 ? "<a class='count_type' href='".route($module_name.'.report_store.index',['type_id' => $reportType->id])."'>".$reportType->total."</a>" : $reportType->total !!}</td>
                             <td>{{ $reportType->reorder }}</td>
                             <td>
                                 <select name="status" id="status" data-report-type-id="{{ $reportType->id }}">
@@ -142,8 +142,8 @@
                             </td>
                             <td class="text-center">
                                 <div class="btn-group">
-                                    <x-edit route="admin.report_type.edit" :id="$reportType->id"/>
-                                    <x-delete route="admin.report_type.destroy" :id="$reportType->id"/>
+                                    <x-edit route="{{$module_name}}.report_type.edit" :id="$reportType->id"/>
+                                    <x-delete route="{{$module_name}}.report_type.destroy" :id="$reportType->id"/>
                                 </div>
                             </td>
                         </tr>
@@ -188,7 +188,7 @@
                 }).then(function (result) {
                     if (result.value) {
                         $.ajax({
-                            url: "{{ route('admin.report_type.changeReportTypeStatus') }}",
+                            url: "{{ route($module_name.'.report_type.changeReportTypeStatus') }}",
                             data: {status: status, report_type_id: report_type_id},
                             method: 'PUT',
                             dataType: 'json',
@@ -266,7 +266,7 @@
                         let join_selected_values = allVals.join(",");
 
                         $.ajax({
-                            url: "{{ route('admin.report_type.destroyMultipleReportType') }}",
+                            url: "{{ route($module_name.'.report_type.destroyMultipleReportType') }}",
                             data: {ids: join_selected_values},
                             method: 'DELETE',
                             dataType: 'json',
@@ -342,7 +342,7 @@
                         let join_selected_values = allVals.join(",");
 
                         $.ajax({
-                            url: "{{ route('admin.report_type.statusMultipleReportType') }}",
+                            url: "{{ route($module_name.'.report_type.statusMultipleReportType') }}",
                             data: {ids: join_selected_values, status: status},
                             method: 'PUT',
                             dataType: 'json',

@@ -20,11 +20,10 @@ class SettingsController extends Controller
 {
     public function __construct()
     {
-//        $this->middleware('permission:school-list|school-create|school-edit|school-delete', ['only' => ['index', 'store']]);
-//        $this->middleware('permission:school-create', ['only' => ['create', 'store']]);
-//        $this->middleware('permission:school-edit', ['only' => ['edit', 'update']]);
-//        $this->middleware('permission:school-delete', ['only' => ['destroy']]);
-//        $this->middleware('permission:school-export', ['only' => ['export']]);
+        parent::__construct();
+        $this->middleware('permission:settings-configs|settings-configs-create', ['only' => ['configs', 'configStore']]);
+        $this->middleware('permission:settings-password|settings-password-create', ['only' => ['password', 'passwordStore']]);
+        $this->middleware('permission:settings-profile|settings-profile-create', ['only' => ['profile', 'profileStore']]);
     }
 
     /**
@@ -59,7 +58,7 @@ class SettingsController extends Controller
             $configs->update($configData);
         }
 
-        return redirect()->route('admin.configs.configs')->with(_sessionmessage());
+        return redirect()->route($this->module_name.'.configs.configs')->with(_sessionmessage());
     }
 
     /**
@@ -80,9 +79,9 @@ class SettingsController extends Controller
      */
     public function passwordStore(PasswordRequest $request)
     {
-        CmsUsers::find(auth()->guard('admin')->user()->id)->update(['password'=> Hash::make($request->newpassword)]);
+        CmsUsers::find(auth()->guard(get_admin_guard_name())->user()->id)->update(['password'=> Hash::make($request->newpassword)]);
 
-        return redirect()->route('admin.password.password')->with(_sessionmessage());
+        return redirect()->route($this->module_name.'.password.password')->with(_sessionmessage());
     }
 
     /**
@@ -103,7 +102,7 @@ class SettingsController extends Controller
      */
     public function profileStore(ProfileRequest $request)
     {
-        $user = CmsUsers::find(auth()->guard('admin')->user()->id);
+        $user = CmsUsers::find(auth()->guard(get_admin_guard_name())->user()->id);
 
         $imageName = $user->photo;
         if($request->hasFile('image') && $request->image != '') {
@@ -121,7 +120,7 @@ class SettingsController extends Controller
             }
             else
             {
-                return redirect()->route('admin.profile.profile', [$user->id])->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png)", 'warning', true));
+                return redirect()->route($this->module_name.'.profile.profile', [$user->id])->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png)", 'warning', true));
             }
         }
 
@@ -133,6 +132,6 @@ class SettingsController extends Controller
 
         $user->update($userData);
 
-        return redirect()->route('admin.profile.profile')->with(_sessionmessage());
+        return redirect()->route($this->module_name.'.profile.profile')->with(_sessionmessage());
     }
 }

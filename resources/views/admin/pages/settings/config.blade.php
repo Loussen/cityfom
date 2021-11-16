@@ -15,7 +15,7 @@
         <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
             <div class="d-flex">
                 <div class="breadcrumb">
-                    <a href="{{ route('admin.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i>
+                    <a href="{{ route($module_name.'.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i>
                         Home</a>
                     <span class="breadcrumb-item active">Configs</span>
                 </div>
@@ -30,7 +30,7 @@
         <div class="card">
             <div class="card-body">
                 @include('admin.particles._sessionmessage')
-                <form action="{{route('admin.configs.configStore')}}" method="POST" enctype="multipart/form-data">
+                <form action="{{route($module_name.'.configs.configStore')}}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="form-row">

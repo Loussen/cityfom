@@ -24,7 +24,15 @@ class CmsUserRequest extends FormRequest
     public function rules()
     {
         return [
-//            'firstname'         => 'required|min:3',
+            'firstname'             => 'required',
+            'lastname'              => 'required',
+            'email'                 => 'required|unique:cms_users,email,'.request('id'),
+            'image'                 => 'sometimes|mimes:png,jpg,jpeg,ico|max:2048',
+//            'password'              => 'sometimes',
+//            'confirm_password'      => 'same:password',
+            "role_id"               => "required|numeric|min:1",
+            'never_expire'          => 'sometimes',
+            'expire_date'           => 'required_if:never_expire,0',
         ];
     }
 }

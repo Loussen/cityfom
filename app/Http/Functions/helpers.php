@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 
 if (! function_exists('getFillable')){
@@ -293,4 +294,49 @@ if (! function_exists('calDistance')) {
     }
 }
 
+if (! function_exists('get_admin_guard_name')) {
 
+    /**
+     * @param null $message
+     * @return array
+     */
+
+    function get_admin_guard_name(){
+
+        $guard = 'admin';
+
+        if(Auth::guard('admin')->check()) {
+            $guard = 'admin';
+        }
+        elseif(Auth::guard('cms')->check()) {
+            $guard = 'cms';
+        }
+        elseif(Auth::guard('subadmin')->check()) {
+            $guard = 'subadmin';
+        }
+
+        return $guard;
+
+    }
+}
+
+if (! function_exists('get_cms_user_store_ids')) {
+
+    /**
+     * @param null $message
+     * @return array
+     */
+
+    function get_cms_user_store_ids($userId){
+
+        $userData = \App\Models\CmsUsers::find($userId);
+
+        $storeIds = [];
+        if (!empty($userData)) {
+            $storeIds = explode(",",$userData->store_ids);
+        }
+
+        return $storeIds;
+
+    }
+}

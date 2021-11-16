@@ -38,13 +38,20 @@
     <script src="{{asset('admin/global_assets/js/plugins/pickers/pickadate/legacy.js')}}"></script>
     <script src="{{asset('admin/global_assets/js/plugins/notifications/jgrowl.min.js')}}"></script>
 
+    <script src="{{asset('admin/global_assets/js/plugins/visualization/d3/d3.min.js')}}"></script>
+
+    <script src="{{asset('admin/global_assets/js/plugins/visualization/echarts/echarts.min.js')}}"></script>
+
     <script src="{{asset('admin/js/app.js')}}"></script>
-{{--    <script src="{{asset('admin/global_assets/js/demo_pages/dashboard.js')}}"></script>--}}
+    <script src="{{asset('admin/global_assets/js/demo_pages/dashboard.js')}}"></script>
     <script src="{{asset('admin/global_assets/js/demo_pages/form_checkboxes_radios.js')}}"></script>
     <script src="{{asset('admin/js/custom.js')}}"></script>
     <script src="{{asset('admin/global_assets/js/demo_pages/form_wizard.js')}}"></script>
     <script src="{{asset('admin/global_assets/js/demo_pages/picker_date.js')}}"></script>
-    <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
+    <script src="{{asset('admin/global_assets/js/demo_charts/pages/dashboard/light/progress.js')}}"></script>
+{{--    <script src="{{asset('admin/global_assets/js/demo_charts/echarts/light/lines/lines_multiple.js')}}"></script>--}}
+    <script src="{{asset('admin/global_assets/js/demo_charts/echarts/light/lines/lines_stacked.js')}}"></script>
+    <script src="{{asset('admin/js/ckeditor.js')}}"></script>
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 

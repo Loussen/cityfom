@@ -14,11 +14,12 @@ class RatingReviewController extends Controller
 {
     public function __construct()
     {
-//        $this->middleware('permission:school-list|school-create|school-edit|school-delete', ['only' => ['index', 'store']]);
-//        $this->middleware('permission:school-create', ['only' => ['create', 'store']]);
-//        $this->middleware('permission:school-edit', ['only' => ['edit', 'update']]);
-//        $this->middleware('permission:school-delete', ['only' => ['destroy']]);
-//        $this->middleware('permission:school-export', ['only' => ['export']]);
+        parent::__construct();
+        $this->middleware('permission:rating-reviews-list|rating-reviews-create|rating-reviews-edit|rating-reviews-delete', ['only' => ['index', 'store']]);
+        $this->middleware('permission:rating-reviews-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:rating-reviews-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:rating-reviews-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:rating-reviews-export', ['only' => ['export']]);
     }
 
     /**
@@ -95,7 +96,7 @@ class RatingReviewController extends Controller
      */
     public function create()
     {
-        return redirect()->route('admin.rating_review.index');
+        return redirect()->route($this->module_name.'.rating_review.index');
     }
 
     /**
@@ -106,7 +107,7 @@ class RatingReviewController extends Controller
      */
     public function store()
     {
-        return redirect()->route('admin.rating_review.index');
+        return redirect()->route($this->module_name.'.rating_review.index');
     }
 
     /**
@@ -137,7 +138,7 @@ class RatingReviewController extends Controller
      */
     public function edit()
     {
-        return redirect()->route('admin.rating_review.index');
+        return redirect()->route($this->module_name.'.rating_review.index');
     }
 
     /**
@@ -149,7 +150,7 @@ class RatingReviewController extends Controller
      */
     public function update()
     {
-        return redirect()->route('admin.rating_review.index');
+        return redirect()->route($this->module_name.'.rating_review.index');
     }
 
     /**

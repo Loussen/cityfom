@@ -13,7 +13,7 @@
 
             <div class="header-elements d-none">
                 <div class="d-flex justify-content-center">
-                    <a href="{{route('admin.store.create')}}" class="btn btn-outline-success float-right"><i
+                    <a href="{{route($module_name.'.store.create')}}" class="btn btn-outline-success float-right"><i
                             class="icon-plus2"></i> Add New</a>
                 </div>
             </div>
@@ -22,7 +22,7 @@
         <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
             <div class="d-flex">
                 <div class="breadcrumb">
-                    <a href="{{ route('admin.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
+                    <a href="{{ route($module_name.'.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
                     <span class="breadcrumb-item active">Stores</span>
                 </div>
 
@@ -100,7 +100,7 @@
                         </div>
                         <div class="col-sm-12">
                             <x-search/>
-                            <x-showall route="admin.store.index"/>
+                            <x-showall route="{{$module_name}}.store.index"/>
                             <x-clear/>
                         </div>
                     </div>
@@ -255,8 +255,8 @@
                             </td>
                             <td class="text-center">
                                 <div class="btn-group">
-                                    <x-edit route="admin.store.edit" :id="$store->id"/>
-                                    <x-delete route="admin.store.destroy" :id="$store->id"/>
+                                    <x-edit route="{{$module_name}}.store.edit" :id="$store->id"/>
+                                    <x-delete route="{{$module_name}}.store.destroy" :id="$store->id"/>
                                 </div>
                             </td>
                         </tr>
@@ -306,7 +306,7 @@
                 }).then(function (result) {
                     if (result.value) {
                         $.ajax({
-                            url: "{{ route('admin.store.changeStoreStatus') }}",
+                            url: "{{ route($module_name.'.store.changeStoreStatus') }}",
                             data: {status: status, store_id: store_id},
                             method: 'PUT',
                             dataType: 'json',
@@ -365,7 +365,7 @@
                 }).then(function (result) {
                     if (result.value) {
                         $.ajax({
-                            url: "{{ route('admin.store.changeStoreVerification') }}",
+                            url: "{{ route($module_name.'.store.changeStoreVerification') }}",
                             data: {verification: verification, store_id: store_id},
                             method: 'PUT',
                             dataType: 'json',
@@ -424,7 +424,7 @@
                 }).then(function (result) {
                     if (result.value) {
                         $.ajax({
-                            url: "{{ route('admin.store.changeStorePartnerType') }}",
+                            url: "{{ route($module_name.'.store.changeStorePartnerType') }}",
                             data: {partner_type: partner_type, store_id: store_id},
                             method: 'PUT',
                             dataType: 'json',
@@ -502,7 +502,7 @@
                         let join_selected_values = allVals.join(",");
 
                         $.ajax({
-                            url: "{{ route('admin.store.destroyMultipleStore') }}",
+                            url: "{{ route($module_name.'.store.destroyMultipleStore') }}",
                             data: {ids: join_selected_values},
                             method: 'DELETE',
                             dataType: 'json',
@@ -578,7 +578,7 @@
                         let join_selected_values = allVals.join(",");
 
                         $.ajax({
-                            url: "{{ route('admin.store.typeMultipleStore') }}",
+                            url: "{{ route($module_name.'.store.typeMultipleStore') }}",
                             data: {ids: join_selected_values, partner_type: partner_type},
                             method: 'PUT',
                             dataType: 'json',
@@ -650,7 +650,7 @@
                         let join_selected_values = allVals.join(",");
 
                         $.ajax({
-                            url: "{{ route('admin.store.statusMultipleStore') }}",
+                            url: "{{ route($module_name.'.store.statusMultipleStore') }}",
                             data: {ids: join_selected_values, status: status},
                             method: 'PUT',
                             dataType: 'json',

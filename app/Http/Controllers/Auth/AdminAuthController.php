@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Session;
 use Validator;
 
@@ -40,10 +42,50 @@ class AdminAuthController extends Controller
         $this->middleware('guest', ['except' => 'logout']);
     }
 
-    public function getLogin()
+    public function getLogin(Request $request)
     {
-        return view('auth.admin.login');
+        $adminLoginName = $request->route()->getName();
+        return view('auth.admin.login',compact('adminLoginName'));
     }
+
+    /**
+     * Show the application loginprocess.
+     *
+     * @return \Illuminate\Http\Response
+     */
+//    public function postLogin(Request $request)
+//    {
+//        echo $request->route()->getName(); exit;
+//        $this->validate($request, [
+//            'email' => 'required|string|email',
+//            'password' => 'required|string|min:6',
+//            'captcha'   => 'required|captcha',
+//        ]);
+//
+//        $query = DB::table('cms_users AS cu')
+//            ->selectRaw('cu.id, r.guard_name')
+//            ->join('model_has_roles AS mhr','mhr.model_id','=','cu.id')
+//            ->join('roles AS r','r.id','=','mhr.role_id')
+//            ->whereRaw('cu.email = "'.$request->input('email').'"')
+//            ->first();
+//
+//        if($query->guard_name == 'admin')
+//        {
+//            if (auth()->guard('admin')->attempt(['email' => $request->input('email'), 'password' => $request->input('password')]))
+//            {
+//                $user = auth()->guard('admin')->user();
+//
+//                \Session::put('success','You are Login successfully!!');
+//                return redirect()->route('admin.dashboard');
+//
+//            } else {
+//                return back()->with(['message' => __('admin.login_failed'), 'type' => 'danger']);
+//            }
+//        } else {
+//            return back()->with(['message' => __('admin.login_failed'), 'type' => 'danger']);
+//        }
+//
+//    }
 
     /**
      * Show the application loginprocess.
@@ -52,18 +94,43 @@ class AdminAuthController extends Controller
      */
     public function postLogin(Request $request)
     {
+        $adminLoginName = $request->route()->getName();
+
         $this->validate($request, [
             'email' => 'required|string|email',
             'password' => 'required|string|min:6',
             'captcha'   => 'required|captcha',
         ]);
-        if (auth()->guard('admin')->attempt(['email' => $request->input('email'), 'password' => $request->input('password')]))
+
+        $query = DB::table('cms_users AS cu')
+            ->selectRaw('cu.id as user_id, r.guard_name')
+            ->join('model_has_roles AS mhr','mhr.model_id','=','cu.id')
+            ->join('roles AS r','r.id','=','mhr.role_id')
+            ->whereRaw('cu.email = "'.$request->input('email').'"');
+
+        if($adminLoginName == 'adminLoginPost') {
+            $query->whereRaw('r.name = "Super Admin"');
+            $redirectName = 'admin';
+        } elseif($adminLoginName == 'subadminLoginPost') {
+            $query->whereRaw('r.name = "Subadmin"');
+            $redirectName = 'subadmin';
+        } elseif($adminLoginName == 'cmsLoginPost') {
+            $query->whereRaw('r.name = "Store users"');
+            $redirectName = 'cms';
+        }
+
+        if($query->count() > 0)
         {
-            $user = auth()->guard('admin')->user();
+            if (auth()->guard('admin')->attempt(['email' => $request->input('email'), 'password' => $request->input('password')]))
+            {
+                $user = auth()->guard('admin')->user();
 
-            \Session::put('success','You are Login successfully!!');
-            return redirect()->route('admin.dashboard');
+                \Session::put('success','You are Login successfully!!');
+                return redirect()->route($redirectName.'.dashboard');
 
+            } else {
+                return back()->with(['message' => __('admin.login_failed'), 'type' => 'danger']);
+            }
         } else {
             return back()->with(['message' => __('admin.login_failed'), 'type' => 'danger']);
         }

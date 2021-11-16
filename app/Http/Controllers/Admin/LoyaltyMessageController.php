@@ -13,11 +13,12 @@ class LoyaltyMessageController extends Controller
 {
     public function __construct()
     {
-//        $this->middleware('permission:school-list|school-create|school-edit|school-delete', ['only' => ['index', 'store']]);
-//        $this->middleware('permission:school-create', ['only' => ['create', 'store']]);
-//        $this->middleware('permission:school-edit', ['only' => ['edit', 'update']]);
-//        $this->middleware('permission:school-delete', ['only' => ['destroy']]);
-//        $this->middleware('permission:school-export', ['only' => ['export']]);
+        parent::__construct();
+        $this->middleware('permission:loyalty-messages-list|loyalty-messages-create|loyalty-messages-edit|loyalty-messages-delete', ['only' => ['index', 'store']]);
+        $this->middleware('permission:loyalty-messages-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:loyalty-messages-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:loyalty-messages-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:loyalty-messages-export', ['only' => ['export']]);
     }
 
     /**
@@ -108,7 +109,7 @@ class LoyaltyMessageController extends Controller
             }
             else
             {
-                return redirect()->route('admin.loyalty_message.create')->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png)", 'warning', true));
+                return redirect()->route($this->module_name.'.loyalty_message.create')->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png)", 'warning', true));
             }
         }
 
@@ -129,7 +130,7 @@ class LoyaltyMessageController extends Controller
 
         LoyaltyMessages::create($loyaltyMessageData);
 
-        return redirect()->route('admin.loyalty_message.index')->with(_sessionmessage());
+        return redirect()->route($this->module_name.'.loyalty_message.index')->with(_sessionmessage());
     }
 
     /**
@@ -184,7 +185,7 @@ class LoyaltyMessageController extends Controller
             }
             else
             {
-                return redirect()->route('admin.loyalty_message.edit', [$id])->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png)", 'warning', true));
+                return redirect()->route($this->module_name.'.loyalty_message.edit', [$id])->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png)", 'warning', true));
             }
         }
 
@@ -205,7 +206,7 @@ class LoyaltyMessageController extends Controller
 
         $loyaltyMessage->update($loyaltyMessageData);
 
-        return redirect()->route('admin.loyalty_message.index')->with(_sessionmessage());
+        return redirect()->route($this->module_name.'.loyalty_message.index')->with(_sessionmessage());
     }
 
     /**

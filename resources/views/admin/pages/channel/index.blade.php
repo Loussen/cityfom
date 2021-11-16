@@ -13,7 +13,7 @@
 
             <div class="header-elements d-none">
                 <div class="d-flex justify-content-center">
-                    <a href="{{route('admin.channel.create')}}" class="btn btn-outline-success float-right"><i
+                    <a href="{{route($module_name.'.channel.create')}}" class="btn btn-outline-success float-right"><i
                             class="icon-plus2"></i> Add New</a>
                 </div>
             </div>
@@ -22,7 +22,7 @@
         <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
             <div class="d-flex">
                 <div class="breadcrumb">
-                    <a href="{{ route('admin.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
+                    <a href="{{ route($module_name.'.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
                     <span class="breadcrumb-item active">Channels</span>
                 </div>
 
@@ -85,7 +85,7 @@
                         </div>
                         <div class="col-sm-12">
                             <x-search/>
-                            <x-showall route="admin.channel.index"/>
+                            <x-showall route="{{$module_name}}.channel.index"/>
                             <x-clear/>
                         </div>
                     </div>
@@ -185,12 +185,12 @@
                             </td>
                             <td class="text-center">
                                 <div class="btn-group">
-                                    <x-edit route="admin.channel.edit" :id="$channel->id"/>
+                                    <x-edit route="{{$module_name}}.channel.edit" :id="$channel->id"/>
                                     <?php
                                         if($existsPost == 'no')
                                         {
                                             ?>
-                                            <x-delete route="admin.channel.destroy" :id="$channel->id"/>
+                                            <x-delete route="{{$module_name}}.channel.destroy" :id="$channel->id"/>
                                             <?php
                                         }
                                     ?>
@@ -243,7 +243,7 @@
                 }).then(function (result) {
                     if (result.value) {
                         $.ajax({
-                            url: "{{ route('admin.channel.changeChannelStatus') }}",
+                            url: "{{ route($module_name.'.channel.changeChannelStatus') }}",
                             data: {status: status, channel_id: channel_id},
                             method: 'PUT',
                             dataType: 'json',
@@ -321,7 +321,7 @@
                         let join_selected_values = allVals.join(",");
 
                         $.ajax({
-                            url: "{{ route('admin.channel.destroyMultipleChannel') }}",
+                            url: "{{ route($module_name.'.channel.destroyMultipleChannel') }}",
                             data: {ids: join_selected_values},
                             method: 'DELETE',
                             dataType: 'json',
@@ -397,7 +397,7 @@
                         let join_selected_values = allVals.join(",");
 
                         $.ajax({
-                            url: "{{ route('admin.channel.statusMultipleChannel') }}",
+                            url: "{{ route($module_name.'.channel.statusMultipleChannel') }}",
                             data: {ids: join_selected_values, status: status},
                             method: 'PUT',
                             dataType: 'json',

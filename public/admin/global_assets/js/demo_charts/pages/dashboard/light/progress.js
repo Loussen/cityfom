@@ -12,7 +12,6 @@
 
 var DashboardProgress = function() {
 
-
     //
     // Setup module components
     //
@@ -137,7 +136,8 @@ var DashboardProgress = function() {
             function updateProgress(progress) {
                 foreground.attr('d', arc.endAngle(twoPi * progress));
                 front.attr('d', arc.endAngle(twoPi * progress));
-                numberText.text(formatPercent(progress));
+                // numberText.text(formatPercent(progress));
+                numberText.text(end);
             }
 
             // Animate text
@@ -159,9 +159,9 @@ var DashboardProgress = function() {
     //
 
     return {
-        init: function() {
-            _ProgressRoundedChart('#hours-available-progress', 38, 2, '#F06292', 0.68, 'icon-watch text-pink-400', 'Hours available', '64% average');
-            _ProgressRoundedChart('#goal-progress', 38, 2, '#5C6BC0', 0.82, 'icon-trophy3 text-indigo-400', 'Productivity goal', '87% average');
+        init: function(element, radius, border, color, end, iconClass, textTitle, textAverage) {
+
+            _ProgressRoundedChart(element, radius, border, color, end, iconClass, textTitle, textAverage);
         }
     }
 }();

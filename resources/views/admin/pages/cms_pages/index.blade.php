@@ -13,7 +13,7 @@
 
             <div class="header-elements d-none">
                 <div class="d-flex justify-content-center">
-                    <a href="{{route('admin.cms_pages.create')}}" class="btn btn-outline-success float-right"><i
+                    <a href="{{route($module_name.'.cms_pages.create')}}" class="btn btn-outline-success float-right"><i
                             class="icon-plus2"></i> Add New</a>
                 </div>
             </div>
@@ -22,7 +22,7 @@
         <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
             <div class="d-flex">
                 <div class="breadcrumb">
-                    <a href="{{ route('admin.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
+                    <a href="{{ route($module_name.'.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
                     <span class="breadcrumb-item active">CMS pages</span>
                 </div>
 
@@ -65,7 +65,7 @@
                         </div>
                         <div class="col-sm-12">
                             <x-search/>
-                            <x-showall route="admin.cms_pages.index"/>
+                            <x-showall route="{{$module_name}}.cms_pages.index"/>
                             <x-clear/>
                         </div>
                     </div>
@@ -119,7 +119,7 @@
                             </td>
                             <td class="text-center">
                                 <div class="btn-group">
-                                    <x-edit route="admin.cms_pages.edit" :id="$cmsPage->id"/>
+                                    <x-edit route="{{$module_name}}.cms_pages.edit" :id="$cmsPage->id"/>
                                 </div>
                             </td>
                         </tr>
@@ -164,7 +164,7 @@
                 }).then(function (result) {
                     if (result.value) {
                         $.ajax({
-                            url: "{{ route('admin.cms_pages.changeCmsPageStatus') }}",
+                            url: "{{ route($module_name.'.cms_pages.changeCmsPageStatus') }}",
                             data: {status: status, cms_page_id: cms_page_id},
                             method: 'PUT',
                             dataType: 'json',
@@ -243,7 +243,7 @@
                         let join_selected_values = allVals.join(",");
 
                         $.ajax({
-                            url: "{{ route('admin.cms_pages.statusMultipleCmsPage') }}",
+                            url: "{{ route($module_name.'.cms_pages.statusMultipleCmsPage') }}",
                             data: {ids: join_selected_values, status: status},
                             method: 'PUT',
                             dataType: 'json',

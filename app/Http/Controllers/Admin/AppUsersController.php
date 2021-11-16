@@ -6,18 +6,21 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\AppUsers;
 use App\Models\Categories;
+use Illuminate\Auth\Authenticatable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class AppUsersController extends Controller
 {
     public function __construct()
     {
-//        $this->middleware('permission:school-list|school-create|school-edit|school-delete', ['only' => ['index', 'store']]);
-//        $this->middleware('permission:school-create', ['only' => ['create', 'store']]);
-//        $this->middleware('permission:school-edit', ['only' => ['edit', 'update']]);
-//        $this->middleware('permission:school-delete', ['only' => ['destroy']]);
-//        $this->middleware('permission:school-export', ['only' => ['export']]);
+        parent::__construct();
+        $this->middleware('permission:app-users-list|app-users-create|app-users-edit|app-users-delete', ['only' => ['index', 'store']]);
+        $this->middleware('permission:app-users-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:app-users-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:app-users-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:app-users-export', ['only' => ['export']]);
     }
 
     /**
@@ -94,7 +97,7 @@ class AppUsersController extends Controller
      */
     public function create()
     {
-        return redirect()->route('admin.category.index');
+        return redirect()->route($this->module_name.'.category.index');
     }
 
     /**
@@ -105,7 +108,7 @@ class AppUsersController extends Controller
      */
     public function store(CategoryRequest $request)
     {
-        return redirect()->route('admin.category.index');
+        return redirect()->route($this->module_name.'.category.index');
     }
 
     /**
@@ -157,7 +160,7 @@ class AppUsersController extends Controller
             }
             else
             {
-                return redirect()->route('admin.category.edit', [$id])->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png,ico)", 'warning', true));
+                return redirect()->route($this->module_name.'.category.edit', [$id])->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png,ico)", 'warning', true));
             }
         }
 
@@ -171,7 +174,7 @@ class AppUsersController extends Controller
 
         $category->update($categoryData);
 
-        return redirect()->route('admin.category.index')->with(_sessionmessage());
+        return redirect()->route($this->module_name.'.category.index')->with(_sessionmessage());
     }
 
     /**

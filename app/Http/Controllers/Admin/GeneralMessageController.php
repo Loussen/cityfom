@@ -11,11 +11,12 @@ class GeneralMessageController extends Controller
 {
     public function __construct()
     {
-//        $this->middleware('permission:school-list|school-create|school-edit|school-delete', ['only' => ['index', 'store']]);
-//        $this->middleware('permission:school-create', ['only' => ['create', 'store']]);
-//        $this->middleware('permission:school-edit', ['only' => ['edit', 'update']]);
-//        $this->middleware('permission:school-delete', ['only' => ['destroy']]);
-//        $this->middleware('permission:school-export', ['only' => ['export']]);
+        parent::__construct();
+        $this->middleware('permission:general-messages-list|general-messages-create|general-messages-edit|general-messages-delete', ['only' => ['index', 'store']]);
+        $this->middleware('permission:general-messages-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:general-messages-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:general-messages-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:general-messages-export', ['only' => ['export']]);
     }
 
     /**
@@ -81,7 +82,7 @@ class GeneralMessageController extends Controller
             }
             else
             {
-                return redirect()->route('admin.general_message.create')->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png)", 'warning', true));
+                return redirect()->route($this->module_name.'.general_message.create')->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png)", 'warning', true));
             }
         }
 
@@ -99,7 +100,7 @@ class GeneralMessageController extends Controller
 
         GeneralMessage::create($generalMessageData);
 
-        return redirect()->route('admin.general_message.index')->with(_sessionmessage());
+        return redirect()->route($this->module_name.'.general_message.index')->with(_sessionmessage());
     }
 
     /**
@@ -151,7 +152,7 @@ class GeneralMessageController extends Controller
             }
             else
             {
-                return redirect()->route('admin.general_message.edit', [$id])->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png)", 'warning', true));
+                return redirect()->route($this->module_name.'.general_message.edit', [$id])->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png)", 'warning', true));
             }
         }
 
@@ -169,7 +170,7 @@ class GeneralMessageController extends Controller
 
         $generalMessage->update($generalMessageData);
 
-        return redirect()->route('admin.general_message.index')->with(_sessionmessage());
+        return redirect()->route($this->module_name.'.general_message.index')->with(_sessionmessage());
     }
 
     /**

@@ -15,7 +15,7 @@
         <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
             <div class="d-flex">
                 <div class="breadcrumb">
-                    <a href="{{ route('admin.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i>
+                    <a href="{{ route($module_name.'.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i>
                         Home</a>
                     <span class="breadcrumb-item active">Edit Profile</span>
                 </div>
@@ -30,7 +30,7 @@
         <div class="card">
             <div class="card-body">
                 @include('admin.particles._sessionmessage')
-                <form action="{{route('admin.profile.profileStore', auth()->guard('admin')->user()->id)}}" method="POST" enctype="multipart/form-data">
+                <form action="{{route($module_name.'.profile.profileStore', auth()->guard(get_admin_guard_name())->user()->id)}}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="form-row">
@@ -41,7 +41,7 @@
                                 <input type="text" name="firstname" id="firstname"
                                        class="form-control @error('firstname') border-danger @enderror"
                                        placeholder="{{__('admin.firstname')}}"
-                                       value="{{ old('firstname', auth()->guard('admin')->user()->firstname) }}">
+                                       value="{{ old('firstname', auth()->guard(get_admin_guard_name())->user()->firstname) }}">
                             </div>
                             @error('firstname')
                             <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
@@ -54,7 +54,7 @@
                                 <input type="text" name="lastname" id="lastname"
                                        class="form-control @error('lastname') border-danger @enderror"
                                        placeholder="{{__('admin.lastname')}}"
-                                       value="{{ old('lastname', auth()->guard('admin')->user()->lastname) }}">
+                                       value="{{ old('lastname', auth()->guard(get_admin_guard_name())->user()->lastname) }}">
                             </div>
                             @error('lastname')
                             <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
@@ -67,7 +67,7 @@
                                 <input disabled type="text" name="email" id="email"
                                        class="form-control @error('email') border-danger @enderror"
                                        placeholder="{{__('admin.email')}}"
-                                       value="{{ old('email', auth()->guard('admin')->user()->email) }}">
+                                       value="{{ old('email', auth()->guard(get_admin_guard_name())->user()->email) }}">
                             </div>
                             @error('email')
                             <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
@@ -79,15 +79,15 @@
                             <input type="file" name="image" class="form-input-styled" data-fouc />
                             <span class="form-text text-muted">Accepted formats: jpg, jpeg, png. Max file size 2Mb</span>
                             <?php
-                            if(auth()->guard('admin')->user()->photo !== null)
+                            if(auth()->guard(get_admin_guard_name())->user()->photo !== null)
                             {
                                 echo "<br />";
-                                $explodeImage = explode(".", auth()->guard('admin')->user()->photo);
+                                $explodeImage = explode(".", auth()->guard(get_admin_guard_name())->user()->photo);
                                 $imageType = end($explodeImage);
                                 if(in_array(strtolower($imageType), ['jpg', 'jpeg', 'png']))
                                 {
                                     ?>
-                                    <a href="javascript:void(0);" class="pop"><img src="{{ asset('/uploads/profile_admin/'.auth()->guard('admin')->user()->photo) }}" style="max-width: 300px; max-height: 300px;"/></a>
+                                    <a href="javascript:void(0);" class="pop"><img src="{{ asset('/uploads/profile_admin/'.auth()->guard(get_admin_guard_name())->user()->photo) }}" style="max-width: 300px; max-height: 300px;"/></a>
                                 <?php
                                 }
                             ?>

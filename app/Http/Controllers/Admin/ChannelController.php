@@ -16,11 +16,12 @@ class ChannelController extends Controller
 {
     public function __construct()
     {
-//        $this->middleware('permission:school-list|school-create|school-edit|school-delete', ['only' => ['index', 'store']]);
-//        $this->middleware('permission:school-create', ['only' => ['create', 'store']]);
-//        $this->middleware('permission:school-edit', ['only' => ['edit', 'update']]);
-//        $this->middleware('permission:school-delete', ['only' => ['destroy']]);
-//        $this->middleware('permission:school-export', ['only' => ['export']]);
+        parent::__construct();
+        $this->middleware('permission:channel-list|channel-create|channel-edit|channel-delete', ['only' => ['index', 'store']]);
+        $this->middleware('permission:channel-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:channel-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:channel-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:channel-export', ['only' => ['export']]);
     }
 
     /**
@@ -119,7 +120,7 @@ class ChannelController extends Controller
             }
             else
             {
-                return redirect()->route('admin.channel.create')->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png)", 'warning', true));
+                return redirect()->route($this->module_name.'.channel.create')->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png)", 'warning', true));
             }
         }
 
@@ -134,7 +135,7 @@ class ChannelController extends Controller
 
         Channels::create($channelData);
 
-        return redirect()->route('admin.channel.index')->with(_sessionmessage());
+        return redirect()->route($this->module_name.'.channel.index')->with(_sessionmessage());
     }
 
     /**
@@ -193,7 +194,7 @@ class ChannelController extends Controller
             }
             else
             {
-                return redirect()->route('admin.channel.edit', [$id])->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png)", 'warning', true));
+                return redirect()->route($this->module_name.'.channel.edit', [$id])->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png)", 'warning', true));
             }
         }
 
@@ -208,7 +209,7 @@ class ChannelController extends Controller
 
         $channel->update($channelData);
 
-        return redirect()->route('admin.channel.index')->with(_sessionmessage());
+        return redirect()->route($this->module_name.'.channel.index')->with(_sessionmessage());
     }
 
     /**

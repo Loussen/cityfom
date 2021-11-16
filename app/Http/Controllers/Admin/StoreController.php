@@ -17,11 +17,12 @@ class StoreController extends Controller
 {
     public function __construct()
     {
-//        $this->middleware('permission:school-list|school-create|school-edit|school-delete', ['only' => ['index', 'store']]);
-//        $this->middleware('permission:school-create', ['only' => ['create', 'store']]);
-//        $this->middleware('permission:school-edit', ['only' => ['edit', 'update']]);
-//        $this->middleware('permission:school-delete', ['only' => ['destroy']]);
-//        $this->middleware('permission:school-export', ['only' => ['export']]);
+        parent::__construct();
+        $this->middleware('permission:stores-list|stores-create|stores-edit|stores-delete', ['only' => ['index', 'store']]);
+        $this->middleware('permission:stores-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:stores-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:stores-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:stores-export', ['only' => ['export']]);
     }
 
     /**
@@ -230,12 +231,12 @@ class StoreController extends Controller
                     $ratingReviewImage->save();
 
                 } else {
-                    return redirect()->route('admin.store.create')->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png)", 'warning', true));
+                    return redirect()->route($this->module_name.'.store.create')->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png)", 'warning', true));
                 }
             }
         }
 
-        return redirect()->route('admin.store.index')->with(_sessionmessage());
+        return redirect()->route($this->module_name.'.store.index')->with(_sessionmessage());
     }
 
     /**
@@ -404,12 +405,12 @@ class StoreController extends Controller
                     $ratingReviewImage->save();
 
                 } else {
-                    return redirect()->route('admin.store.create')->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png)", 'warning', true));
+                    return redirect()->route($this->module_name.'.store.create')->with(_sessionmessage(null, "Must be this type (jpg,jpeg,png)", 'warning', true));
                 }
             }
         }
 
-        return redirect()->route('admin.store.index')->with(_sessionmessage());
+        return redirect()->route($this->module_name.'.store.index')->with(_sessionmessage());
     }
 
     /**

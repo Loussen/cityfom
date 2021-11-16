@@ -15,9 +15,9 @@
         <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
             <div class="d-flex">
                 <div class="breadcrumb">
-                    <a href="{{ route('admin.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i>
+                    <a href="{{ route($module_name.'.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i>
                         Home</a>
-                    <a href="{{ route('admin.loyalty_point.index') }}" class="breadcrumb-item">Loyalty points</a>
+                    <a href="{{ route($module_name.'.loyalty_point.index') }}" class="breadcrumb-item">Loyalty points</a>
                     <span class="breadcrumb-item active">Add Loyalty points</span>
                 </div>
 
@@ -31,7 +31,7 @@
         <div class="card">
             <div class="card-body">
                 @include('admin.particles._sessionmessage',['error_type' => 'warning'])
-                <form action="{{route('admin.loyalty_point.store')}}" method="POST">
+                <form action="{{route($module_name.'.loyalty_point.store')}}" method="POST">
                     @csrf
                     <div class="form-row">
                         <div class="form-group col-sm-6">
@@ -77,7 +77,7 @@
                         <div class="col-sm-12">
                             <button name="save" value="2" class="btn btn-outline-danger float-right"><i class="icon-floppy-disk"></i> {{__('admin.decrease')}}</button>
                             <button name="save" value="1" class="btn btn-outline-success float-right mr-2"><i class="icon-floppy-disk"></i> {{__('admin.increase')}}</button>
-                            <x-back route="admin.loyalty_point.index"></x-back>
+                            <x-back route="{{$module_name}}.loyalty_point.index"></x-back>
                         </div>
                     </div>
                 </form>

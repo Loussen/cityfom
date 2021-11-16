@@ -12,11 +12,12 @@ class CmsPagesController extends Controller
 {
     public function __construct()
     {
-//        $this->middleware('permission:school-list|school-create|school-edit|school-delete', ['only' => ['index', 'store']]);
-//        $this->middleware('permission:school-create', ['only' => ['create', 'store']]);
-//        $this->middleware('permission:school-edit', ['only' => ['edit', 'update']]);
-//        $this->middleware('permission:school-delete', ['only' => ['destroy']]);
-//        $this->middleware('permission:school-export', ['only' => ['export']]);
+        parent::__construct();
+        $this->middleware('permission:cms-pages-list|cms-pages-create|cms-pages-edit|cms-pages-delete', ['only' => ['index', 'store']]);
+        $this->middleware('permission:cms-pages-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:cms-pages-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:cms-pages-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:cms-pages-export', ['only' => ['export']]);
     }
 
     /**
@@ -80,7 +81,7 @@ class CmsPagesController extends Controller
 
         CmsPages::create($cmsPageData);
 
-        return redirect()->route('admin.cms_pages.index')->with(_sessionmessage());
+        return redirect()->route($this->module_name.'.cms_pages.index')->with(_sessionmessage());
     }
 
     /**
@@ -127,7 +128,7 @@ class CmsPagesController extends Controller
 
         $cmsPage->update($cmsPageData);
 
-        return redirect()->route('admin.cms_pages.index')->with(_sessionmessage());
+        return redirect()->route($this->module_name.'.cms_pages.index')->with(_sessionmessage());
     }
 
     public function statusMultipleCmsPage(Request $request)

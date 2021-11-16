@@ -12,11 +12,12 @@ class ReportTypeController extends Controller
 {
     public function __construct()
     {
-//        $this->middleware('permission:school-list|school-create|school-edit|school-delete', ['only' => ['index', 'store']]);
-//        $this->middleware('permission:school-create', ['only' => ['create', 'store']]);
-//        $this->middleware('permission:school-edit', ['only' => ['edit', 'update']]);
-//        $this->middleware('permission:school-delete', ['only' => ['destroy']]);
-//        $this->middleware('permission:school-export', ['only' => ['export']]);
+        parent::__construct();
+        $this->middleware('permission:report-type-list|report-type-create|report-type-edit|report-type-delete', ['only' => ['index', 'store']]);
+        $this->middleware('permission:report-type-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:report-type-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:report-type-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:report-type-export', ['only' => ['export']]);
     }
 
     /**
@@ -80,7 +81,7 @@ class ReportTypeController extends Controller
 
         ReportType::create($reportTypeData);
 
-        return redirect()->route('admin.report_type.index')->with(_sessionmessage());
+        return redirect()->route($this->module_name.'.report_type.index')->with(_sessionmessage());
     }
 
     /**
@@ -126,7 +127,7 @@ class ReportTypeController extends Controller
 
         $reportType->update($reportTypeData);
 
-        return redirect()->route('admin.report_type.index')->with(_sessionmessage());
+        return redirect()->route($this->module_name.'.report_type.index')->with(_sessionmessage());
     }
 
     /**

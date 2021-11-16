@@ -15,8 +15,8 @@
         <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
             <div class="d-flex">
                 <div class="breadcrumb">
-                    <a href="{{ route('admin.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
-                    <a href="{{ route('admin.report_type.index') }}" class="breadcrumb-item">Report types</a>
+                    <a href="{{ route($module_name.'.dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
+                    <a href="{{ route($module_name.'.report_type.index') }}" class="breadcrumb-item">Report types</a>
                     <span class="breadcrumb-item active">Add report type</span>
                 </div>
 
@@ -30,7 +30,7 @@
         <div class="card">
             <div class="card-body">
                 @include('admin.particles._sessionmessage',['error_type' => 'warning'])
-                <form action="{{route('admin.report_type.store')}}" method="POST">
+                <form action="{{route($module_name.'.report_type.store')}}" method="POST">
                     @csrf
                     <div class="form-row">
                         <div class="form-group col-sm-6">
@@ -80,7 +80,7 @@
                         </div>
                         <div class="col-sm-12">
                             <x-save />
-                            <x-back route="admin.report_type.index"></x-back>
+                            <x-back route="{{$module_name}}.report_type.index"></x-back>
                         </div>
                     </div>
                 </form>

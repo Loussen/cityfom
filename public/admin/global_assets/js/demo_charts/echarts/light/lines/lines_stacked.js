@@ -12,13 +12,12 @@
 
 var EchartsLinesStackedLight = function() {
 
-
     //
     // Setup module components
     //
 
     // Stacked line chart
-    var _linesStackedLightExample = function() {
+    var _linesStackedLightExample = function(stores,users_count) {
         if (typeof echarts == 'undefined') {
             console.warn('Warning - echarts.min.js is not loaded.');
             return;
@@ -65,7 +64,7 @@ var EchartsLinesStackedLight = function() {
 
                 // Add legend
                 legend: {
-                    data: ['Internet Explorer', 'Opera', 'Safari', 'Firefox', 'Chrome'],
+                    data: ['Stores'],
                     itemHeight: 8,
                     itemGap: 20
                 },
@@ -84,10 +83,8 @@ var EchartsLinesStackedLight = function() {
                 // Horizontal axis
                 xAxis: [{
                     type: 'category',
-                    boundaryGap: false,
-                    data: [
-                        'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
-                    ],
+                    boundaryGap: true,
+                    data: stores,
                     axisLabel: {
                         color: '#333'
                     },
@@ -130,70 +127,18 @@ var EchartsLinesStackedLight = function() {
                 // Add series
                 series: [
                     {
-                        name: 'Internet Explorer',
+                        name: 'Users count',
                         type: 'line',
                         stack: 'Total',
                         smooth: true,
                         symbolSize: 7,
-                        data: [120, 132, 101, 134, 90, 230, 210],
+                        data: users_count,
                         itemStyle: {
                             normal: {
                                 borderWidth: 2
                             }
                         }
                     },
-                    {
-                        name: 'Opera',
-                        type: 'line',
-                        stack: 'Total',
-                        smooth: true,
-                        symbolSize: 7,
-                        data: [220, 182, 191, 234, 290, 330, 310],
-                        itemStyle: {
-                            normal: {
-                                borderWidth: 2
-                            }
-                        }
-                    },
-                    {
-                        name: 'Safari',
-                        type: 'line',
-                        stack: 'Total',
-                        smooth: true,
-                        symbolSize: 7,
-                        data: [150, 232, 201, 154, 190, 330, 410],
-                        itemStyle: {
-                            normal: {
-                                borderWidth: 2
-                            }
-                        }
-                    },
-                    {
-                        name: 'Firefox',
-                        type: 'line',
-                        stack: 'Total',
-                        smooth: true,
-                        symbolSize: 7,
-                        data: [320, 332, 301, 334, 390, 330, 320],
-                        itemStyle: {
-                            normal: {
-                                borderWidth: 2
-                            }
-                        }
-                    },
-                    {
-                        name: 'Chrome',
-                        type: 'line',
-                        stack: 'Total',
-                        smooth: true,
-                        symbolSize: 7,
-                        data: [820, 932, 901, 934, 1290, 1330, 1320],
-                        itemStyle: {
-                            normal: {
-                                borderWidth: 2
-                            }
-                        }
-                    }
                 ]
             });
         }
@@ -228,8 +173,9 @@ var EchartsLinesStackedLight = function() {
     //
 
     return {
-        init: function() {
-            _linesStackedLightExample();
+        init: function(stores,users_count) {
+            console.log(stores);
+            _linesStackedLightExample(stores,users_count);
         }
     }
 }();
@@ -239,5 +185,5 @@ var EchartsLinesStackedLight = function() {
 // ------------------------------
 
 document.addEventListener('DOMContentLoaded', function() {
-    EchartsLinesStackedLight.init();
+    EchartsLinesStackedLight.init(stores,users_count);
 });

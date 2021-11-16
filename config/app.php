@@ -181,6 +181,8 @@ return [
 
         Laravel\Passport\PassportServiceProvider::class,
 
+        Barryvdh\Debugbar\ServiceProvider::class,
+
     ],
 
     /*
@@ -236,6 +238,7 @@ return [
 
         'Captcha' => Mews\Captcha\Facades\Captcha::class,
 
+        'Debugbar' => Barryvdh\Debugbar\Facade::class,
         Spatie\Permission\PermissionServiceProvider::class,
 
     ],
