@@ -20,29 +20,33 @@ class Controller extends BaseController
         $this->module_name = Request()->route()->getPrefix();
         $this->module_name = str_replace("/","",$this->module_name);
 
-        View::share('module_name', $this->module_name);
+        if($this->module_name != 'apiv1')
+        {
+            View::share('module_name', $this->module_name);
 
-        $this->middleware(function ($request, $next) {
+            $this->middleware(function ($request, $next) {
 
-            $request = Request();
-            $prefix = $request->route()->getName();
+                $request = Request();
+                $prefix = $request->route()->getName();
 
-            $prefix = explode(".",$prefix);
+                $prefix = explode(".",$prefix);
 
-            $prefixDB = 'admin';
+                $prefixDB = 'admin';
 
-            if(Auth::user()->hasRole('Store users')) {
-                $prefixDB = 'cms';
-            } elseif(Auth::user()->hasRole('Subadmin')) {
-                $prefixDB = 'subadmin';
-            }
+                if(Auth::user()->hasRole('Store users')) {
+                    $prefixDB = 'cms';
+                } elseif(Auth::user()->hasRole('Subadmin')) {
+                    $prefixDB = 'subadmin';
+                }
 
-            if($prefix[0] != $prefixDB) {
-                abort(404);
-                die();
-            }
+                if($prefix[0] != $prefixDB) {
+                    abort(404);
+                    die();
+                }
 
-            return $next($request);
-        });
+                return $next($request);
+            });
+        }
+
     }
 }
