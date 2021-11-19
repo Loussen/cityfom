@@ -58,16 +58,18 @@
                             <input type="text" class="form-control" name="name" id="name"
                                    placeholder="{{ __('admin.name') }}" value="{{request('name')}}">
                         </div>
-                        <div class="form-group col-sm-2">
-                            <label for="type">{{__('admin.type')}}</label>
-                            <select name="type" class="select" id="type">
-                                <option value="">{{ __('admin.all') }}</option>
-                                @foreach($storeTypes as $typeKey => $typeVal)
-                                    <option
-                                        {{ request('type') == $typeKey ? 'selected' : '' }}  value="{{ $typeKey }}">{{ $typeVal }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                        @if($moduleName != 'cms')
+                            <div class="form-group col-sm-2">
+                                <label for="type">{{__('admin.type')}}</label>
+                                <select name="type" class="select" id="type">
+                                    <option value="">{{ __('admin.all') }}</option>
+                                    @foreach($storeTypes as $typeKey => $typeVal)
+                                        <option
+                                            {{ request('type') == $typeKey ? 'selected' : '' }}  value="{{ $typeKey }}">{{ $typeVal }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
                         <div class="form-group col-sm-3">
                             <label for="category_id">{{__('admin.category')}}</label>
                             <select name="category_id" class="select-search" id="category_id">
@@ -78,16 +80,18 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="form-group col-sm-2">
-                            <label for="partner_type">{{__('admin.partner_type')}}</label>
-                            <select name="partner_type" class="select" id="partner_type">
-                                <option value="">{{ __('admin.all') }}</option>
-                                @foreach($partnerTypes as $partnerTypeKey => $partnerTypeVal)
-                                    <option
-                                        {{ request('partner_type') == $partnerTypeKey ? 'selected' : '' }}  value="{{ $partnerTypeKey }}">{{ $partnerTypeVal }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                        @if($moduleName != 'cms')
+                            <div class="form-group col-sm-2">
+                                <label for="partner_type">{{__('admin.partner_type')}}</label>
+                                <select name="partner_type" class="select" id="partner_type">
+                                    <option value="">{{ __('admin.all') }}</option>
+                                    @foreach($partnerTypes as $partnerTypeKey => $partnerTypeVal)
+                                        <option
+                                            {{ request('partner_type') == $partnerTypeKey ? 'selected' : '' }}  value="{{ $partnerTypeKey }}">{{ $partnerTypeVal }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
                         <div class="form-group col-sm-2">
                             <label for="status">{{__('admin.status')}}</label>
                             <select name="status" class="select" id="status">
@@ -161,7 +165,9 @@
                         <th>Categories</th>
                         <th>Tags</th>
                         <th>Created</th>
-                        <th>Type</th>
+                        @if($moduleName != 'cms')
+                            <th>Type</th>
+                        @endif
                         <th>Verification</th>
                         <th>Status</th>
                         <th class="text-center"><i class="icon-menu7"></i></th>
@@ -229,14 +235,16 @@
                                 @endphp
                             </td>
                             <td>{{ $store->created_at }}</td>
-                            <td>
-                                <select name="partner_type" id="partner_type" data-store-id="{{ $store->id }}">
-                                    @foreach($partnerTypes as $typeKey => $typeVal)
-                                        <option
-                                            {{ $typeKey == $store->type ? 'selected': '' }} value="{{ $typeKey }}">{{ $typeVal }}</option>
-                                    @endforeach
-                                </select>
-                            </td>
+                            @if($moduleName != 'cms')
+                                <td>
+                                    <select name="partner_type" id="partner_type" data-store-id="{{ $store->id }}">
+                                        @foreach($partnerTypes as $typeKey => $typeVal)
+                                            <option
+                                                {{ $typeKey == $store->type ? 'selected': '' }} value="{{ $typeKey }}">{{ $typeVal }}</option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                            @endif
                             <td>
                                 <select name="verification" id="verification" data-store-id="{{ $store->id }}">
                                     @foreach($storeVerifications as $verificationKey => $verificationVal)

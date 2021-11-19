@@ -7,6 +7,7 @@ use App\Http\Requests\LoyaltyMessageRequest;
 use App\Models\LoyaltyMessages;
 use App\Models\Stores;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class LoyaltyMessageController extends Controller
@@ -28,11 +29,17 @@ class LoyaltyMessageController extends Controller
      */
     public function index()
     {
+        $moduleName = $this->module_name;
         $query = DB::table('loyalty_messages AS lm')
             ->selectRaw('lm.*, s.name AS s_name')
             ->join('stores AS s','s.id','=','lm.store_id');
 
         $pageCount = config('global.pagination_count');
+
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+            $query->whereIn('s.id',$storeIds);
+        }
 
         if(request('description')) {
             $query->whereRaw('lm.description LIKE "%'.request('description').'%"');
@@ -67,7 +74,12 @@ class LoyaltyMessageController extends Controller
         $query = $query->paginate($pageCount);
         $loyaltyMessages = $query->appends(request()->query());
 
-        $stores = Stores::all();
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+            $stores = Stores::whereIn('id',$storeIds)->get();
+        } else {
+            $stores = Stores::all();
+        }
         $status = config('global.status');
         $loyaltyMessageType = config('global.loyalty_message_type');
 
@@ -81,7 +93,15 @@ class LoyaltyMessageController extends Controller
      */
     public function create()
     {
-        $stores = Stores::all();
+        $moduleName = $this->module_name;
+
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+            $stores = Stores::whereIn('id',$storeIds)->get();
+        } else {
+            $stores = Stores::all();
+        }
+
         $loyaltyMessageType = config('global.loyalty_message_type');
 
         return view('admin.pages.loyalty_message.create',compact('stores','loyaltyMessageType'));
@@ -120,13 +140,27 @@ class LoyaltyMessageController extends Controller
 
         $loyaltyMessageData = [
             'type' => $request->type,
-            'store_id' => $request->store_id,
             'points' => $request->points,
             'description' => $request->description,
             'image' => $imageName,
             'valid_from' => $validFrom,
             'valid_to' => $validTo,
         ];
+
+        $moduleName = $this->module_name;
+
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+
+            if(in_array($request->store_id,$storeIds)) {
+                $loyaltyMessageData['store_id'] = $request->store_id;
+            } else {
+                abort(404);
+                exit;
+            }
+        } else {
+            $loyaltyMessageData['store_id'] = $request->store_id;
+        }
 
         LoyaltyMessages::create($loyaltyMessageData);
 
@@ -152,7 +186,15 @@ class LoyaltyMessageController extends Controller
      */
     public function edit(LoyaltyMessages $loyaltyMessage)
     {
-        $stores = Stores::all();
+        $moduleName = $this->module_name;
+
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+            $stores = Stores::whereIn('id',$storeIds)->get();
+        } else {
+            $stores = Stores::all();
+        }
+
         $loyaltyMessageType = config('global.loyalty_message_type');
 
         return view('admin.pages.loyalty_message.edit', compact('loyaltyMessage','stores','loyaltyMessageType'));
@@ -196,13 +238,27 @@ class LoyaltyMessageController extends Controller
 
         $loyaltyMessageData = [
             'type' => $request->type,
-            'store_id' => $request->store_id,
             'points' => $request->points,
             'description' => $request->description,
             'image' => $imageName,
             'valid_from' => $validFrom,
             'valid_to' => $validTo,
         ];
+
+        $moduleName = $this->module_name;
+
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+
+            if(in_array($request->store_id,$storeIds)) {
+                $loyaltyMessageData['store_id'] = $request->store_id;
+            } else {
+                abort(404);
+                exit;
+            }
+        } else {
+            $loyaltyMessageData['store_id'] = $request->store_id;
+        }
 
         $loyaltyMessage->update($loyaltyMessageData);
 
@@ -217,6 +273,16 @@ class LoyaltyMessageController extends Controller
      */
     public function destroy(LoyaltyMessages $loyaltyMessage)
     {
+        $moduleName = $this->module_name;
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+
+            if(!in_array($loyaltyMessage->store_id,$storeIds)) {
+                abort(404);
+                exit;
+            }
+        }
+
         delete_old_files(public_path().'/uploads/loyalty_messages/'.$loyaltyMessage->image);
         $loyaltyMessage->delete();
         $arr = _sessionmessage(null, null, null, true);
@@ -228,9 +294,19 @@ class LoyaltyMessageController extends Controller
         $ids = $request->ids;
         $explodeIds = explode(",",$ids);
 
+        $moduleName = $this->module_name;
         foreach ($explodeIds as $id)
         {
             $loyaltyMessage = LoyaltyMessages::find($id);
+
+            if($moduleName == 'cms') {
+                $storeIds = get_cms_user_store_ids(Auth::user()->id);
+                if(!in_array($loyaltyMessage->store_id,$storeIds)) {
+                    abort(404);
+                    exit;
+                }
+            }
+
             delete_old_files(public_path().'/uploads/loyalty_messages/'.$loyaltyMessage->image);
         }
 
@@ -269,6 +345,15 @@ class LoyaltyMessageController extends Controller
 
             if ($status > 0 && $loyaltyMessageId > 0) {
                 $loyaltyMessage = LoyaltyMessages::find($loyaltyMessageId);
+
+                $moduleName = $this->module_name;
+                if($moduleName == 'cms') {
+                    $storeIds = get_cms_user_store_ids(Auth::user()->id);
+                    if(!in_array($loyaltyMessage->store_id,$storeIds)) {
+                        abort(404);
+                        exit;
+                    }
+                }
 
                 $loyaltyMessageData = [
                     'status' => $status,

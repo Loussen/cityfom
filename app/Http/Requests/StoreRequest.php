@@ -23,10 +23,12 @@ class StoreRequest extends FormRequest
      */
     public function rules()
     {
+        $moduleName = Request()->route()->getPrefix();
+        $moduleName = str_replace("/","",$moduleName);
+
         $image = request()->isMethod('put') ? 'nullable' : 'required';
 
-        return [
-            'name'   => 'required|min:3',
+        $validateArr = [
             'description'   => 'required|min:3',
             "category_id"    => "required|array|max:3",
             "category_id.*"  => "required|string|distinct|min:2",
@@ -36,7 +38,6 @@ class StoreRequest extends FormRequest
             "latitude"  => "required|string|min:3",
             "longitude"  => "required|string|min:3",
             "email"  => "required|email|min:3",
-            "partner_type"  => "required|numeric|in:1,2",
             "phone"  => "required|string|min:3",
             "image" => $image,
             "image.*" => "mimes:jpeg,jpg,png|max:8000",
@@ -55,5 +56,15 @@ class StoreRequest extends FormRequest
                 },
             ],
         ];
+
+        if($moduleName == 'cms') {
+            $validateArr['name'] = '';
+            $validateArr['partner_type'] = '';
+        } else {
+            $validateArr['name'] = 'required|min:3';
+            $validateArr['partner_type']  = 'required|numeric|in:1,2';
+        }
+
+        return $validateArr;
     }
 }

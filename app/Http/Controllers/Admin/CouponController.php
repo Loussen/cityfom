@@ -7,6 +7,7 @@ use App\Http\Requests\CouponRequest;
 use App\Models\Coupons;
 use App\Models\Stores;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class CouponController extends Controller
@@ -28,6 +29,7 @@ class CouponController extends Controller
      */
     public function index()
     {
+        $moduleName = $this->module_name;
         $query = DB::table('coupons AS c')
             ->selectRaw('c.*, sum((case when cr.coupon_id is not null then 1 else 0 end)) AS redeem_count, s.name AS s_name')
             ->leftJoin('coupon_redeem as cr', 'cr.coupon_id','=','c.id')
@@ -35,6 +37,11 @@ class CouponController extends Controller
             ->groupByRaw('c.id');
 
         $pageCount = config('global.pagination_count');
+
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+            $query->whereIn('s.id',$storeIds);
+        }
 
         if(request('id')) {
             $filterId = intval(request('id'));
@@ -76,7 +83,12 @@ class CouponController extends Controller
         $query = $query->paginate($pageCount);
         $coupons = $query->appends(request()->query());
 
-        $stores = Stores::all();
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+            $stores = Stores::whereIn('id',$storeIds)->get();
+        } else {
+            $stores = Stores::all();
+        }
         $status = config('global.status');
 
         return view('admin.pages.coupon.index', compact('coupons','stores','redeemCount','status'));
@@ -89,7 +101,14 @@ class CouponController extends Controller
      */
     public function create()
     {
-        $stores = Stores::all();
+        $moduleName = $this->module_name;
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+            $stores = Stores::whereIn('id',$storeIds)->get();
+        } else {
+            $stores = Stores::all();
+        }
+
         $radius = radius_promote();
 
         return view('admin.pages.coupon.create',compact('stores','radius'));
@@ -138,7 +157,6 @@ class CouponController extends Controller
 
         $couponData = [
             'title' => $request->title,
-            'store_id' => $request->store_id,
             'description' => $request->description,
             'discount' => $request->discount,
             'image' => $imageName,
@@ -148,6 +166,21 @@ class CouponController extends Controller
             'end_date_promote' => $endPromote,
             'radius' => $radius,
         ];
+
+        $moduleName = $this->module_name;
+
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+
+            if(in_array($request->store_id,$storeIds)) {
+                $couponData['store_id'] = $request->store_id;
+            } else {
+                abort(404);
+                exit;
+            }
+        } else {
+            $couponData['store_id'] = $request->store_id;
+        }
 
         $couponId = Coupons::insertGetId($couponData);
 
@@ -181,7 +214,14 @@ class CouponController extends Controller
      */
     public function edit(Coupons $coupon)
     {
-        $stores = Stores::all();
+        $moduleName = $this->module_name;
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+            $stores = Stores::whereIn('id',$storeIds)->get();
+        } else {
+            $stores = Stores::all();
+        }
+
         $radius = radius_promote();
 
         return view('admin.pages.coupon.edit', compact('coupon','stores','radius'));
@@ -235,7 +275,6 @@ class CouponController extends Controller
 
         $couponData = [
             'title' => $request->title,
-            'store_id' => $request->store_id,
             'description' => $request->description,
             'discount' => $request->discount,
             'image' => $imageName,
@@ -245,6 +284,20 @@ class CouponController extends Controller
             'end_date_promote' => $endPromote,
             'radius' => $radius,
         ];
+
+        $moduleName = $this->module_name;
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+
+            if(in_array($request->store_id,$storeIds)) {
+                $couponData['store_id'] = $request->store_id;
+            } else {
+                abort(404);
+                exit;
+            }
+        } else {
+            $couponData['store_id'] = $request->store_id;
+        }
 
         $coupon->update($couponData);
 
@@ -259,6 +312,15 @@ class CouponController extends Controller
      */
     public function destroy(Coupons $coupon)
     {
+        $moduleName = $this->module_name;
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+
+            if(!in_array($coupon->store_id,$storeIds)) {
+                abort(404);
+                exit;
+            }
+        }
         delete_old_files(public_path().'/uploads/coupons/'.$coupon->image);
         $coupon->delete();
         $arr = _sessionmessage(null, null, null, true);
@@ -270,9 +332,20 @@ class CouponController extends Controller
         $ids = $request->ids;
         $explodeIds = explode(",",$ids);
 
+        $moduleName = $this->module_name;
+
         foreach ($explodeIds as $id)
         {
             $coupon = Coupons::find($id);
+
+            if($moduleName == 'cms') {
+                $storeIds = get_cms_user_store_ids(Auth::user()->id);
+                if(!in_array($coupon->store_id,$storeIds)) {
+                    abort(404);
+                    exit;
+                }
+            }
+
             delete_old_files(public_path().'/uploads/coupons/'.$coupon->image);
         }
 
@@ -311,6 +384,16 @@ class CouponController extends Controller
 
             if ($status > 0 && $couponId > 0) {
                 $coupon = Coupons::find($couponId);
+
+                $moduleName = $this->module_name;
+                if($moduleName == 'cms') {
+                    $storeIds = get_cms_user_store_ids(Auth::user()->id);
+
+                    if(!in_array($coupon->store_id,$storeIds)) {
+                        abort(404);
+                        exit;
+                    }
+                }
 
                 $couponData = [
                     'status' => $status,

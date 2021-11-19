@@ -8,6 +8,7 @@ use App\Models\AppUsers;
 use App\Models\LoyaltyPoints;
 use App\Models\Stores;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class LoyaltyPointController extends Controller
@@ -29,6 +30,7 @@ class LoyaltyPointController extends Controller
      */
     public function index()
     {
+        $moduleName = $this->module_name;
         $query = DB::table('loyalty_points AS lp')
             ->selectRaw('lp.*, au.firstname, au.lastname, au.email, s.name AS store_name')
             ->join('stores AS s','s.id','=','lp.store_id')
@@ -39,6 +41,11 @@ class LoyaltyPointController extends Controller
             ;
 
         $pageCount = config('global.pagination_count');
+
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+            $query->whereIn('s.id',$storeIds);
+        }
 
         if(request('store_id')) {
             $storeId = intval(request('store_id'));
@@ -67,7 +74,12 @@ class LoyaltyPointController extends Controller
         $query = $query->paginate($pageCount);
         $loyaltyPoints = $query->appends(request()->query());
 
-        $stores = Stores::all();
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+            $stores = Stores::whereIn('id',$storeIds)->get();
+        } else {
+            $stores = Stores::all();
+        }
         $users = AppUsers::all();
 
         return view('admin.pages.loyalty_point.index', compact('loyaltyPoints','stores','users'));
@@ -80,7 +92,13 @@ class LoyaltyPointController extends Controller
      */
     public function create()
     {
-        $stores = Stores::all();
+        $moduleName = $this->module_name;
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+            $stores = Stores::whereIn('id',$storeIds)->get();
+        } else {
+            $stores = Stores::all();
+        }
 
         return view('admin.pages.loyalty_point.create', compact('stores'));
     }
@@ -93,19 +111,41 @@ class LoyaltyPointController extends Controller
      */
     public function store(LoyaltyPointRequest $request)
     {
+        $moduleName = $this->module_name;
         $userLoyaltyPointDesc = DB::table('loyalty_points AS lp')
             ->selectRaw('lp.*')
             ->join('stores AS s','s.id','=','lp.store_id')
             ->join('app_users AS au','au.id','=','lp.user_id')
-            ->whereRaw('lp.id = (SELECT MAX(lp2.id) FROM loyalty_points lp2 WHERE lp2.store_id = lp.store_id) AND user_id = '.intval($request->user_id).' AND store_id = '.intval($request->store_id))->groupBy('lp.store_id')->first()
+            ->whereRaw('lp.id = (SELECT MAX(lp2.id) FROM loyalty_points lp2 WHERE lp2.store_id = lp.store_id) AND user_id = '.intval($request->user_id).' AND store_id = '.intval($request->store_id))->groupBy('lp.store_id')
         ;
+
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+            $userLoyaltyPointDesc->whereIn('s.id',$storeIds);
+        }
+
+        $userLoyaltyPointDesc = $userLoyaltyPointDesc->first();
 
         $loyaltyPointData = [
             'user_id' => $request->user_id,
-            'store_id'  => $request->store_id,
             'previous' => $userLoyaltyPointDesc->current,
             'current' => $request->save == 1 ? $userLoyaltyPointDesc->current + $request->points : $userLoyaltyPointDesc->current - $request->points,
         ];
+
+        $moduleName = $this->module_name;
+
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+
+            if(in_array($request->store_id,$storeIds)) {
+                $loyaltyPointData['store_id'] = $request->store_id;
+            } else {
+                abort(404);
+                exit;
+            }
+        } else {
+            $loyaltyPointData['store_id'] = $request->store_id;
+        }
 
         LoyaltyPoints::create($loyaltyPointData);
 
@@ -154,6 +194,16 @@ class LoyaltyPointController extends Controller
      */
     public function destroy(LoyaltyPoints $loyaltyPoint)
     {
+        $moduleName = $this->module_name;
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+
+            if(!in_array($loyaltyPoint->store_id,$storeIds)) {
+                abort(404);
+                exit;
+            }
+        }
+
         LoyaltyPoints::where('user_id',$loyaltyPoint->user_id)->where('store_id',$loyaltyPoint->store_id)->delete();
         $arr = _sessionmessage(null, null, null, true);
         return response($arr);
@@ -164,8 +214,18 @@ class LoyaltyPointController extends Controller
         $ids = $request->ids;
         $explodeIds = explode(",", $ids);
 
+        $moduleName = $this->module_name;
         foreach ($explodeIds as $id) {
             $loyaltyPoint = LoyaltyPoints::find($id);
+
+            if($moduleName == 'cms') {
+                $storeIds = get_cms_user_store_ids(Auth::user()->id);
+
+                if(!in_array($loyaltyPoint->store_id,$storeIds)) {
+                    abort(404);
+                    exit;
+                }
+            }
 
             DB::table("loyalty_points")->where('user_id', $loyaltyPoint->user_id)->where('store_id', $loyaltyPoint->store_id)->delete();
         }
@@ -185,6 +245,7 @@ class LoyaltyPointController extends Controller
             if ($pointId > 0) {
                 $pointExists = LoyaltyPoints::find($pointId);
 
+                $moduleName = $this->module_name;
                 if($pointExists) {
                     $pointHistory = DB::table('loyalty_points AS lp')
                         ->selectRaw('lp.*, s.name AS store_name, au.firstname, au.lastname, au.email')
@@ -192,8 +253,14 @@ class LoyaltyPointController extends Controller
                         ->join('app_users AS au', 'au.id', '=', 'lp.user_id')
                         ->where('lp.user_id', '=', $pointExists->user_id)
                         ->where('lp.store_id', '=', $pointExists->store_id)
-                        ->orderBy('lp.id','DESC')
-                        ->get();
+                        ->orderBy('lp.id','DESC');
+
+                    if($moduleName == 'cms') {
+                        $storeIds = get_cms_user_store_ids(Auth::user()->id);
+                        $pointHistory->whereIn('s.id',$storeIds);
+                    }
+
+                    $pointHistory->get();
 
                     $response = ['status' => 'OK', 'data' => $pointHistory];
                 }

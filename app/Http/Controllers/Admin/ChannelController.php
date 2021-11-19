@@ -10,6 +10,7 @@ use App\Models\Channels;
 use App\Models\Coupons;
 use App\Models\Stores;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class ChannelController extends Controller
@@ -31,12 +32,19 @@ class ChannelController extends Controller
      */
     public function index()
     {
+        $moduleName = $this->module_name;
+
         $query = DB::table('channels AS c')
             ->selectRaw('c.*, s.name AS s_name, cc.name AS c_name')
             ->leftJoin('channel_category as cc', 'cc.id','=','c.channel_category_id')
             ->join('stores AS s','s.id','=','c.store_id');
 
         $pageCount = config('global.pagination_count');
+
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+            $query->whereIn('s.id',$storeIds);
+        }
 
         if(request('title')) {
             $query->whereRaw('c.title LIKE "%'.request('title').'%"');
@@ -78,7 +86,12 @@ class ChannelController extends Controller
         $query = $query->paginate($pageCount);
         $channels = $query->appends(request()->query());
 
-        $stores = Stores::all();
+        if($moduleName == 'cms') {
+            $stores = Stores::whereIn('id',$storeIds)->get();
+        } else {
+            $stores = Stores::all();
+        }
+
         $categories = ChannelCategory::all();
         $status = config('global.status');
 
@@ -92,7 +105,15 @@ class ChannelController extends Controller
      */
     public function create()
     {
-        $stores = Stores::all();
+        $moduleName = $this->module_name;
+
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+            $stores = Stores::whereIn('id',$storeIds)->get();
+        } else {
+            $stores = Stores::all();
+        }
+
         $categories = ChannelCategory::all();
 
         return view('admin.pages.channel.create',compact('stores','categories'));
@@ -126,12 +147,26 @@ class ChannelController extends Controller
 
         $channelData = [
             'title' => $request->title,
-            'store_id' => $request->store_id,
             'channel_category_id' => $request->category_id,
             'description' => $request->description,
             'image' => $imageName,
             'reorder' => $request->reorder ?? 0,
         ];
+
+        $moduleName = $this->module_name;
+
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+
+            if(in_array($request->store_id,$storeIds)) {
+                $channelData['store_id'] = $request->store_id;
+            } else {
+                abort(404);
+                exit;
+            }
+        } else {
+            $channelData['store_id'] = $request->store_id;
+        }
 
         Channels::create($channelData);
 
@@ -157,7 +192,15 @@ class ChannelController extends Controller
      */
     public function edit(Channels $channel)
     {
-        $stores = Stores::all();
+        $moduleName = $this->module_name;
+
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+            $stores = Stores::whereIn('id',$storeIds)->get();
+        } else {
+            $stores = Stores::all();
+        }
+
         $categories = ChannelCategory::all();
 
         $channelPost = DB::table("channels_details")->where('channel_id',$channel->id)->first();
@@ -207,6 +250,20 @@ class ChannelController extends Controller
             'reorder' => $request->reorder ?? 0,
         ];
 
+        $moduleName = $this->module_name;
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+
+            if(in_array($request->store_id,$storeIds)) {
+                $channelData['store_id'] = $request->store_id;
+            } else {
+                abort(404);
+                exit;
+            }
+        } else {
+            $channelData['store_id'] = $request->store_id;
+        }
+
         $channel->update($channelData);
 
         return redirect()->route($this->module_name.'.channel.index')->with(_sessionmessage());
@@ -220,6 +277,15 @@ class ChannelController extends Controller
      */
     public function destroy(Channels $channel)
     {
+        $moduleName = $this->module_name;
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+
+            if(!in_array($channel->store_id,$storeIds)) {
+                abort(404);
+                exit;
+            }
+        }
         delete_old_files(public_path().'/uploads/channels/'.$channel->image);
         DB::table("channels_details")->where('channel_id',$channel->id)->delete();
         $channel->delete();
@@ -232,9 +298,20 @@ class ChannelController extends Controller
         $ids = $request->ids;
         $explodeIds = explode(",",$ids);
 
+        $moduleName = $this->module_name;
+
         foreach ($explodeIds as $id)
         {
             $channel = Channels::find($id);
+
+            if($moduleName == 'cms') {
+                $storeIds = get_cms_user_store_ids(Auth::user()->id);
+                if(!in_array($channel->store_id,$storeIds)) {
+                    abort(404);
+                    exit;
+                }
+            }
+
             delete_old_files(public_path().'/uploads/channels/'.$channel->image);
         }
 
@@ -252,6 +329,21 @@ class ChannelController extends Controller
             $status = intval($request->status);
             $ids = $request->ids;
             $explodeIds = explode(",",$ids);
+
+            $moduleName = $this->module_name;
+
+            foreach ($explodeIds as $id) {
+                $channel = Channels::find($id);
+
+                if($moduleName == 'cms') {
+                    $storeIds = get_cms_user_store_ids(Auth::user()->id);
+                    if(!in_array($channel->store_id,$storeIds)) {
+                        abort(404);
+                        exit;
+                    }
+                }
+            }
+
 
             if ($status > 0 && count($explodeIds) > 0) {
                 DB::table("channels")->whereIn('id',$explodeIds)
@@ -274,6 +366,17 @@ class ChannelController extends Controller
 
             if ($status > 0 && $channelId > 0) {
                 $channel = Channels::find($channelId);
+
+                $moduleName = $this->module_name;
+
+                if($moduleName == 'cms') {
+                    $storeIds = get_cms_user_store_ids(Auth::user()->id);
+
+                    if(!in_array($channel->store_id,$storeIds)) {
+                        abort(404);
+                        exit;
+                    }
+                }
 
                 $channelData = [
                     'status' => $status,

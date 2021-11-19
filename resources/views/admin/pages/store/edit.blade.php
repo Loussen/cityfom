@@ -177,22 +177,24 @@
                             @enderror
                         </div>
 
-                        <div class="form-group col-sm-6">
-                            <label class="font-weight-semibold @error('partner_type') text-danger @enderror"
-                                   for="partner_type">{{__('admin.partner_type')}}</label>
-                            <div class="form-group-feedback form-group-feedback-right">
-                                <select name="partner_type" class="form-control @error('partner_type') border-danger @enderror" id="partner_type">
-                                    <option value="0">{{__('admin.please_select')}} ...</option>
-                                    @foreach($partnerTypes as $typeKey => $typeVal)
-                                        <option
-                                            {{ old('partner_type', $store->type) == $typeKey ? 'selected': '' }} value="{{$typeKey}}">{{$typeVal}}</option>
-                                    @endforeach
-                                </select>
+                        @if($moduleName != 'cms')
+                            <div class="form-group col-sm-6">
+                                <label class="font-weight-semibold @error('partner_type') text-danger @enderror"
+                                       for="partner_type">{{__('admin.partner_type')}}</label>
+                                <div class="form-group-feedback form-group-feedback-right">
+                                    <select name="partner_type" class="form-control @error('partner_type') border-danger @enderror" id="partner_type">
+                                        <option value="0">{{__('admin.please_select')}} ...</option>
+                                        @foreach($partnerTypes as $typeKey => $typeVal)
+                                            <option
+                                                {{ old('partner_type', $store->type) == $typeKey ? 'selected': '' }} value="{{$typeKey}}">{{$typeVal}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('partner_type')
+                                <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
-                            @error('partner_type')
-                            <span class="form-text font-weight-semibold text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
+                        @endif
 
                         <div class="form-group col-sm-6">
                             <label class="font-weight-semibold @error('image') text-danger @enderror"

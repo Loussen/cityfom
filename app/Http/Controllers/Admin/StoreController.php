@@ -11,6 +11,7 @@ use App\Models\StoreImages;
 use App\Models\Stores;
 use Illuminate\Http\Request;
 use Illuminate\Session\Store;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class StoreController extends Controller
@@ -32,6 +33,7 @@ class StoreController extends Controller
      */
     public function index()
     {
+        $moduleName = $this->module_name;
         $query = DB::table('stores AS s')
             ->selectRaw('s.*, (SELECT COUNT(f.id) FROM favourites AS f WHERE f.store_id = s.id GROUP BY s.id) AS fav_count, GROUP_CONCAT(DISTINCT si.image ORDER BY si.image SEPARATOR "&&&") AS store_images, GROUP_CONCAT(DISTINCT c.name_en ORDER BY c.name_en SEPARATOR "&&&") AS store_category')
             ->leftJoin('store_images as si', 'si.store_id','=','s.id')
@@ -41,6 +43,11 @@ class StoreController extends Controller
             ->orderBy('s.id','DESC');
 
         $pageCount = config('global.pagination_count');
+
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+            $query->whereIn('s.id',$storeIds);
+        }
 
         if(request('id')) {
             $query->whereRaw('s.id = '.intval(request('id')));
@@ -94,7 +101,7 @@ class StoreController extends Controller
 
         $categories = Categories::all();
 
-        return view('admin.pages.store.index', compact('stores','status','partnerTypes','storeTypes','categories','storeVerifications'));
+        return view('admin.pages.store.index', compact('stores','status','partnerTypes','storeTypes','categories','storeVerifications','moduleName'));
     }
 
     /**
@@ -258,6 +265,15 @@ class StoreController extends Controller
      */
     public function edit(Stores $store)
     {
+        $moduleName = $this->module_name;
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+            if(!in_array($store->id,$storeIds)) {
+                abort(404);
+                exit;
+            }
+        }
+
         $categories = Categories::all();
         $partnerTypes = config('global.partner_type');
 
@@ -276,7 +292,7 @@ class StoreController extends Controller
 
         $weekdays = config('global.weekdays');
 
-        return view('admin.pages.store.edit', compact('store','categories','partnerTypes','categoryArr', 'storeImages','storeOpeningHours','storeSpecialDays','weekdays'));
+        return view('admin.pages.store.edit', compact('store','categories','partnerTypes','categoryArr', 'storeImages','storeOpeningHours','storeSpecialDays','weekdays','moduleName'));
     }
 
     /**
@@ -288,6 +304,15 @@ class StoreController extends Controller
      */
     public function update(StoreRequest $request, $id)
     {
+        $moduleName = $this->module_name;
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+            if(!in_array($id,$storeIds)) {
+                abort(404);
+                exit;
+            }
+        }
+
         $store = Stores::find($id);
 
         // Opening hours
@@ -367,10 +392,14 @@ class StoreController extends Controller
             'facebook' => $request->facebook_url,
             'twitter' => $request->twitter_url,
             'instagram' => $request->instagram_url,
-            'type' => $request->partner_type,
+//            'type' => $request->partner_type,
             'hours' => $openingHoursArr,
             'special_days' => $specialDaysHourArrEnd
         ];
+
+        if($moduleName != 'cms') {
+            $storeData['type'] = $request->partner_type;
+        }
 
         $store->update($storeData);
 
@@ -421,6 +450,15 @@ class StoreController extends Controller
      */
     public function destroy(Stores $store)
     {
+        $moduleName = $this->module_name;
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+            if(!in_array($store->id,$storeIds)) {
+                abort(404);
+                exit;
+            }
+        }
+
         $images = StoreImages::where('store_id',$store->id)->get();
 
         foreach ($images as $image)
@@ -438,6 +476,15 @@ class StoreController extends Controller
     {
         $ids = $request->ids;
         $explodeIds = explode(",",$ids);
+
+        $moduleName = $this->module_name;
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+            if(array_diff($explodeIds,$storeIds) != array_diff($storeIds,$explodeIds)) {
+                abort(404);
+                exit;
+            }
+        }
 
         foreach ($explodeIds as $id)
         {
@@ -464,6 +511,15 @@ class StoreController extends Controller
             $ids = $request->ids;
             $explodeIds = explode(",",$ids);
 
+            $moduleName = $this->module_name;
+            if($moduleName == 'cms') {
+                $storeIds = get_cms_user_store_ids(Auth::user()->id);
+                if(array_diff($explodeIds,$storeIds) != array_diff($storeIds,$explodeIds)) {
+                    abort(404);
+                    exit;
+                }
+            }
+
             if ($partnerType > 0 && count($explodeIds) > 0) {
                 DB::table("stores")->whereIn('id',$explodeIds)
                     ->update(['type' => $partnerType]);
@@ -484,6 +540,15 @@ class StoreController extends Controller
             $ids = $request->ids;
             $explodeIds = explode(",",$ids);
 
+            $moduleName = $this->module_name;
+            if($moduleName == 'cms') {
+                $storeIds = get_cms_user_store_ids(Auth::user()->id);
+                if(array_diff($explodeIds,$storeIds) != array_diff($storeIds,$explodeIds)) {
+                    abort(404);
+                    exit;
+                }
+            }
+
             if ($status > 0 && count($explodeIds) > 0) {
                 DB::table("stores")->whereIn('id',$explodeIds)
                     ->update(['status' => $status]);
@@ -502,6 +567,15 @@ class StoreController extends Controller
         if ($request->has('status') && $request->has('store_id')) {
             $status = intval($request->status);
             $storeId = intval($request->store_id);
+
+            $moduleName = $this->module_name;
+            if($moduleName == 'cms') {
+                $storeIds = get_cms_user_store_ids(Auth::user()->id);
+                if(!in_array($storeId,$storeIds)) {
+                    abort(404);
+                    exit;
+                }
+            }
 
             if ($status > 0 && $storeId > 0) {
                 $store = Stores::find($storeId);
@@ -527,6 +601,15 @@ class StoreController extends Controller
             $partnerType = intval($request->partner_type);
             $storeId = intval($request->store_id);
 
+            $moduleName = $this->module_name;
+            if($moduleName == 'cms') {
+                $storeIds = get_cms_user_store_ids(Auth::user()->id);
+                if(!in_array($storeId,$storeIds)) {
+                    abort(404);
+                    exit;
+                }
+            }
+
             if ($partnerType > 0 && $storeId > 0) {
                 $store = Stores::find($storeId);
 
@@ -551,6 +634,15 @@ class StoreController extends Controller
             $verification = intval($request->verification);
             $storeId = intval($request->store_id);
 
+            $moduleName = $this->module_name;
+            if($moduleName == 'cms') {
+                $storeIds = get_cms_user_store_ids(Auth::user()->id);
+                if(!in_array($storeId,$storeIds)) {
+                    abort(404);
+                    exit;
+                }
+            }
+
             if ($verification > 0 && $storeId > 0) {
                 $store = Stores::find($storeId);
 
@@ -572,6 +664,15 @@ class StoreController extends Controller
         $imageId = $request->image_id;
 
         $image = StoreImages::where('id',$imageId)->first();
+
+        $moduleName = $this->module_name;
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+            if(!in_array($image->store_id,$storeIds)) {
+                abort(404);
+                exit;
+            }
+        }
 
         delete_old_files(public_path().'/uploads/stores/'.$image->image);
 

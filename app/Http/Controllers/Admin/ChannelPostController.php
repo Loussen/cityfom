@@ -8,6 +8,7 @@ use App\Models\ChannelCategory;
 use App\Models\ChannelsDetails;
 use App\Models\Stores;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class ChannelPostController extends Controller
@@ -29,6 +30,8 @@ class ChannelPostController extends Controller
      */
     public function index()
     {
+        $moduleName = $this->module_name;
+
         $query = DB::table('channels_details AS cd')
             ->selectRaw('cd.*, s.name AS s_name, cc.name AS c_name, cd.title AS title_post, c.title AS title_channel')
             ->leftJoin('channels as c', 'c.id','=','cd.channel_id')
@@ -36,6 +39,11 @@ class ChannelPostController extends Controller
             ->join('stores AS s','s.id','=','c.store_id');
 
         $pageCount = config('global.pagination_count');
+
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+            $query->whereIn('s.id',$storeIds);
+        }
 
         if(request('title')) {
             $query->whereRaw('cd.title LIKE "%'.request('title').'%"');
@@ -77,7 +85,12 @@ class ChannelPostController extends Controller
         $query = $query->paginate($pageCount);
         $channelPosts = $query->appends(request()->query());
 
-        $stores = Stores::all();
+        if($moduleName == 'cms') {
+            $stores = Stores::whereIn('id',$storeIds)->get();
+        } else {
+            $stores = Stores::all();
+        }
+
         $categories = ChannelCategory::all();
         $status = config('global.status');
 
@@ -91,7 +104,15 @@ class ChannelPostController extends Controller
      */
     public function create()
     {
-        $stores = Stores::all();
+        $moduleName = $this->module_name;
+
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+            $stores = Stores::whereIn('id',$storeIds)->get();
+        } else {
+            $stores = Stores::all();
+        }
+
         $radius = radius_promote();
 
         return view('admin.pages.channel_post.create',compact('stores','radius'));
@@ -207,15 +228,29 @@ class ChannelPostController extends Controller
      */
     public function edit(ChannelsDetails $channelPost)
     {
-        $stores = Stores::all();
+        $moduleName = $this->module_name;
+
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+            $stores = Stores::whereIn('id',$storeIds)->get();
+        } else {
+            $stores = Stores::all();
+        }
+
         $radius = radius_promote();
 
         $selectedStore = \Illuminate\Support\Facades\DB::table('channels_details AS cd')
             ->join('channels AS c', 'c.id', '=', 'cd.channel_id')
             ->join('stores AS s', 's.id', '=', 'c.store_id')
             ->whereRaw('cd.id = ' . $channelPost->id)
-            ->select('s.id AS store_id')
-            ->first();
+            ->select('s.id AS store_id');
+
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+            $selectedStore->whereIn('s.id',$storeIds);
+        }
+
+        $selectedStore->first();
 
         return view('admin.pages.channel_post.edit', compact('stores','channelPost','selectedStore','radius'));
     }

@@ -8,6 +8,7 @@ use App\Models\RateReviewImages;
 use App\Models\RateReviews;
 use App\Models\Stores;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class RatingReviewController extends Controller
@@ -29,6 +30,7 @@ class RatingReviewController extends Controller
      */
     public function index()
     {
+        $moduleName = $this->module_name;
         $query = DB::table('rate_reviews AS rr')
             ->selectRaw('rr.*, rr.id AS rate_review_id, sum((case when rl.review_id is not null then 1 else 0 end)) AS like_count, s.name AS store_name, au.firstname AS firstname, au.lastname AS lastname, au.email, GROUP_CONCAT(rri.image SEPARATOR ",") AS rate_review_images')
             ->leftJoin('review_likes as rl', 'rl.review_id','=','rr.id')
@@ -38,6 +40,11 @@ class RatingReviewController extends Controller
             ->groupByRaw('rr.id');
 
         $pageCount = config('global.pagination_count');
+
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+            $query->whereIn('s.id',$storeIds);
+        }
 
         if(request('review')) {
             $query->whereRaw('rr.review LIKE "%'.request('review').'%"');
@@ -83,7 +90,12 @@ class RatingReviewController extends Controller
         $query = $query->paginate($pageCount);
         $ratingReviews = $query->appends(request()->query());
 
-        $stores = Stores::all();
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+            $stores = Stores::whereIn('id',$storeIds)->get();
+        } else {
+            $stores = Stores::all();
+        }
         $ratingReviewstatus = config('global.rating_review_status');
 
         return view('admin.pages.rating_review.index', compact('ratingReviews','stores','ratingReviewstatus','likeCount'));
@@ -118,6 +130,7 @@ class RatingReviewController extends Controller
      */
     public function show($id)
     {
+        $moduleName = $this->module_name;
         $rateReview = DB::table('rate_reviews AS rr')
             ->selectRaw('rr.*, rr.id AS rate_review_id, rr.comment, sum((case when rl.review_id is not null then 1 else 0 end)) AS like_count, s.name AS store_name, au.firstname AS firstname, au.lastname AS lastname, GROUP_CONCAT(rri.image SEPARATOR ",") AS rate_review_images, GROUP_CONCAT(rri.id SEPARATOR ",") AS rate_review_image_id')
             ->leftJoin('review_likes as rl', 'rl.review_id','=','rr.id')
@@ -125,7 +138,14 @@ class RatingReviewController extends Controller
             ->leftJoin('rate_review_images as rri', 'rri.rate_review_id','=','rr.id')
             ->join('stores AS s','s.id','=','rr.store_id')
             ->where('rr.id','=',$id)
-            ->groupByRaw('rr.id')->first();
+            ->groupByRaw('rr.id');
+
+        if($moduleName == 'cms') {
+            $storeIds = get_cms_user_store_ids(Auth::user()->id);
+            $rateReview->whereIn('s.id',$storeIds);
+        }
+
+        $rateReview->first();
 
         return view('admin.pages.rating_review.show', compact('rateReview'));
     }
