@@ -278,7 +278,7 @@
             <!-- Quick stats boxes -->
                 <div class="row">
 
-                    <div class="col-lg-3">
+                    <div class="col-lg-6">
 
                         <!-- Members online -->
                         <div class="card bg-teal-400">
@@ -302,7 +302,7 @@
 
                     </div>
 
-                    <div class="col-lg-3">
+                    <div class="col-lg-6">
 
                         <!-- Members online -->
                         <div class="card bg-teal-400">
@@ -326,7 +326,7 @@
 
                     </div>
 
-                    <div class="col-lg-3">
+                    <div class="col-lg-6">
 
                         <!-- Members online -->
                         <div class="card bg-teal-400">
@@ -350,7 +350,7 @@
 
                     </div>
 
-                    <div class="col-lg-3">
+                    <div class="col-lg-6">
 
                         <!-- Members online -->
                         <div class="card bg-teal-400">

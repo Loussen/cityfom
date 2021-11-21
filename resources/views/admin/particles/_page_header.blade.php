@@ -50,7 +50,7 @@
 
         <ul class="navbar-nav">
 
-            @if($module_name == 'cms')
+            @if($module_name == 'cms' && 1!=1)
                 <li class="nav-item dropdown">
                     <a href="#" class="navbar-nav-link dropdown-toggle caret-0 legitRipple" data-toggle="dropdown">
                         <i class="icon-bubbles4"></i>
